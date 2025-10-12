@@ -4,6 +4,7 @@ import {styles} from "@/assets/style/tab.styles";
 import {TabList, Tabs, TabSlot, TabTrigger} from "expo-router/ui";
 import {usePathname} from "expo-router";
 import {colors} from "@/constants/colors";
+import lang from "@/lib/lang";
 
 const TabsLayout = () => {
     const pathName = usePathname();
@@ -14,18 +15,18 @@ const TabsLayout = () => {
             <TabTrigger name="index" href="/" style={[styles.tabBarItem, pathName === "/" ? styles.activeBarItem : {}, { gap: 4 }]}>
                 <MaterialCommunityIcons name="fridge-outline" size={32} color={pathName === "/" ? colors.bg : colors.black} />
                 {
-                    pathName === "/" && <Text style={styles.tabBarItemText}>Fridges</Text>
+                    pathName === "/" && <Text style={styles.tabBarItemText}>{lang.tab.index}</Text>
                 }
             </TabTrigger>
             <TabTrigger name="stats" href="/stats" style={[styles.tabBarItem, pathName === "/stats" ? styles.activeBarItem : {}]}>
                 <Ionicons name="bar-chart-outline" size={32} color={pathName === "/stats" ? colors.bg : colors.black} />
                 {
-                    pathName === "/stats" && <Text style={styles.tabBarItemText}>Stats</Text>
+                    pathName === "/stats" && <Text style={styles.tabBarItemText}>{lang.tab.stats}</Text>
                 }
             </TabTrigger>
             <TabTrigger name="settings" href="/settings" style={[styles.tabBarItem, pathName === "/settings" ? styles.activeBarItem : {}]}>
                 {
-                    pathName === "/settings" && <Text style={styles.tabBarItemText}>Settings</Text>
+                    pathName === "/settings" && <Text style={styles.tabBarItemText}>{lang.tab.settings}</Text>
                 }
                 <Ionicons name="settings-outline" size={32} color={pathName === "/settings" ? colors.bg : colors.black} />
             </TabTrigger>
