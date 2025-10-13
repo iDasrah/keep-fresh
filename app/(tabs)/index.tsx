@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import {ScrollView, View} from "react-native";
 import Header from "@/components/ui/Header";
 import ItemsList from "@/components/ui/ItemsList";
 import {useItems} from "@/stores/items";
@@ -9,9 +9,9 @@ export default function Index() {
     return (
         <View>
             <Header variant="index" />
-            <View style={{padding: 16}}>
+            <ScrollView style={{padding: 16}} contentContainerStyle={{paddingBottom: 300}}>
                 <ItemsList storage={selectedStorage !== "all" ? selectedStorage : undefined} searchText={searchText} />
-            </View>
+            </ScrollView>
         </View>
   );
 }

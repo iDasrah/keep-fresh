@@ -22,6 +22,32 @@ const fr = {
     },
     product: {
         expiringIn: "Expire dans",
+    },
+    addItem: {
+        title: "Ajouter un nouvel article",
+        subtitle: "Ajoutez rapidement un produit à votre frigo.",
+        form: {
+            name: {
+                label: "Nom du produit",
+                placeholder: "Ex: Yaourt nature",
+            },
+            quantity: {
+                label: "Quantité",
+                placeholder: "Ex: 6",
+            },
+            unit: {
+                label: "Unité",
+                placeholder: "Ex: pièces, g, ml...",
+            },
+            storage: {
+                label: "Stockage",
+            },
+            expirationDate: {
+                label: "Date d'expiration",
+                placeholder: "Sélectionner une date",
+            },
+            addButton: "Ajouter l'article",
+        }
     }
 }
 

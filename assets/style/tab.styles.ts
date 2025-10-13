@@ -4,10 +4,12 @@ import {colors} from "@/constants/colors";
 export const styles = StyleSheet.create({
     tabBar: {
         backgroundColor: colors.bg,
-        marginHorizontal: 64,
+        marginHorizontal: 48,
         borderRadius: 64,
-        position: "fixed",
+        position: "absolute",
         bottom: 32,
+        left: 0,
+        right: 0,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

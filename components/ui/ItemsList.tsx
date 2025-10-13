@@ -23,6 +23,8 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
         enabled: isConnected
     });
 
+    items?.sort((a, b) => new Date(a.expirationDate).getTime() - new Date(b.expirationDate).getTime());
+
     if (isLoading) {
         return <ActivityIndicator />
     }
