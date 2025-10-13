@@ -8,6 +8,7 @@ export type Item = {
 }
 
 export type Stats = {
+    antiWasteScore: number;
     totalAddedItems: number;
     thrownAwayItems: number;
     expiredThisWeek: number;
@@ -18,7 +19,6 @@ export type Stats = {
 export type Settings = {
     expiredNotification: boolean;
     soonExpirationNotification: boolean;
-    dailyReminder: boolean;
 }
 
 export type Storage = 'fridge' | 'freezer' | 'pantry';

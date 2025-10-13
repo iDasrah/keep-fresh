@@ -14,7 +14,8 @@ export const useNotifications = create<NotificationsState>((set, get) => ({
     notifications: [],
 
     scheduleItemNotifications: async (item: Item) => {
-        const ids = await scheduleItemNotifications(item.name, new Date(item.expirationDate), item.id.toString());
+        const ids = (await scheduleItemNotifications(item.name, new Date(item.expirationDate), item.id.toString()))
+            .filter((id): id is string => id !== null);
         set({notifications: [...get().notifications, {ids, itemId: item.id}]});
     },
     cancelItemNotifications: (itemId: number) => {

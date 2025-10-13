@@ -66,6 +66,53 @@ const fr = {
         throw: "Jeter",
         consume: "Consommer",
 
+    },
+    stats: {
+        antiWasteTitle: "Score Anti-Gaspi",
+        antiWasteMessages: {
+            low: [
+                {
+                    title: "Trop de gaspillage ! 😢",
+                    content: "Beaucoup de produits ont expiré ce mois-ci."
+                },
+                {
+                    title: "Action requise ! 🚨",
+                    content: "Active les notifications pour ne rien manquer."
+                },
+                {
+                    title: "C'est le moment d'agir ! 💡",
+                    content: "Planifie mieux tes repas pour moins jeter."
+                }
+            ],
+            medium: [
+                {
+                    title: "Attention ⚠️",
+                    content: "Quelques produits ont été jetés ce mois-ci."
+                },
+                {
+                    title: "On peut mieux faire 💪",
+                    content: "Pense à vérifier les dates régulièrement."
+                },
+                {
+                    title: "Pas mal ! 👍",
+                    content: "Mais il y a encore de la marge de progression."
+                }
+            ],
+            high: [
+                {
+                    title: "Excellent ! 🌟",
+                    content: "Continue comme ça, tu gaspilles très peu !"
+                },
+                {
+                    title: "Bravo ! 👏",
+                    content: "Ton frigo est bien géré, zéro déchet !"
+                },
+                {
+                    title: "Top ! 💚",
+                    content: "Tu es un champion anti-gaspi !"
+                }
+            ],
+        }
     }
 }
 
