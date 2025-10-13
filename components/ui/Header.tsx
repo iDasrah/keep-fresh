@@ -25,7 +25,7 @@ const Header = ({variant}: HeaderProps) => {
                     )
                 }
                 <Text style={styles.headerTitleText}>
-                    fridgely<Text style={{color: colors.success}}>.</Text>
+                    keep fresh<Text style={{color: colors.success}}>.</Text>
                 </Text>
                 {
                     variant === 'index' && (
