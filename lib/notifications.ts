@@ -20,7 +20,7 @@ export async function handler(notification: Notification): Promise<NotificationB
 export async function scheduleItemNotifications(itemName: string, expirationDate: Date, id: string) {
     const expirationNotificationId = await scheduleItemExpirationNotification(itemName, expirationDate, id);
     const expirationSoonNotificationId = await scheduleItemExpirationSoonNotification(itemName, expirationDate, id);
-    return { expirationNotificationId, expirationSoonNotificationId };
+    return [ expirationNotificationId, expirationSoonNotificationId ];
 }
 
 export async function scheduleItemExpirationNotification(itemName: string, expirationDate: Date, id: string) {
@@ -38,6 +38,10 @@ export async function scheduleItemExpirationNotification(itemName: string, expir
 }
 
 export async function scheduleItemExpirationSoonNotification(itemName: string, expirationDate: Date, id: string) {
+    if (subDays(new Date(expirationDate), 3) < new Date()) {
+        return null;
+    }
+
     return await scheduleNotificationAsync({
         content: {
             title: lang.notifications.itemExpiringSoon.title,
@@ -49,8 +53,4 @@ export async function scheduleItemExpirationSoonNotification(itemName: string, e
             type: SchedulableTriggerInputTypes.DATE
         },
     });
-}
-
-export async function cancelItemExpirationNotification(id: string) {
-    return await cancelScheduledNotificationAsync(id);
 }

@@ -58,6 +58,14 @@ const fr = {
             title: "Article bientôt expiré",
             body: (itemName: string, days: number) => `L'article ${itemName} expirera dans ${days} jours.`,
         }
+    },
+    alert: {
+        cancel: "Annuler",
+        deleteItem: "Supprimer l'article",
+        deleteItemMessage: "Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.",
+        throw: "Jeter",
+        consume: "Consommer",
+
     }
 }
 

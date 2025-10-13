@@ -1,5 +1,5 @@
 import {create} from "zustand/react";
-import {initDatabase, getAllItems, getItemsByStorage, searchItems, addItem} from "@/lib/db";
+import {initDatabase, getAllItems, getItemsByStorage, searchItems, addItem, deleteItem} from "@/lib/db";
 import {Item} from "@/types";
 
 interface DatabaseState {
@@ -11,6 +11,7 @@ interface DatabaseState {
     getAllItemsByStorage: (storage: string) => Promise<any[]>;
     searchItems: (query: string, storage?: string) => Promise<any[]>;
     addItem: (item: Omit<Item, 'id'>) => Promise<number>;
+    deleteItem: (id: number) => Promise<void>;
 }
 
 export const useDatabase = create<DatabaseState>((set, get) => ({
@@ -43,5 +44,10 @@ export const useDatabase = create<DatabaseState>((set, get) => ({
     addItem: async (item: Omit<Item, 'id'>) => {
         if (!get().isConnected) throw new Error("Database not connected");
         return await addItem(item);
+    },
+
+    deleteItem: async (id: number) => {
+        if (!get().isConnected) throw new Error("Database not connected");
+        return await deleteItem(id);
     }
 }));

@@ -76,6 +76,17 @@ export async function addItem(item: Omit<Item, 'id'>): Promise<number> {
     return result.lastInsertRowId;
 }
 
+export async function deleteItem(id: number): Promise<void> {
+    if (!db) {
+        throw new Error("Database not initialized. Call initDatabase() first.");
+    }
+    const prep = await db.prepareAsync(`
+        DELETE FROM items WHERE id = ?;
+    `);
+    await prep.executeAsync([id]);
+    await prep.finalizeAsync();
+}
+
 async function seedDatabase() {
     if (!db) {
         throw new Error("Database not initialized. Call initDatabase() first.");

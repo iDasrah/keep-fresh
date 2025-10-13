@@ -5,8 +5,9 @@ import {StatusBar} from "expo-status-bar";
 import {useEffect} from "react";
 import { useDatabase } from "@/stores/database";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {getAllScheduledNotificationsAsync, requestPermissionsAsync, setNotificationHandler} from "expo-notifications";
+import {requestPermissionsAsync, setNotificationHandler} from "expo-notifications";
 import {handler} from "@/lib/notifications";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 const queryClient = new QueryClient()
 
@@ -32,16 +33,18 @@ export default function RootLayout() {
     }, [getAllItems, init, isConnected, isConnecting]);
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={{flex: 1, backgroundColor: colors.black}} edges={['top', 'right', 'left']}>
-                <StatusBar style="light" />
-                <QueryClientProvider client={queryClient}>
-                    <Stack screenOptions={{headerShown: false}}>
-                        <Stack.Screen name="(tabs)" />
-                        <Stack.Screen name="add-item" />
-                    </Stack>
-                </QueryClientProvider>
-            </SafeAreaView>
-        </SafeAreaProvider>
+        <GestureHandlerRootView>
+            <SafeAreaProvider>
+                <SafeAreaView style={{flex: 1, backgroundColor: colors.black}} edges={['top', 'right', 'left']}>
+                    <StatusBar style="light" />
+                    <QueryClientProvider client={queryClient}>
+                        <Stack screenOptions={{headerShown: false}}>
+                            <Stack.Screen name="(tabs)" />
+                            <Stack.Screen name="add-item" />
+                        </Stack>
+                    </QueryClientProvider>
+                </SafeAreaView>
+            </SafeAreaProvider>
+        </GestureHandlerRootView>
     );
 }
