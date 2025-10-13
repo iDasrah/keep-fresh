@@ -11,10 +11,10 @@ interface StatsState {
     updateAverageConsumptionTime: (newTime: number) => void;
     updateAntiWasteScore: () => void;
     addWeeklyAntiWasteScore: (score: number) => void;
-    resetStats: () => void;
+    resetStats: () => Promise<void>;
 
-    loadData: () => void;
-    saveData: () => void;
+    loadData: () => Promise<void>;
+    saveData: () => Promise<void>;
 }
 
 export const useStats = create<StatsState>((set, get) => ({
@@ -27,7 +27,7 @@ export const useStats = create<StatsState>((set, get) => ({
         antiWasteScoreByWeek: [],
     },
 
-    addTotalAddedItems: () => {
+    addTotalAddedItems: async () => {
         set((state) => ({
             userStats: {
                 ...state.userStats,
@@ -35,9 +35,9 @@ export const useStats = create<StatsState>((set, get) => ({
             }
         }));
         get().updateAntiWasteScore();
-        get().saveData();
+        await get().saveData();
     },
-    addThrownAwayItems: () => {
+    addThrownAwayItems: async () => {
         set((state) => ({
             userStats: {
                 ...state.userStats,
@@ -45,9 +45,9 @@ export const useStats = create<StatsState>((set, get) => ({
             }
         }));
         get().updateAntiWasteScore();
-        get().saveData();
+        await get().saveData();
     },
-    addExpiredThisWeek: () => {
+    addExpiredThisWeek: async () => {
         set((state) => ({
             userStats: {
                 ...state.userStats,
@@ -55,7 +55,7 @@ export const useStats = create<StatsState>((set, get) => ({
             }
         }));
         get().updateAntiWasteScore();
-        get().saveData();
+        await get().saveData();
     },
     updateAverageConsumptionTime: (newTime: number) => set((state) => ({})),
     updateAntiWasteScore: () => set((state) => {
@@ -74,25 +74,31 @@ export const useStats = create<StatsState>((set, get) => ({
             }
         };
     }),
-    addWeeklyAntiWasteScore: (score: number) => {
+    addWeeklyAntiWasteScore: async (score: number) => {
         set((state) => ({
             userStats: {
                 ...state.userStats,
                 antiWasteScoreByWeek: [...state.userStats.antiWasteScoreByWeek, score],
             }
         }));
-        get().saveData();
+        await get().saveData();
     },
-    resetStats: () => set(() => ({
-        userStats: {
-            antiWasteScore: 100,
-            totalAddedItems: 0,
-            thrownAwayItems: 0,
-            expiredThisWeek: 0,
-            averageConsumptionTime: 0,
-            antiWasteScoreByWeek: [],
-        }
-    })),
+    resetStats: () => {
+        return new Promise<void>(async (resolve) => {
+            set({
+                userStats: {
+                    antiWasteScore: 100,
+                    totalAddedItems: 0,
+                    thrownAwayItems: 0,
+                    expiredThisWeek: 0,
+                    averageConsumptionTime: 0,
+                    antiWasteScoreByWeek: [],
+                }
+            });
+            await get().saveData();
+            resolve();
+        });
+    },
 
     loadData: async () => {
         const [

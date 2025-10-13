@@ -65,7 +65,11 @@ const fr = {
         deleteItemMessage: "Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.",
         throw: "Jeter",
         consume: "Consommer",
-
+        deleteData: {
+            title: "Supprimer mes données",
+            message: "Êtes-vous sûr de vouloir supprimer toutes vos données ? Cette action est irréversible.",
+            delete: "Supprimer",
+        }
     },
     stats: {
         antiWasteTitle: "Score Anti-Gaspi",
@@ -112,6 +116,25 @@ const fr = {
                     content: "Tu es un champion anti-gaspi !"
                 }
             ],
+        }
+    },
+    settings: {
+        notifications: {
+            title: "Notifications",
+            expiredProduct: {
+                title: "Produit expiré",
+                description: "Recevoir une notification le jour où un produit expire."
+            },
+            expiringSoonProduct: {
+                title: "Produit bientôt expiré",
+                description: "Recevoir une notification quelques jours avant qu'un produit n'expire."
+            },
+        },
+        feedback: {
+            title: "Envoyer un commentaire",
+        },
+        deleteData: {
+            title: "Supprimer mes données",
         }
     }
 }

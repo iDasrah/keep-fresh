@@ -9,6 +9,7 @@ import {requestPermissionsAsync, setNotificationHandler} from "expo-notification
 import {handler} from "@/lib/notifications";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 import {useStats} from "@/stores/stats";
+import {useSettings} from "@/stores/settings";
 
 const queryClient = new QueryClient()
 
@@ -19,17 +20,19 @@ setNotificationHandler({
 export default function RootLayout() {
     const { init, getAllItems, isConnected, isConnecting } = useDatabase();
     const { loadData } = useStats();
+    const { loadSettings } = useSettings();
 
     useEffect(() => {
         const initApp = async () => {
             await Promise.all([
                 init(),
                 requestPermissionsAsync(),
+                loadSettings(),
+                loadData()
             ])
-            loadData();
         }
         initApp();
-    }, [getAllItems, init, isConnected, isConnecting, loadData]);
+    }, [getAllItems, init, isConnected, isConnecting, loadData, loadSettings]);
 
     return (
         <GestureHandlerRootView>
