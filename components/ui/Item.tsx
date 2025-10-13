@@ -11,6 +11,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useDatabase} from "@/stores/database";
 import {useNotifications} from "@/stores/notifications";
 import {LinearGradient} from "expo-linear-gradient";
+import {useStats} from "@/stores/stats";
 
 interface ItemProps {
     item: ItemType
@@ -27,6 +28,7 @@ const Item = ({item}: ItemProps) => {
     const { deleteItem } = useDatabase();
     const {cancelItemNotifications} = useNotifications();
     const queryClient = useQueryClient();
+    const { addThrownAwayItems, updateAntiWasteScore, saveData } = useStats();
 
     const deleteItemMut = useMutation({
         mutationKey: ['deleteItem', item.id],
@@ -54,6 +56,9 @@ const Item = ({item}: ItemProps) => {
                     style: 'destructive',
                     onPress: () => {
                         deleteItemMut.mutate(item.id);
+                        addThrownAwayItems();
+                        updateAntiWasteScore();
+                        saveData();
                     }
                 },
                 {

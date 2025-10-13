@@ -8,6 +8,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {requestPermissionsAsync, setNotificationHandler} from "expo-notifications";
 import {handler} from "@/lib/notifications";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {useStats} from "@/stores/stats";
 
 const queryClient = new QueryClient()
 
@@ -17,20 +18,18 @@ setNotificationHandler({
 
 export default function RootLayout() {
     const { init, getAllItems, isConnected, isConnecting } = useDatabase();
+    const { loadData } = useStats();
 
     useEffect(() => {
-        if (!isConnected && !isConnecting) {
-            console.log("Initializing database...");
-            init()
-                .then(() => getAllItems().then((items) => console.log("Database initialized with", items.length, "items")))
-                .catch(console.error);
+        const initApp = async () => {
+            await Promise.all([
+                init(),
+                requestPermissionsAsync(),
+            ])
+            loadData();
         }
-        requestPermissionsAsync().then(({status}) => {
-            if (status !== 'granted') {
-                console.log('Notification permissions not granted!');
-            }
-        });
-    }, [getAllItems, init, isConnected, isConnecting]);
+        initApp();
+    }, [getAllItems, init, isConnected, isConnecting, loadData]);
 
     return (
         <GestureHandlerRootView>

@@ -50,7 +50,7 @@ const AddItem = () => {
     const [storage, setStorage] = useState<{label: string, value: string}>({label: lang.header.storageSelector.fridge, value: "fridge"});
     const [expirationDate, setExpirationDate] = useState<Date>(new Date());
     const { scheduleItemNotifications } = useNotifications();
-    const { addTotalAddedItems } = useStats();
+    const { addTotalAddedItems, updateAntiWasteScore, saveData } = useStats();
 
     const { addItem } = useDatabase();
     const router = useRouter();
@@ -68,6 +68,8 @@ const AddItem = () => {
             const id = await addItem({...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
             scheduleItemNotifications({id, ...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
             addTotalAddedItems();
+            updateAntiWasteScore();
+            saveData();
 
             setName("");
             setQuantity({label: "1", value: "1"});

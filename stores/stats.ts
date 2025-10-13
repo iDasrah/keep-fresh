@@ -30,19 +30,19 @@ export const useStats = create<StatsState>((set) => ({
     addTotalAddedItems: () => set((state) => ({
         userStats: {
             ...state.userStats,
-            totalAddedItems: state.userStats.totalAddedItems++,
+            totalAddedItems: state.userStats.totalAddedItems + 1,
         }
     })),
     addThrownAwayItems: () => set((state) => ({
         userStats: {
             ...state.userStats,
-            thrownAwayItems: state.userStats.thrownAwayItems++,
+            thrownAwayItems: state.userStats.thrownAwayItems + 1,
         }
     })),
     addExpiredThisWeek: () => set((state) => ({
         userStats: {
             ...state.userStats,
-            expiredThisWeek: state.userStats.expiredThisWeek++,
+            expiredThisWeek: state.userStats.expiredThisWeek + 1,
         }
     })),
     updateAverageConsumptionTime: (newTime: number) => set((state) => ({})),
