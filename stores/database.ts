@@ -10,7 +10,7 @@ interface DatabaseState {
     getAllItems: () => Promise<any[]>;
     getAllItemsByStorage: (storage: string) => Promise<any[]>;
     searchItems: (query: string, storage?: string) => Promise<any[]>;
-    addItem: (item: Omit<Item, 'id'>) => Promise<void>;
+    addItem: (item: Omit<Item, 'id'>) => Promise<number>;
 }
 
 export const useDatabase = create<DatabaseState>((set, get) => ({

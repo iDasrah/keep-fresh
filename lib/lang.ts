@@ -48,6 +48,16 @@ const fr = {
             },
             addButton: "Ajouter l'article",
         }
+    },
+    notifications: {
+        itemExpired: {
+            title: "Article expiré",
+            body: (itemName: string) => `L'article ${itemName} a expiré aujourd'hui.`,
+        },
+        itemExpiringSoon: {
+            title: "Article bientôt expiré",
+            body: (itemName: string, days: number) => `L'article ${itemName} expirera dans ${days} jours.`,
+        }
     }
 }
 

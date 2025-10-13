@@ -63,15 +63,17 @@ export async function searchItems(query: string, storage?: Storage): Promise<Ite
     }
 }
 
-export async function addItem(item: Omit<Item, 'id'>): Promise<void> {
+export async function addItem(item: Omit<Item, 'id'>): Promise<number> {
     if (!db) {
         throw new Error("Database not initialized. Call initDatabase() first.");
     }
     const prep = await db.prepareAsync(`
         INSERT INTO items (name, quantity, unit, expirationDate, storage) VALUES (?, ?, ?, ?, ?);
     `);
-    await prep.executeAsync([item.name, item.quantity, item.unit, item.expirationDate, item.storage]);
+    const result = await prep.executeAsync([item.name, item.quantity, item.unit, item.expirationDate, item.storage]);
     await prep.finalizeAsync();
+
+    return result.lastInsertRowId;
 }
 
 async function seedDatabase() {

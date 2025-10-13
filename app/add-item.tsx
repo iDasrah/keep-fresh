@@ -10,6 +10,7 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import {useDatabase} from "@/stores/database";
 import {z} from "zod/v4";
 import { useRouter } from "expo-router";
+import {scheduleItemNotifications} from "@/lib/notifications";
 
 const quantityOptions = Array.from({length: 100}, (_, i) => ({
     label: (i + 1).toString(),
@@ -61,13 +62,15 @@ const AddItem = () => {
                 expirationDate,
             });
 
-            await addItem({...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
+            const id = await addItem({...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
 
             setName("");
             setQuantity({label: "1", value: "1"});
             setUnit({label: "pcs", value: "pcs"});
             setStorage({label: lang.header.storageSelector.fridge, value: "fridge"});
             setExpirationDate(new Date());
+
+            const notifIds = await scheduleItemNotifications(name, expirationDate, id.toString());
 
             router.replace("/");
         } catch (error) {

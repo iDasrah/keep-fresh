@@ -5,8 +5,14 @@ import {StatusBar} from "expo-status-bar";
 import {useEffect} from "react";
 import { useDatabase } from "@/stores/database";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {getAllScheduledNotificationsAsync, requestPermissionsAsync, setNotificationHandler} from "expo-notifications";
+import {handler} from "@/lib/notifications";
 
 const queryClient = new QueryClient()
+
+setNotificationHandler({
+    handleNotification: handler
+});
 
 export default function RootLayout() {
     const { init, getAllItems, isConnected, isConnecting } = useDatabase();
@@ -18,7 +24,12 @@ export default function RootLayout() {
                 .then(() => getAllItems().then((items) => console.log("Database initialized with", items.length, "items")))
                 .catch(console.error);
         }
-    }, []);
+        requestPermissionsAsync().then(({status}) => {
+            if (status !== 'granted') {
+                console.log('Notification permissions not granted!');
+            }
+        });
+    }, [getAllItems, init, isConnected, isConnecting]);
 
     return (
         <SafeAreaProvider>
