@@ -10,7 +10,7 @@ const fr = {
                 all: "Rechercher dans tous les frigos...",
                 fridge: "Rechercher dans le frigo...",
                 freezer: "Rechercher dans le congélateur...",
-                pantry: "Rechercher dans le garde-manger...",
+                pantry: "Rechercher dans les placards...",
             }
         },
         storageSelector: {
