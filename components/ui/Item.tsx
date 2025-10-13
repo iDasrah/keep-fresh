@@ -57,8 +57,6 @@ const Item = ({item}: ItemProps) => {
                     onPress: () => {
                         deleteItemMut.mutate(item.id);
                         addThrownAwayItems();
-                        updateAntiWasteScore();
-                        saveData();
                     }
                 },
                 {

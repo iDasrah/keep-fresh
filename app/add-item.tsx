@@ -68,8 +68,6 @@ const AddItem = () => {
             const id = await addItem({...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
             scheduleItemNotifications({id, ...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
             addTotalAddedItems();
-            updateAntiWasteScore();
-            saveData();
 
             setName("");
             setQuantity({label: "1", value: "1"});

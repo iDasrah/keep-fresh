@@ -17,7 +17,7 @@ interface StatsState {
     saveData: () => void;
 }
 
-export const useStats = create<StatsState>((set) => ({
+export const useStats = create<StatsState>((set, get) => ({
     userStats: {
         antiWasteScore: 100,
         totalAddedItems: 0,
@@ -27,24 +27,36 @@ export const useStats = create<StatsState>((set) => ({
         antiWasteScoreByWeek: [],
     },
 
-    addTotalAddedItems: () => set((state) => ({
-        userStats: {
-            ...state.userStats,
-            totalAddedItems: state.userStats.totalAddedItems + 1,
-        }
-    })),
-    addThrownAwayItems: () => set((state) => ({
-        userStats: {
-            ...state.userStats,
-            thrownAwayItems: state.userStats.thrownAwayItems + 1,
-        }
-    })),
-    addExpiredThisWeek: () => set((state) => ({
-        userStats: {
-            ...state.userStats,
-            expiredThisWeek: state.userStats.expiredThisWeek + 1,
-        }
-    })),
+    addTotalAddedItems: () => {
+        set((state) => ({
+            userStats: {
+                ...state.userStats,
+                totalAddedItems: state.userStats.totalAddedItems + 1,
+            }
+        }));
+        get().updateAntiWasteScore();
+        get().saveData();
+    },
+    addThrownAwayItems: () => {
+        set((state) => ({
+            userStats: {
+                ...state.userStats,
+                thrownAwayItems: state.userStats.thrownAwayItems + 1,
+            }
+        }));
+        get().updateAntiWasteScore();
+        get().saveData();
+    },
+    addExpiredThisWeek: () => {
+        set((state) => ({
+            userStats: {
+                ...state.userStats,
+                expiredThisWeek: state.userStats.expiredThisWeek + 1,
+            }
+        }));
+        get().updateAntiWasteScore();
+        get().saveData();
+    },
     updateAverageConsumptionTime: (newTime: number) => set((state) => ({})),
     updateAntiWasteScore: () => set((state) => {
         const {totalAddedItems, thrownAwayItems} = state.userStats;
@@ -62,12 +74,15 @@ export const useStats = create<StatsState>((set) => ({
             }
         };
     }),
-    addWeeklyAntiWasteScore: (score: number) => set((state) => ({
-        userStats: {
-            ...state.userStats,
-            antiWasteScoreByWeek: [...state.userStats.antiWasteScoreByWeek, score],
-        }
-    })),
+    addWeeklyAntiWasteScore: (score: number) => {
+        set((state) => ({
+            userStats: {
+                ...state.userStats,
+                antiWasteScoreByWeek: [...state.userStats.antiWasteScoreByWeek, score],
+            }
+        }));
+        get().saveData();
+    },
     resetStats: () => set(() => ({
         userStats: {
             antiWasteScore: 100,
