@@ -5,30 +5,43 @@ import {TabList, Tabs, TabSlot, TabTrigger} from "expo-router/ui";
 import {usePathname} from "expo-router";
 import {colors} from "@/constants/colors";
 import lang from "@/lib/lang";
+import {LinearGradient} from "expo-linear-gradient";
 
 const TabsLayout = () => {
     const pathName = usePathname();
 
     return <Tabs>
-        <TabSlot style={{backgroundColor: colors.bgDark}} />
+        <TabSlot style={{backgroundColor: colors.bgDark}}/>
         <TabList style={styles.tabBar}>
-            <TabTrigger name="index" href="/" style={[styles.tabBarItem, pathName === "/" ? styles.activeBarItem : {}, { gap: 4 }]}>
-                <MaterialCommunityIcons name="fridge-outline" size={32} color={pathName === "/" ? colors.bg : colors.black} />
+            <TabTrigger name="index" href="/">
                 {
-                    pathName === "/" && <Text style={styles.tabBarItemText}>{lang.tab.index}</Text>
+                    pathName === "/" ? (
+                        <LinearGradient colors={colors.blackGradient} style={[styles.activeBarItem, styles.tabBarItem, {gap: 4}]}>
+                            <MaterialCommunityIcons name="fridge-outline" size={32} color={colors.bg} />
+                            <Text style={styles.tabBarItemText}>{lang.tab.index}</Text>
+                        </LinearGradient>
+                    ) : <MaterialCommunityIcons name="fridge-outline" size={32} color={colors.black} style={styles.tabBarItem} />
                 }
             </TabTrigger>
-            <TabTrigger name="stats" href="/stats" style={[styles.tabBarItem, pathName === "/stats" ? styles.activeBarItem : {}]}>
-                <Ionicons name="bar-chart-outline" size={32} color={pathName === "/stats" ? colors.bg : colors.black} />
+            <TabTrigger name="stats" href="/stats">
                 {
-                    pathName === "/stats" && <Text style={styles.tabBarItemText}>{lang.tab.stats}</Text>
+                    pathName === "/stats" ? (
+                        <LinearGradient colors={colors.blackGradient} style={[styles.activeBarItem, styles.tabBarItem]}>
+                            <Ionicons name="bar-chart-outline" size={32} color={colors.bg}/>
+                            <Text style={styles.tabBarItemText}>{lang.tab.stats}</Text>
+                        </LinearGradient>
+                    ) : <Ionicons name="bar-chart-outline" size={32} color={colors.black} style={styles.tabBarItem} />
                 }
             </TabTrigger>
-            <TabTrigger name="settings" href="/settings" style={[styles.tabBarItem, pathName === "/settings" ? styles.activeBarItem : {}]}>
+            <TabTrigger name="settings" href="/settings">
                 {
-                    pathName === "/settings" && <Text style={styles.tabBarItemText}>{lang.tab.settings}</Text>
+                    pathName === "/settings" ? (
+                        <LinearGradient colors={colors.blackGradient} style={[styles.activeBarItem, styles.tabBarItem]}>
+                            <Text style={styles.tabBarItemText}>{lang.tab.settings}</Text>
+                            <Ionicons name="settings-outline" size={32} color={colors.bg}/>
+                        </LinearGradient>
+                    ) : <Ionicons name="settings-outline" size={32} color={colors.black} style={styles.tabBarItem} />
                 }
-                <Ionicons name="settings-outline" size={32} color={pathName === "/settings" ? colors.bg : colors.black} />
             </TabTrigger>
         </TabList>
     </Tabs>

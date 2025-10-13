@@ -16,18 +16,16 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     tabBarItem: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 20,
         gap: 8,
+        padding: 20
     },
     tabBarItemText: {
         fontSize: 20,
         color: colors.bg,
     },
     activeBarItem: {
-        backgroundColor: colors.black,
-        borderRadius: 64
+        borderRadius: 64,
+        flexDirection: "row",
+        alignItems: "center",
     },
 });

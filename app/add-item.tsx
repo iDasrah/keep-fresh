@@ -117,7 +117,7 @@ const AddItem = () => {
                         <Text style={styles.label}>{lang.addItem.form.storage.label}</Text>
                         <SelectorInput items={storageOptions} selectedItem={storage} onSelectItem={setStorage} />
                     </View>
-                    <LinearGradient style={styles.addBtn} colors={["#404040", colors.black]}>
+                    <LinearGradient style={styles.addBtn} colors={colors.blackGradient}>
                         <Pressable onPress={handleAddItem}>
                             <Text style={styles.addBtnText}>{lang.addItem.form.addButton}</Text>
                         </Pressable>

@@ -10,6 +10,7 @@ import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useDatabase} from "@/stores/database";
 import {useNotifications} from "@/stores/notifications";
+import {LinearGradient} from "expo-linear-gradient";
 
 interface ItemProps {
     item: ItemType
@@ -68,14 +69,16 @@ const Item = ({item}: ItemProps) => {
     return (
         <GestureDetector gesture={longPress}>
             <View style={styles.item}>
-                <View style={styles.itemImg}></View>
-                <View style={styles.itemInfo}>
-                    <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={styles.itemQuantity}>{item.quantity} {item.unit}</Text>
-                </View>
-                <Text style={[styles.itemExpiration, {color: statusColors[itemStatus]}]}>
-                    {lang.product.expiringIn} {formatDistanceToNow(new Date(item.expirationDate), {locale: fr})}
-                </Text>
+                <LinearGradient colors={colors.cardGradient} style={{ borderRadius: 12, padding: 14 }}>
+                    <View style={styles.itemImg}></View>
+                    <View style={styles.itemInfo}>
+                        <Text style={styles.itemName}>{item.name}</Text>
+                        <Text style={styles.itemQuantity}>{item.quantity} {item.unit}</Text>
+                    </View>
+                    <Text style={[styles.itemExpiration, {color: statusColors[itemStatus]}]}>
+                        {lang.product.expiringIn} {formatDistanceToNow(new Date(item.expirationDate), {locale: fr})}
+                    </Text>
+                </LinearGradient>
             </View>
         </GestureDetector>
     )
