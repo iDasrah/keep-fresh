@@ -73,3 +73,39 @@ export async function addItem(item: Omit<Item, 'id'>): Promise<void> {
     await prep.executeAsync([item.name, item.quantity, item.unit, item.expirationDate, item.storage]);
     await prep.finalizeAsync();
 }
+
+async function seedDatabase() {
+    if (!db) {
+        throw new Error("Database not initialized. Call initDatabase() first.");
+    }
+
+    const items: Omit<Item, 'id'>[] = [
+        {
+            name: "Lait",
+            quantity: 2,
+            unit: "bouteille",
+            expirationDate: "2025-11-10",
+            storage: "fridge"
+        },
+        {
+            name: "Poulet",
+            quantity: 1,
+            unit: "kg",
+            expirationDate: "2025-10-23",
+            storage: "freezer"
+        },
+        {
+            name: "Pâtes",
+            quantity: 3,
+            unit: "paquet",
+            expirationDate: "2026-03-02",
+            storage: "pantry"
+        }
+    ];
+
+    for (const item of items) {
+        await addItem(item);
+    }
+
+    console.log("Database seeded with initial data.");
+}

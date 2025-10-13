@@ -4,6 +4,9 @@ import {colors} from "@/constants/colors";
 import {StatusBar} from "expo-status-bar";
 import {useEffect} from "react";
 import { useDatabase } from "@/stores/database";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+
+const queryClient = new QueryClient()
 
 export default function RootLayout() {
     const { init, getAllItems, isConnected, isConnecting } = useDatabase();
@@ -21,9 +24,11 @@ export default function RootLayout() {
         <SafeAreaProvider>
             <SafeAreaView style={{flex: 1, backgroundColor: colors.black}} edges={['top', 'right', 'left']}>
                 <StatusBar style="light" />
-                <Stack screenOptions={{headerShown: false}}>
-                    <Stack.Screen name="(tabs)" />
-                </Stack>
+                <QueryClientProvider client={queryClient}>
+                    <Stack screenOptions={{headerShown: false}}>
+                        <Stack.Screen name="(tabs)" />
+                    </Stack>
+                </QueryClientProvider>
             </SafeAreaView>
         </SafeAreaProvider>
     );

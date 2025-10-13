@@ -19,6 +19,9 @@ const fr = {
             freezer: "Congélateur",
             pantry: "Placards",
         }
+    },
+    product: {
+        expiringIn: "Expire dans",
     }
 }
 
