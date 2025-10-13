@@ -1,5 +1,4 @@
 import {
-    cancelScheduledNotificationAsync,
     Notification,
     NotificationBehavior,
     SchedulableTriggerInputTypes,
@@ -7,6 +6,7 @@ import {
 } from "expo-notifications";
 import lang from "./lang";
 import {subDays} from "date-fns";
+import {useSettings} from "@/stores/settings";
 
 export async function handler(notification: Notification): Promise<NotificationBehavior> {
     return {
@@ -18,9 +18,18 @@ export async function handler(notification: Notification): Promise<NotificationB
 }
 
 export async function scheduleItemNotifications(itemName: string, expirationDate: Date, id: string) {
-    const expirationNotificationId = await scheduleItemExpirationNotification(itemName, expirationDate, id);
-    const expirationSoonNotificationId = await scheduleItemExpirationSoonNotification(itemName, expirationDate, id);
-    return [ expirationNotificationId, expirationSoonNotificationId ];
+    const settings = useSettings.getState().settings;
+    let ids = [];
+
+    if (settings.expiredNotification) {
+        ids.push(await scheduleItemExpirationNotification(itemName, expirationDate, id));
+    }
+
+    if (settings.soonExpirationNotification) {
+        ids.push(await scheduleItemExpirationSoonNotification(itemName, expirationDate, id));
+    }
+
+    return ids;
 }
 
 export async function scheduleItemExpirationNotification(itemName: string, expirationDate: Date, id: string) {
@@ -33,6 +42,8 @@ export async function scheduleItemExpirationNotification(itemName: string, expir
         trigger: {
             date: expirationDate,
             type: SchedulableTriggerInputTypes.DATE
+            // seconds: 10,
+            // type: SchedulableTriggerInputTypes.TIME_INTERVAL
         },
     });
 }
@@ -51,6 +62,8 @@ export async function scheduleItemExpirationSoonNotification(itemName: string, e
         trigger: {
             date: subDays(new Date(expirationDate), 3),
             type: SchedulableTriggerInputTypes.DATE
+            // seconds: 5,
+            // type: SchedulableTriggerInputTypes.TIME_INTERVAL
         },
     });
 }

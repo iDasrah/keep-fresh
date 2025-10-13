@@ -9,11 +9,31 @@ import {useDatabase} from "@/stores/database";
 import {useStats} from "@/stores/stats";
 import {useSettings} from "@/stores/settings";
 import {requestReview} from "expo-store-review";
+import {useNotifications} from "@/stores/notifications";
 
 const Settings = () => {
     const { clear } = useDatabase();
     const { resetStats } = useStats();
+    const { clearAllExpiredNotifications, clearAllSoonExpiredNotifications, scheduleAllItemsExpiredNotifications, scheduleAllItemsSoonExpiredNotifications } = useNotifications();
     const { settings, resetSettings, setSettings } = useSettings();
+
+    const onExpiredNotificationChange = async (value: boolean) => {
+        setSettings({ expiredNotification: value });
+        if (!value) {
+            clearAllExpiredNotifications();
+        } else {
+            await scheduleAllItemsExpiredNotifications();
+        }
+    }
+
+    const onSoonExpirationNotificationChange = async (value: boolean) => {
+        setSettings({ soonExpirationNotification: value });
+        if (!value) {
+            clearAllSoonExpiredNotifications();
+        } else {
+            await scheduleAllItemsSoonExpiredNotifications();
+        }
+    }
 
     const onDeleteData = async () => {
         Alert.alert(lang.alert.deleteData.title, lang.alert.deleteData.message, [
@@ -49,7 +69,7 @@ const Settings = () => {
                             </View>
                             <Switch
                                 value={settings.expiredNotification}
-                                onValueChange={(value) => setSettings({...settings, expiredNotification: value})}
+                                onValueChange={onExpiredNotificationChange}
                             />
                         </View>
                         <View style={styles.notificationItem}>
@@ -59,7 +79,7 @@ const Settings = () => {
                             </View>
                             <Switch
                                 value={settings.soonExpirationNotification}
-                                onValueChange={(value) => setSettings({...settings, soonExpirationNotification: value})}
+                                onValueChange={onSoonExpirationNotificationChange}
                             />
                         </View>
                     </LinearGradient>
