@@ -1,5 +1,5 @@
 import {View, Text, Pressable} from 'react-native'
-import {useState} from 'react'
+import {useState, useMemo} from 'react'
 import Header from "@/components/ui/Header";
 import FormInput from "@/components/ui/FormInput";
 import FormLabel from "@/components/ui/FormLabel";
@@ -15,22 +15,9 @@ import { useRouter } from "expo-router";
 import {useNotifications} from "@/stores/notifications";
 import {useStats} from "@/stores/stats";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
+import {units, getQuantityOptionsForUnit} from "@/lib/units";
 
-const quantityOptions = Array.from({length: 100}, (_, i) => ({
-    label: (i + 1).toString(),
-    value: (i + 1).toString()
-}));
 
-const unitOptions = [
-    {label: "pcs", value: "pcs"},
-    {label: "kg", value: "kg"},
-    {label: "g", value: "g"},
-    {label: "L", value: "L"},
-    {label: "ml", value: "ml"},
-    {label: "box", value: "box"},
-    {label: "bottle", value: "bottle"},
-    {label: "bag", value: "bag"},
-];
 
 const storageOptions = [
     {label: lang.header.storageSelector.fridge, value: "fridge"},
@@ -57,6 +44,16 @@ const AddItem = () => {
 
     const { addItem } = useDatabase();
     const router = useRouter();
+
+    const quantityOptions = useMemo(() => {
+        return getQuantityOptionsForUnit(unit.value);
+    }, [unit.value]);
+
+    const handleUnitChange = (newUnit: {label: string, value: string}) => {
+        setUnit(newUnit);
+        const newOptions = getQuantityOptionsForUnit(newUnit.value);
+        setQuantity(newOptions[0]);
+    };
 
     const scale = useSharedValue(1);
     const animatedStyle = useAnimatedStyle(() => ({
@@ -124,7 +121,7 @@ const AddItem = () => {
                         </View>
                         <View style={{flex: 1}}>
                             <FormLabel>{lang.addItem.form.unit.label}</FormLabel>
-                            <SelectorInput items={unitOptions} selectedItem={unit} onSelectItem={setUnit} />
+                            <SelectorInput items={units} selectedItem={unit} onSelectItem={handleUnitChange} />
                         </View>
                     </View>
                     <View style={styles.inputField}>
