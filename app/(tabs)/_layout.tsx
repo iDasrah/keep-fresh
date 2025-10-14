@@ -1,5 +1,4 @@
-import {Text, LayoutChangeEvent} from "react-native";
-import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
+import {Text, LayoutChangeEvent, View} from "react-native";
 import {styles} from "@/assets/style/tab.styles";
 import {TabList, Tabs, TabSlot, TabTrigger} from "expo-router/ui";
 import {usePathname} from "expo-router";
@@ -8,6 +7,7 @@ import lang from "@/lib/lang";
 import {LinearGradient} from "expo-linear-gradient";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {useEffect, useRef} from "react";
+import {SolarIcon} from "react-native-solar-icons";
 
 const TabsLayout = () => {
     const pathName = usePathname();
@@ -51,12 +51,14 @@ const TabsLayout = () => {
                 style={styles.tabTrigger}
                 onLayout={(e) => handleLayout('/', e)}
             >
-                <MaterialCommunityIcons
-                    name="fridge-outline"
-                    size={32}
-                    color={pathName === '/' ? colors.bg : colors.black}
-                    style={[styles.tabBarItem, {paddingHorizontal: 2}]}
-                />
+                <View style={styles.tabBarItem}>
+                    <SolarIcon
+                        name="Fridge"
+                        size={32}
+                        color={pathName === '/' ? colors.bg : colors.black}
+                        type="outline"
+                    />
+                </View>
                 {pathName === "/" && <Text style={styles.tabBarItemText}>{lang.tab.index}</Text>}
             </TabTrigger>
 
@@ -66,12 +68,14 @@ const TabsLayout = () => {
                 style={styles.tabTrigger}
                 onLayout={(e) => handleLayout('/stats', e)}
             >
-                <Ionicons
-                    name="bar-chart-outline"
-                    size={32}
-                    color={pathName === '/stats' ? colors.bg : colors.black}
-                    style={styles.tabBarItem}
-                />
+                <View style={styles.tabBarItem}>
+                    <SolarIcon
+                        name="ChartSquare"
+                        size={32}
+                        color={pathName === '/stats' ? colors.bg : colors.black}
+                        type="outline"
+                    />
+                </View>
                 {pathName === "/stats" && <Text style={styles.tabBarItemText}>{lang.tab.stats}</Text>}
             </TabTrigger>
 
@@ -82,12 +86,14 @@ const TabsLayout = () => {
                 onLayout={(e) => handleLayout('/settings', e)}
             >
                 {pathName === "/settings" && <Text style={styles.tabBarItemText}>{lang.tab.settings}</Text>}
-                <Ionicons
-                    name="settings-outline"
-                    size={32}
-                    color={pathName === '/settings' ? colors.bg : colors.black}
-                    style={styles.tabBarItem}
-                />
+                <View style={styles.tabBarItem}>
+                    <SolarIcon
+                        name="Settings"
+                        size={32}
+                        color={pathName === '/settings' ? colors.bg : colors.black}
+                        type="outline"
+                    />
+                </View>
             </TabTrigger>
         </TabList>
     </Tabs>

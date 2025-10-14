@@ -14,14 +14,21 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        overflow: "hidden"
+        shadowColor: colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 8,
     },
     tabBarItem: {
         paddingVertical: 16,
-        paddingHorizontal: 8,
+        paddingHorizontal: 6,
     },
     tabBarItemText: {
-        fontSize: 20,
+        fontSize: 16,
         color: colors.bg,
     },
     activeBarItem: {
@@ -42,7 +49,6 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 16,
         zIndex: 1,
         flexDirection: "row",
-        justifyContent: "center",
         alignItems: "center",
     }
 });
