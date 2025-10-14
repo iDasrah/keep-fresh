@@ -11,12 +11,14 @@ import {useSettings} from "@/stores/settings";
 import {requestReview} from "expo-store-review";
 import {useNotifications} from "@/stores/notifications";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
+import {useRouter} from "expo-router";
 
 const Settings = () => {
     const { clear } = useDatabase();
     const { resetStats } = useStats();
-    const { clearAllExpiredNotifications, clearAllSoonExpiredNotifications, scheduleAllItemsExpiredNotifications, scheduleAllItemsSoonExpiredNotifications } = useNotifications();
+    const { clearAllExpiredNotifications, clearAllSoonExpiredNotifications, scheduleAllItemsExpiredNotifications, scheduleAllItemsSoonExpiredNotifications, clearAllNotifications } = useNotifications();
     const { settings, resetSettings, setSettings } = useSettings();
+    const router = useRouter();
 
     const onExpiredNotificationChange = async (value: boolean) => {
         setSettings({ expiredNotification: value });
@@ -49,8 +51,10 @@ const Settings = () => {
                     await Promise.all([
                         clear(),
                         resetStats(),
-                        resetSettings()
+                        resetSettings(),
+                        clearAllNotifications(),
                     ]);
+                    router.push('/');
                 }
             }
         ]);

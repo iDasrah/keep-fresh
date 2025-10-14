@@ -17,7 +17,7 @@ interface NotificationsState {
     scheduleAllItemsSoonExpiredNotifications: () => Promise<void>;
     cancelItemNotifications: (itemId: number) => void;
 
-    clearAllNotifications: () => void;
+    clearAllNotifications: () => Promise<void>;
     clearAllExpiredNotifications: () => void;
     clearAllSoonExpiredNotifications: () => void;
 }
@@ -64,6 +64,7 @@ export const useNotifications = create<NotificationsState>((set, get) => ({
             notif.ids.forEach(async (id) => await cancelScheduledNotificationAsync(id));
         });
         set({notifications: []});
+        return Promise.resolve();
     },
     clearAllExpiredNotifications: () => {
         get().notifications.forEach(async (notif) => {
