@@ -14,10 +14,11 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        overflow: "hidden"
     },
     tabBarItem: {
-        gap: 8,
-        padding: 20
+        paddingVertical: 16,
+        paddingHorizontal: 8,
     },
     tabBarItemText: {
         fontSize: 20,
@@ -25,7 +26,23 @@ export const styles = StyleSheet.create({
     },
     activeBarItem: {
         borderRadius: 64,
+        height: "100%",
         flexDirection: "row",
         alignItems: "center",
     },
+    activeBackground: {
+        position: "absolute",
+        left: 0,
+        top: 0,
+        bottom: 0,
+        width: 120,
+        zIndex: 0,
+    },
+    tabTrigger: {
+        paddingHorizontal: 16,
+        zIndex: 1,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    }
 });
