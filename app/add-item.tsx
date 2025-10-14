@@ -14,6 +14,7 @@ import {z} from "zod/v4";
 import { useRouter } from "expo-router";
 import {useNotifications} from "@/stores/notifications";
 import {useStats} from "@/stores/stats";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 
 const quantityOptions = Array.from({length: 100}, (_, i) => ({
     label: (i + 1).toString(),
@@ -56,6 +57,19 @@ const AddItem = () => {
 
     const { addItem } = useDatabase();
     const router = useRouter();
+
+    const scale = useSharedValue(1);
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }]
+    }));
+
+    const handlePressIn = () => {
+        scale.value = withSpring(0.95);
+    };
+
+    const handlePressOut = () => {
+        scale.value = withSpring(1);
+    };
 
     const handleAddItem = async () => {
         try {
@@ -121,11 +135,13 @@ const AddItem = () => {
                         <FormLabel>{lang.addItem.form.storage.label}</FormLabel>
                         <SelectorInput items={storageOptions} selectedItem={storage} onSelectItem={setStorage} />
                     </View>
-                    <LinearGradient style={styles.addBtn} colors={colors.blackGradient}>
-                        <Pressable onPress={handleAddItem}>
-                            <Text style={styles.addBtnText}>{lang.addItem.form.addButton}</Text>
-                        </Pressable>
-                    </LinearGradient>
+                    <Animated.View style={animatedStyle}>
+                        <LinearGradient style={styles.addBtn} colors={colors.blackGradient}>
+                            <Pressable onPress={handleAddItem} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                                <Text style={styles.addBtnText}>{lang.addItem.form.addButton}</Text>
+                            </Pressable>
+                        </LinearGradient>
+                    </Animated.View>
                 </View>
             </View>
         </View>

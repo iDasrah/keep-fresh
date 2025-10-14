@@ -1,4 +1,4 @@
-import {View, Text, Alert} from 'react-native'
+import {Alert, Text, View} from 'react-native'
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 import {Item as ItemType} from "@/types";
 import {styles} from "@/assets/style/item.styles";
@@ -13,6 +13,7 @@ import {useDatabase} from "@/stores/database";
 import {useNotifications} from "@/stores/notifications";
 import Card from "@/components/ui/Card";
 import {useStats} from "@/stores/stats";
+import {selectionAsync} from "expo-haptics";
 
 interface ItemProps {
     item: ItemType
@@ -52,7 +53,7 @@ const Item = ({item}: ItemProps) => {
             opacity.value = withTiming(.8, { duration: 200 });
             scale.value = withSpring(.95);
         })
-        .onStart(() => {
+        .onStart(async () => {
             Alert.alert(lang.alert.deleteItem, lang.alert.deleteItemMessage, [
                 {
                     text: lang.alert.cancel,
@@ -73,6 +74,7 @@ const Item = ({item}: ItemProps) => {
                     }
                 }
             ]);
+            await selectionAsync();
         })
         .onFinalize(() => {
             opacity.value = withTiming(1, { duration: 200 });
