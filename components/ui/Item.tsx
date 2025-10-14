@@ -1,4 +1,5 @@
 import {View, Text, Alert} from 'react-native'
+import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 import {Item as ItemType} from "@/types";
 import {styles} from "@/assets/style/item.styles";
 import {formatDistanceToNow} from "date-fns";
@@ -28,7 +29,9 @@ const Item = ({item}: ItemProps) => {
     const { deleteItem } = useDatabase();
     const {cancelItemNotifications} = useNotifications();
     const queryClient = useQueryClient();
-    const { addThrownAwayItems, updateAntiWasteScore, saveData } = useStats();
+    const { addThrownAwayItems } = useStats();
+    const opacity = useSharedValue(1);
+    const scale = useSharedValue(1);
 
     const deleteItemMut = useMutation({
         mutationKey: ['deleteItem', item.id],
@@ -45,6 +48,10 @@ const Item = ({item}: ItemProps) => {
 
     const longPress = Gesture.LongPress()
         .minDuration(1000)
+        .onBegin(() => {
+            opacity.value = withTiming(.8, { duration: 200 });
+            scale.value = withSpring(.95);
+        })
         .onStart(() => {
             Alert.alert(lang.alert.deleteItem, lang.alert.deleteItemMessage, [
                 {
@@ -67,11 +74,20 @@ const Item = ({item}: ItemProps) => {
                 }
             ]);
         })
+        .onFinalize(() => {
+            opacity.value = withTiming(1, { duration: 200 });
+            scale.value = withSpring(1);
+        })
         .runOnJS(true);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        opacity: opacity.value,
+        transform: [{ scale: scale.value }]
+    }));
 
     return (
         <GestureDetector gesture={longPress}>
-            <View style={styles.item}>
+            <Animated.View style={[styles.item, animatedStyle]}>
                 <LinearGradient colors={colors.cardGradient} style={{ borderRadius: 12, padding: 14 }}>
                     <View style={styles.itemImg}></View>
                     <View style={styles.itemInfo}>
@@ -82,7 +98,7 @@ const Item = ({item}: ItemProps) => {
                         {lang.product.expiringIn} {formatDistanceToNow(new Date(item.expirationDate), {locale: fr})}
                     </Text>
                 </LinearGradient>
-            </View>
+            </Animated.View>
         </GestureDetector>
     )
 }
