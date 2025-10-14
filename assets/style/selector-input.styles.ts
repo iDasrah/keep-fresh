@@ -1,17 +1,10 @@
 import {StyleSheet} from "react-native";
 import {colors} from "@/constants/colors";
+import {inputBase, cardShadow} from "@/assets/style/shared.styles";
 
 export const styles = StyleSheet.create({
     selectorInput: {
-        backgroundColor: colors.bg,
-        borderRadius: 12,
-        padding: 16,
-        borderColor: colors.cardStroke,
-        shadowColor: colors.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
+        ...inputBase,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -24,12 +17,9 @@ export const styles = StyleSheet.create({
         borderRadius: 12,
         marginTop: 8,
         borderColor: colors.cardStroke,
-        shadowColor: colors.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
+        borderWidth: 1,
         maxHeight: 200,
+        ...cardShadow,
     },
     dropdownItem: {
         padding: 16,

@@ -1,15 +1,20 @@
-import {View, Text, Pressable, ScrollView} from 'react-native'
+import {View, Text, Pressable, ScrollView, StyleProp, ViewStyle} from 'react-native'
 import {useState} from 'react'
 import {styles} from "@/assets/style/selector-input.styles";
 import {Ionicons} from "@expo/vector-icons";
 import {colors} from "@/constants/colors";
 
+export interface SelectorItem {
+    label: string;
+    value: string;
+}
+
 interface SelectorInputProps {
-    items: {label: string, value: string}[];
-    selectedItem: {label: string, value: string};
-    onSelectItem: (item: any) => void;
+    items: SelectorItem[];
+    selectedItem: SelectorItem;
+    onSelectItem: (item: SelectorItem) => void;
     placeholder?: string;
-    style?: object;
+    style?: StyleProp<ViewStyle>;
 }
 
 const SelectorInput = ({items, selectedItem, onSelectItem, placeholder, style}: SelectorInputProps) => {
@@ -19,7 +24,7 @@ const SelectorInput = ({items, selectedItem, onSelectItem, placeholder, style}: 
         setIsOpen(!isOpen);
     }
 
-    const handleSelectItem = (item: {label: string, value: string}) => {
+    const handleSelectItem = (item: SelectorItem) => {
         onSelectItem(item);
         setIsOpen(false);
     }

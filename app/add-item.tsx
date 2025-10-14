@@ -1,6 +1,8 @@
-import {View, Text, TextInput, Pressable} from 'react-native'
+import {View, Text, Pressable} from 'react-native'
 import {useState} from 'react'
 import Header from "@/components/ui/Header";
+import FormInput from "@/components/ui/FormInput";
+import FormLabel from "@/components/ui/FormLabel";
 import {styles} from "@/assets/style/add-item.styles";
 import lang from "@/lib/lang";
 import {colors} from "@/constants/colors";
@@ -94,31 +96,29 @@ const AddItem = () => {
                 <Text style={styles.subtitle}>{lang.addItem.subtitle}</Text>
                 <View style={{marginTop: 30}}>
                     <View style={styles.inputField}>
-                        <Text style={styles.label}>{lang.addItem.form.name.label}</Text>
-                        <TextInput
-                            style={styles.textInput}
+                        <FormLabel>{lang.addItem.form.name.label}</FormLabel>
+                        <FormInput
                             placeholder={lang.addItem.form.name.placeholder}
-                            placeholderTextColor={colors.textMuted}
                             value={name}
                             onChangeText={setName}
                         />
                     </View>
                     <View style={[styles.inputField, {flexDirection: "row", gap: 12}]}>
                         <View style={{flex: 1}}>
-                            <Text style={styles.label}>{lang.addItem.form.quantity.label}</Text>
+                            <FormLabel>{lang.addItem.form.quantity.label}</FormLabel>
                             <SelectorInput items={quantityOptions} selectedItem={quantity} onSelectItem={setQuantity} />
                         </View>
                         <View style={{flex: 1}}>
-                            <Text style={styles.label}>{lang.addItem.form.unit.label}</Text>
+                            <FormLabel>{lang.addItem.form.unit.label}</FormLabel>
                             <SelectorInput items={unitOptions} selectedItem={unit} onSelectItem={setUnit} />
                         </View>
                     </View>
                     <View style={styles.inputField}>
-                        <Text style={styles.label}>{lang.addItem.form.expirationDate.label}</Text>
+                        <FormLabel>{lang.addItem.form.expirationDate.label}</FormLabel>
                         <RNDateTimePicker value={expirationDate} onChange={(_, date) => setExpirationDate(date!)} />
                     </View>
                     <View style={styles.inputField}>
-                        <Text style={styles.label}>{lang.addItem.form.storage.label}</Text>
+                        <FormLabel>{lang.addItem.form.storage.label}</FormLabel>
                         <SelectorInput items={storageOptions} selectedItem={storage} onSelectItem={setStorage} />
                     </View>
                     <LinearGradient style={styles.addBtn} colors={colors.blackGradient}>

@@ -11,7 +11,7 @@ import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useDatabase} from "@/stores/database";
 import {useNotifications} from "@/stores/notifications";
-import {LinearGradient} from "expo-linear-gradient";
+import Card from "@/components/ui/Card";
 import {useStats} from "@/stores/stats";
 
 interface ItemProps {
@@ -87,8 +87,8 @@ const Item = ({item}: ItemProps) => {
 
     return (
         <GestureDetector gesture={longPress}>
-            <Animated.View style={[styles.item, animatedStyle]}>
-                <LinearGradient colors={colors.cardGradient} style={{ borderRadius: 12, padding: 14 }}>
+            <Animated.View style={animatedStyle}>
+                <Card style={styles.item} contentStyle={styles.itemContent}>
                     <View style={styles.itemImg}></View>
                     <View style={styles.itemInfo}>
                         <Text style={styles.itemName}>{item.name}</Text>
@@ -97,7 +97,7 @@ const Item = ({item}: ItemProps) => {
                     <Text style={[styles.itemExpiration, {color: statusColors[itemStatus]}]}>
                         {lang.product.expiringIn} {formatDistanceToNow(new Date(item.expirationDate), {locale: fr})}
                     </Text>
-                </LinearGradient>
+                </Card>
             </Animated.View>
         </GestureDetector>
     )

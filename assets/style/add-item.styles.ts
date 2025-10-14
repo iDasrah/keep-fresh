@@ -12,26 +12,8 @@ export const styles = StyleSheet.create({
     },
     subtitle: {
         fontSize: 20,
-        fontWeight: "medium",
+        fontWeight: "500",
         color: colors.textMuted
-    },
-    label: {
-        fontSize: 20,
-        fontWeight: "medium",
-        marginBottom: 6,
-        marginLeft: 4
-    },
-    textInput: {
-        backgroundColor: colors.bg,
-        borderRadius: 12,
-        padding: 16,
-        fontSize: 18,
-        borderColor: colors.cardStroke,
-        shadowColor: colors.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
     },
     inputField: {
         marginBottom: 20

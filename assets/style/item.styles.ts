@@ -3,18 +3,10 @@ import {colors} from "@/constants/colors";
 
 export const styles = StyleSheet.create({
     item: {
-        borderRadius: 12,
         width: 190,
-        borderColor: colors.cardStroke,
-        borderWidth: 1,
-        shadowColor: colors.black,
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
+    },
+    itemContent: {
+        padding: 14,
     },
     itemImg: {
         width: 160,
