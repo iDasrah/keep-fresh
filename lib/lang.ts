@@ -136,6 +136,10 @@ const fr = {
         deleteData: {
             title: "Supprimer mes données",
         }
+    },
+    noItems: {
+        title: "Vous n'avez ajouté aucun article !",
+        button: "Ajouter un article",
     }
 }
 

@@ -1,10 +1,15 @@
-import {View, ActivityIndicator} from 'react-native'
+import {View, ActivityIndicator, Text, Pressable} from 'react-native'
 import React from 'react'
 import {useDatabase} from "@/stores/database";
 import {useQuery} from "@tanstack/react-query";
 import Item from "@/components/ui/Item";
 import {Item as ItemType} from "@/types";
 import {styles} from "@/assets/style/items-list.styles";
+import lang from "@/lib/lang";
+import {useRouter} from "expo-router";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
+import {LinearGradient} from "expo-linear-gradient";
+import {colors} from "@/constants/colors";
 
 interface ItemsListProps {
     storage?: "fridge" | "freezer" | "pantry";
@@ -13,6 +18,11 @@ interface ItemsListProps {
 
 const ItemsList = ({storage, searchText}: ItemsListProps) => {
     const { searchItems, getAllItemsByStorage, getAllItems, isConnected } = useDatabase();
+    const router = useRouter();
+    const scale = useSharedValue(1);
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: scale.value }]
+    }));
 
     const { data: items, isLoading } = useQuery({
         queryKey: ['items', storage, searchText],
@@ -27,6 +37,29 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
 
     if (isLoading) {
         return <ActivityIndicator />
+    }
+
+    if (!items || items.length === 0) {
+        const handlePressIn = () => {
+            scale.value = withSpring(0.95);
+        }
+
+        const handlePressOut = () => {
+            scale.value = withSpring(1);
+        }
+
+        return (
+            <View style={styles.noItemsContainer}>
+                <Text style={styles.noItemsText}>{lang.noItems.title}</Text>
+                <Animated.View style={animatedStyle}>
+                    <Pressable onPress={() => router.push('/add-item')} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                        <LinearGradient colors={colors.blackGradient} style={styles.addButton}>
+                            <Text style={styles.addButtonText}>{lang.noItems.button}</Text>
+                        </LinearGradient>
+                    </Pressable>
+                </Animated.View>
+            </View>
+        )
     }
 
     return (
