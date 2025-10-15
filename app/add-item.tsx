@@ -1,4 +1,4 @@
-import {View, Text, Pressable} from 'react-native'
+import {View, Text} from 'react-native'
 import {useState, useMemo} from 'react'
 import Header from "@/components/ui/Header";
 import FormInput from "@/components/ui/FormInput";
@@ -14,10 +14,10 @@ import {z} from "zod/v4";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {useNotifications} from "@/stores/notifications";
 import {useStats} from "@/stores/stats";
-import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {units, getQuantityOptionsForUnit} from "@/lib/units";
 import {getRandomPlaceholder} from "@/lib/utils";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
+import {addDays} from "date-fns";
 
 
 
@@ -28,11 +28,11 @@ const storageOptions = [
 ];
 
 const itemSchema = z.object({
-    name: z.string().min(1, {message: "Name is required"}),
-    quantity: z.number().min(1, {message: "Quantity must be at least 1"}),
-    unit: z.string().min(1, {message: "Unit is required"}),
+    name: z.string().min(1, {error: lang.errors.addItem.requiredName}),
+    quantity: z.number().min(1),
+    unit: z.string().min(1),
     storage: z.enum(["fridge", "freezer", "pantry"]),
-    expirationDate: z.date().refine(date => date > new Date(), {message: "Expiration date must be in the future"}),
+    expirationDate: z.date().refine(date => date > new Date()),
 });
 
 const storageParamSchema = z.enum(["fridge", "freezer", "pantry"]);
@@ -43,7 +43,7 @@ const AddItem = () => {
     const [quantity, setQuantity] = useState<{label: string, value: string}>({label: "1", value: "1"});
     const [unit, setUnit] = useState<{label: string, value: string}>({label: "pcs", value: "pcs"});
     const [storage, setStorage] = useState<{label: string, value: string}>(storageParam && storageParamSchema.safeParse(storageParam).success ? {label: lang.header.storageSelector[storageParam as "fridge" | "freezer" | "pantry"], value: storageParam as string} : {label: lang.header.storageSelector.fridge, value: "fridge"});
-    const [expirationDate, setExpirationDate] = useState<Date>(new Date());
+    const [expirationDate, setExpirationDate] = useState<Date>(addDays(new Date(), 1));
     const { scheduleItemNotifications } = useNotifications();
     const { addTotalAddedItems } = useStats();
 
@@ -60,48 +60,51 @@ const AddItem = () => {
         setQuantity(newOptions[0]);
     };
 
-    const scale = useSharedValue(1);
-    const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }]
-    }));
-
-    const handlePressIn = () => {
-        scale.value = withSpring(0.95);
-    };
-
-    const handlePressOut = () => {
-        scale.value = withSpring(1);
-    };
-
     const handleAddItem = async () => {
-        try {
-            const parsedItem = itemSchema.parse({
-                name,
-                quantity: Number(quantity.value),
-                unit: unit.value,
-                storage: storage.value as "fridge" | "freezer" | "pantry",
-                expirationDate,
-            });
 
-            const id = await addItem({...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
+        const parsedItem = itemSchema.safeParse({
+            name,
+            quantity: Number(quantity.value),
+            unit: unit.value,
+            storage: storage.value as "fridge" | "freezer" | "pantry",
+            expirationDate,
+        });
 
-            await scheduleItemNotifications({id, ...parsedItem, expirationDate: parsedItem.expirationDate.toISOString()});
-            addTotalAddedItems();
-
-            setName("");
-            setQuantity({label: "1", value: "1"});
-            setUnit({label: "pcs", value: "pcs"});
-            setStorage({label: lang.header.storageSelector.fridge, value: "fridge"});
-            setExpirationDate(new Date());
-
-            router.replace("/");
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                console.log("Validation errors:", error);
+        if (!parsedItem.success) {
+            const firstError = Object.values(parsedItem.error.flatten().fieldErrors)[0];
+            if (firstError && firstError[0]) {
+                alert(firstError[0]);
             } else {
-                console.error("Unexpected error:", error);
+                alert(lang.errors.generic);
             }
+            return;
         }
+
+        const newItemId = await addItem({
+            name: parsedItem.data.name,
+            quantity: parsedItem.data.quantity,
+            unit: parsedItem.data.unit,
+            storage: parsedItem.data.storage,
+            expirationDate: parsedItem.data.expirationDate.toISOString(),
+        });
+
+        await scheduleItemNotifications({
+            id: newItemId,
+            name: parsedItem.data.name,
+            quantity: parsedItem.data.quantity,
+            unit: parsedItem.data.unit,
+            storage: parsedItem.data.storage,
+            expirationDate: parsedItem.data.expirationDate.toISOString(),
+        });
+        addTotalAddedItems();
+
+        setName("");
+        setQuantity({label: "1", value: "1"});
+        setUnit({label: "pcs", value: "pcs"});
+        setStorage({label: lang.header.storageSelector.fridge, value: "fridge"});
+        setExpirationDate(new Date());
+
+        router.replace("/");
     }
 
     return (
@@ -131,7 +134,11 @@ const AddItem = () => {
                     </View>
                     <View style={styles.inputField}>
                         <FormLabel>{lang.addItem.form.expirationDate.label}</FormLabel>
-                        <RNDateTimePicker value={expirationDate} onChange={(_, date) => setExpirationDate(date!)} />
+                        <RNDateTimePicker
+                            value={expirationDate}
+                            onChange={(_, date) => setExpirationDate(date!)}
+                            minimumDate={addDays(new Date(), 1)}
+                        />
                     </View>
                     <View style={styles.inputField}>
                         <FormLabel>{lang.addItem.form.storage.label}</FormLabel>

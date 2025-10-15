@@ -234,6 +234,15 @@ const fr = {
         shoppingList: "Courses",
         stats: "Stats",
         settings: "Réglages",
+    },
+    errors: {
+        generic: "Une erreur est survenue. Veuillez réessayer.",
+        shoppingList: {
+            emptyItemName: "Le nom de l'article ne peut pas être vide.",
+        },
+        addItem: {
+            requiredName: "Le nom du produit est requis.",
+        }
     }
 }
 

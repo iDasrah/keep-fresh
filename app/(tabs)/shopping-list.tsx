@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, TextInput} from "react-native";
+import {View, Text, ScrollView, TextInput, Alert} from "react-native";
 import Header from "@/components/ui/Header";
 import {styles} from "@/assets/style/shopping-list.styles";
 import {SolarIcon} from "react-native-solar-icons";
@@ -10,6 +10,9 @@ import {useState} from "react";
 import {useDatabase} from "@/stores/database";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import Card from "@/components/ui/Card";
+import {z} from "zod/v4";
+
+const itemSchema = z.string().min(1, {error: lang.errors.shoppingList.emptyItemName});
 
 const ShoppingList = () => {
     const [newItem, setNewItem] = useState('');
@@ -42,7 +45,13 @@ const ShoppingList = () => {
     });
 
     const handleAddItem = async () => {
-        createItemMut.mutate(newItem);
+        const parsed = itemSchema.safeParse(newItem.trim());
+        if (parsed.success) {
+            createItemMut.mutate(parsed.data);
+        } else {
+            const errorMessage = parsed.error.issues[0]?.message || lang.errors.generic;
+            alert(errorMessage);
+        }
     }
 
     const handleDeleteItem = async (id: number) => {
