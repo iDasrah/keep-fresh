@@ -117,7 +117,7 @@ const Item = ({item}: ItemProps) => {
         <GestureDetector gesture={longPress}>
             <Animated.View style={animatedStyle}>
                 <Card style={styles.item} contentStyle={styles.itemContent}>
-                    <View style={styles.itemImg}></View>
+                    {/*<View style={styles.itemImg}></View>*/}
                     <View style={styles.itemInfo}>
                         <Text style={styles.itemName}>{item.name}</Text>
                         <Text style={styles.itemQuantity}>{item.quantity} {item.unit}</Text>
