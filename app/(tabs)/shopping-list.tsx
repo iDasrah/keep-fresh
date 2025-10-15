@@ -6,16 +6,19 @@ import { colors } from "@/constants/colors";
 import lang from "@/lib/lang";
 import {LinearGradient} from "expo-linear-gradient";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
-import {useState} from "react";
+import {useState, useMemo} from "react";
 import {useDatabase} from "@/stores/database";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import Card from "@/components/ui/Card";
 import {z} from "zod/v4";
 
-const itemSchema = z.string().min(1, {error: lang.errors.shoppingList.emptyItemName});
-
 const ShoppingList = () => {
     const [newItem, setNewItem] = useState('');
+
+    const itemSchema = useMemo(() =>
+        z.string().min(1, {error: lang.errors.shoppingList.emptyItemName}),
+        []
+    );
     const { addShoppingListItem, getShoppingList } = useDatabase();
     const queryClient = useQueryClient();
 
@@ -61,7 +64,7 @@ const ShoppingList = () => {
     return (
         <View>
             <Header />
-            <View style={{padding: 16}}>
+            <View style={styles.container}>
                 <View style={styles.addItemContainer}>
                     <View style={styles.addItemInputContainer}>
                         <SolarIcon
@@ -103,14 +106,14 @@ const ShoppingList = () => {
                                 </Card>
                             ))
                         ) : (
-                            <View style={{alignItems: "center", marginTop: 40}}>
+                            <View style={styles.emptyStateContainer}>
                                 <SolarIcon
                                     name="Cart"
                                     size={64}
                                     color={colors.textMuted}
                                     type="outline"
                                 />
-                                <Text style={{color: colors.textMuted, fontSize: 16, marginTop: 16}}>
+                                <Text style={styles.emptyStateText}>
                                     {lang.shoppingList.emptyList}
                                 </Text>
                             </View>

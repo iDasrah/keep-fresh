@@ -34,13 +34,13 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
         enabled: isConnected
     });
 
-    items?.sort((a, b) => new Date(a.expirationDate).getTime() - new Date(b.expirationDate).getTime());
+    const sortedItems = items ? [...items].sort((a, b) => new Date(a.expirationDate).getTime() - new Date(b.expirationDate).getTime()) : [];
 
     if (isLoading) {
         return <ActivityIndicator />
     }
 
-    if (!items || items.length === 0) {
+    if (!sortedItems || sortedItems.length === 0) {
         return (
             <View style={styles.noItemsContainer}>
                 <Text style={styles.noItemsText}>{lang.noItems.title}</Text>
@@ -57,7 +57,7 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
 
     return (
         <View style={styles.itemsList}>
-            {items && items.map((item: ItemType) => (
+            {sortedItems.map((item: ItemType) => (
                 <Item key={item.id} item={item} />
             ))}
         </View>

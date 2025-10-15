@@ -76,4 +76,16 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    container: {
+        padding: 16,
+    },
+    emptyStateContainer: {
+        alignItems: "center",
+        marginTop: 40,
+    },
+    emptyStateText: {
+        color: colors.textMuted,
+        fontSize: 16,
+        marginTop: 16,
+    }
 });

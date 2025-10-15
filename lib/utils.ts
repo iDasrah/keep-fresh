@@ -26,35 +26,39 @@ export function getProgressColor(percentage: number): string {
     }
 }
 
+function getRandomItem<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
 export function getRandomAntiWasteMessage(score: number): {title: string, content: string} {
     if (score < 40) {
-        return lang.stats.antiWasteMessages.low[Math.floor(Math.random() * lang.stats.antiWasteMessages.low.length)];
+        return getRandomItem(lang.stats.antiWasteMessages.low);
     } else if (score < 70) {
-        return lang.stats.antiWasteMessages.medium[Math.floor(Math.random() * lang.stats.antiWasteMessages.medium.length)];
+        return getRandomItem(lang.stats.antiWasteMessages.medium);
     }
-    return lang.stats.antiWasteMessages.high[Math.floor(Math.random() * lang.stats.antiWasteMessages.high.length)];
+    return getRandomItem(lang.stats.antiWasteMessages.high);
 }
 
 export function getRandomConsumptionTimeMessage(days: number): string {
     if (days <= 2) {
-        return lang.stats.avgConsumptionTime.subtitle.short[Math.floor(Math.random() * lang.stats.avgConsumptionTime.subtitle.short.length)];
+        return getRandomItem(lang.stats.avgConsumptionTime.subtitle.short);
     } else if (days <= 5) {
-        return lang.stats.avgConsumptionTime.subtitle.medium[Math.floor(Math.random() * lang.stats.avgConsumptionTime.subtitle.medium.length)];
+        return getRandomItem(lang.stats.avgConsumptionTime.subtitle.medium);
     }
-    return lang.stats.avgConsumptionTime.subtitle.long[Math.floor(Math.random() * lang.stats.avgConsumptionTime.subtitle.long.length)];
+    return getRandomItem(lang.stats.avgConsumptionTime.subtitle.long);
 }
 
 export function getRandomPlaceholder(storage: "fridge" | "freezer" | "pantry"): string {
-    return lang.addItem.form.name.placeholder[storage][Math.floor(Math.random() * lang.addItem.form.name.placeholder[storage].length)];
+    return getRandomItem(lang.addItem.form.name.placeholder[storage]);
 }
 
 export function getRandomExpiredThisWeekMessage(count: number): string {
     if (count === 0) {
-        return lang.stats.expiredThisWeek.subtitle.none[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.none.length)];
+        return getRandomItem(lang.stats.expiredThisWeek.subtitle.none);
     } else if (count <= 3) {
-        return lang.stats.expiredThisWeek.subtitle.few[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.few.length)];
+        return getRandomItem(lang.stats.expiredThisWeek.subtitle.few);
     } else if (count <= 7) {
-        return lang.stats.expiredThisWeek.subtitle.several[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.several.length)];
+        return getRandomItem(lang.stats.expiredThisWeek.subtitle.some);
     }
-    return lang.stats.expiredThisWeek.subtitle.many[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.many.length)];
+    return getRandomItem(lang.stats.expiredThisWeek.subtitle.many);
 }
