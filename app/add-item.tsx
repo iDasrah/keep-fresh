@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native'
+import {View, Text, Platform} from 'react-native'
 import {useState, useMemo} from 'react'
 import Header from "@/components/ui/Header";
 import FormInput from "@/components/ui/FormInput";
@@ -8,7 +8,7 @@ import lang from "@/lib/lang";
 import {colors} from "@/constants/colors";
 import SelectorInput from "@/components/ui/SelectorInput";
 import {LinearGradient} from "expo-linear-gradient";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import RNDateTimePicker, {DateTimePickerAndroid} from "@react-native-community/datetimepicker";
 import {useDatabase} from "@/stores/database";
 import {z} from "zod/v4";
 import {useLocalSearchParams, useRouter} from "expo-router";
@@ -236,11 +236,34 @@ const AddItem = () => {
                     {/* CHAMP 4 : Date d'expiration (DateTimePicker natif iOS/Android) */}
                     <View style={styles.inputField}>
                         <FormLabel>{lang.addItem.form.expirationDate.label}</FormLabel>
-                        <RNDateTimePicker
-                            value={expirationDate}
-                            onChange={(_, date) => setExpirationDate(date!)}
-                            minimumDate={addDays(new Date(), 1)} // Minimum = demain
-                        />
+                        { Platform.OS === "ios" ? (
+                            <RNDateTimePicker
+                                value={expirationDate}
+                                onChange={(_, date) => setExpirationDate(date!)}
+                                minimumDate={addDays(new Date(), 1)} // Minimum = demain
+                            />
+                            ) : (
+                            <AnimatedPressable
+                                onPress={() => DateTimePickerAndroid.open({
+                                    value: expirationDate,
+                                    onChange: (_, date) => date && setExpirationDate(date),
+                                    minimumDate: addDays(new Date(), 1),
+                                    mode: "date",
+                                })}
+                                style={styles.androidDatePicker}
+                            >
+                                <View style={styles.androidDatePickerContent}>
+                                    <Text style={styles.androidDatePickerText}>
+                                        {expirationDate.toLocaleDateString("fr-FR", {
+                                            day: "2-digit",
+                                            month: "long",
+                                            year: "numeric"
+                                        })}
+                                    </Text>
+                                </View>
+                            </AnimatedPressable>
+                            )
+                        }
                     </View>
 
                     {/* CHAMP 5 : Stockage (frigo/congélateur/placards) */}
