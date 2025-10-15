@@ -150,7 +150,7 @@ const AddItem = () => {
         // Si validation échoue : Affiche le premier message d'erreur
         if (!parsedItem.success) {
             const firstError = parsedItem.error.issues[0]?.message;
-            if (firstError && firstError) {
+            if (firstError) {
                 alert(firstError);
             } else {
                 alert(lang.errors.generic);
