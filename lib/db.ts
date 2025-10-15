@@ -1,14 +1,33 @@
 import {openDatabaseAsync, SQLiteDatabase} from "expo-sqlite";
 import {Item, ShoppingListItem, Storage} from "@/types";
 
+/**
+ * === GESTION DE LA BASE DE DONNÉES SQLITE ===
+ *
+ * Ce fichier centralise toutes les opérations de base de données de l'application.
+ * Deux tables principales :
+ * - `items` : Produits du frigo/congélateur/placards
+ * - `shopping_list` : Liste de courses
+ *
+ * La connexion DB est un singleton partagé par toute l'app.
+ */
+
 export const DATABASE_NAME = "fridgely.db";
 let db: SQLiteDatabase | null = null;
 
+/**
+ * Initialise la connexion à la base de données et crée les tables si nécessaire.
+ * Appelé au démarrage de l'app via useDatabase.init()
+ *
+ * @returns Instance de la base de données
+ *
+ */
 export async function initDatabase() {
     if (!db) {
         db = await openDatabaseAsync(DATABASE_NAME);
     }
 
+    // Création des tables
     await db.execAsync(`
         CREATE TABLE IF NOT EXISTS items (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,6 +89,13 @@ export async function searchItems(query: string, storage?: Storage): Promise<Ite
     }
 }
 
+/**
+ * Ajoute un nouvel item dans la base de données.
+ *
+ * @param item - Item sans id ni createdAt (générés auto par SQLite)
+ * @returns L'ID du nouvel item créé
+ *
+ */
 export async function addItem(item: Omit<Item, 'id' | 'createdAt'>): Promise<number> {
     if (!db) {
         throw new Error("Database not initialized. Call initDatabase() first.");
