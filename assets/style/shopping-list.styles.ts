@@ -1,5 +1,6 @@
 import {StyleSheet} from "react-native";
 import {colors} from "@/constants/colors";
+import {cardShadow} from "@/assets/style/shared.styles";
 
 export const styles = StyleSheet.create({
     addItemContainer: {
@@ -9,14 +10,9 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         padding: 8,
         gap: 12,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 3,
+        borderColor: colors.cardStroke,
+        borderWidth: 1,
+        ...cardShadow
     },
     addItemInputContainer: {
         flex: 1,
@@ -49,5 +45,35 @@ export const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: "600",
         lineHeight: 28,
-    }
+    },
+    itemsList: {
+        marginTop: 16,
+        paddingBottom: 100,
+    },
+    itemCard: {
+        marginBottom: 12,
+    },
+    itemCardContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    itemText: {
+        fontSize: 16,
+        color: colors.black,
+        fontWeight: "500",
+        flex: 1,
+    },
+    itemActions: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+    },
+    deleteButton: {
+        width: 36,
+        height: 36,
+        borderRadius: 8,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });

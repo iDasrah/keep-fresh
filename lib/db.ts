@@ -1,5 +1,5 @@
 import {openDatabaseAsync, SQLiteDatabase} from "expo-sqlite";
-import {Item, Storage} from "@/types";
+import {Item, ShoppingListItem, Storage} from "@/types";
 
 export const DATABASE_NAME = "fridgely.db";
 let db: SQLiteDatabase | null = null;
@@ -17,6 +17,12 @@ export async function initDatabase() {
             unit TEXT NOT NULL,
             expirationDate TEXT NOT NULL,
             storage TEXT CHECK( storage IN ('fridge', 'freezer', 'pantry') ) NOT NULL,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS shopping_list (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
             createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `);
@@ -88,12 +94,47 @@ export async function deleteItem(id: number): Promise<void> {
     await prep.finalizeAsync();
 }
 
+export async function getShoppingList(): Promise<ShoppingListItem[]> {
+    if (!db) {
+        throw new Error("Database not initialized. Call initDatabase() first.");
+    }
+
+    return await db.getAllAsync(`
+        SELECT * FROM shopping_list;
+    `);
+}
+
+export async function addShoppingListItem(item: string): Promise<number> {
+    if (!db) {
+        throw new Error("Database not initialized. Call initDatabase() first.");
+    }
+    const prep = await db.prepareAsync(`
+        INSERT INTO shopping_list (name) VALUES (?);
+    `);
+    const result = await prep.executeAsync([item]);
+    await prep.finalizeAsync();
+
+    return result.lastInsertRowId;
+}
+
+export async function deleteShoppingListItem(id: number): Promise<void> {
+    if (!db) {
+        throw new Error("Database not initialized. Call initDatabase() first.");
+    }
+    const prep = await db.prepareAsync(`
+        DELETE FROM shopping_list WHERE id = ?;
+    `);
+    await prep.executeAsync([id]);
+    await prep.finalizeAsync();
+}
+
 export function clearDatabase() {
     if (!db) {
         throw new Error("Database not initialized. Call initDatabase() first.");
     }
     return db.execAsync(`
         DELETE FROM items;
+        DELETE FROM shopping_list;
     `);
 }
 

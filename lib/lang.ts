@@ -227,6 +227,13 @@ const fr = {
     },
     shoppingList: {
         addItemFieldPlaceholder: "Ajouter un article à la liste de courses...",
+        emptyList: "Aucun article dans la liste",
+    },
+    tab: {
+        fridge: "Frigo",
+        shoppingList: "Courses",
+        stats: "Stats",
+        settings: "Réglages",
     }
 }
 
