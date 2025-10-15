@@ -12,6 +12,7 @@ import {requestReview} from "expo-store-review";
 import {useNotifications} from "@/stores/notifications";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {useRouter} from "expo-router";
+import {useQueryClient} from "@tanstack/react-query";
 
 /**
  * SCREEN : Page des paramètres
@@ -44,6 +45,7 @@ const Settings = () => {
     } = useNotifications();
     const { settings, resetSettings, setSettings } = useSettings();
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     /**
      * Handler pour le toggle "Produit expiré"
@@ -105,6 +107,13 @@ const Settings = () => {
                             resetSettings(),
                             clearAllNotifications(),
                         ]);
+                        // Invalide tous les caches pour forcer un rafraîchissement
+                        await queryClient.invalidateQueries({
+                            queryKey: ['items']
+                        });
+                        await queryClient.invalidateQueries({
+                            queryKey: ['shoppingListItems']
+                        });
                         // Retour à l'accueil après reset complet
                         router.push('/');
                     }
