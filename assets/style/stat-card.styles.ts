@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "500",
         marginTop: 4,
-        height: 48,
+        minHeight: 48,
     },
     statCardSubtitle: {
         textAlign: "center",
