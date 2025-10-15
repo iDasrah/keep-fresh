@@ -49,8 +49,6 @@ const AddItem = () => {
     const { addItem } = useDatabase();
     const router = useRouter();
 
-    console.log(storageParam, storage);
-
     const quantityOptions = useMemo(() => {
         return getQuantityOptionsForUnit(unit.value);
     }, [unit.value]);
