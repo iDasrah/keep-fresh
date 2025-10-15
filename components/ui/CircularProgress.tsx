@@ -16,20 +16,23 @@ const CircularProgress = ({progress, size = 100, strokeWidth = 10}: CircularProg
     const strokeDashoffset = circumference - (progress / 100) * circumference;
     const color = getProgressColor(progress);
 
+    const centerX = size / 2;
+    const centerY = size / 2;
+
     return (
         <View style={[styles.container, {width: size, height: size}]}>
             <Svg width={size} height={size} style={styles.svg}>
                 <Circle
-                    cx={size / 2}
-                    cy={size / 2}
+                    cx={centerX}
+                    cy={centerY}
                     r={radius}
                     stroke="#D9D9D9"
                     strokeWidth={strokeWidth}
                     fill="none"
                 />
                 <Circle
-                    cx={size / 2}
-                    cy={size / 2}
+                    cx={centerX}
+                    cy={centerY}
                     r={radius}
                     stroke={color}
                     strokeWidth={strokeWidth}
@@ -37,6 +40,7 @@ const CircularProgress = ({progress, size = 100, strokeWidth = 10}: CircularProg
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
                     strokeLinecap="round"
+                    transform={`rotate(-90 ${centerX} ${centerY})`}
                 />
             </Svg>
             <View style={styles.textContainer}>
