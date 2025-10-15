@@ -7,6 +7,7 @@ import Searchbar from "./Searchbar";
 import StorageSelector from "@/components/ui/StorageSelector";
 import { useRouter } from "expo-router";
 import AnimatedPressable from "./AnimatedPressable";
+import {useItems} from "@/stores/items";
 
 interface HeaderProps {
     variant?: 'index' | 'back';
@@ -14,6 +15,7 @@ interface HeaderProps {
 
 const Header = ({variant}: HeaderProps) => {
     const router = useRouter();
+    const {selectedStorage} = useItems();
 
     return (
         <View style={styles.header}>
@@ -30,7 +32,7 @@ const Header = ({variant}: HeaderProps) => {
                 </Text>
                 {
                     variant === 'index' && (
-                        <AnimatedPressable onPress={() => router.push("/add-item")}>
+                        <AnimatedPressable onPress={() => router.push(`/add-item?storage=${selectedStorage}`)}>
                             <Ionicons name="add" color={colors.bg} size={32} />
                         </AnimatedPressable>
                     )

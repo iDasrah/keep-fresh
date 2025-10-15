@@ -6,10 +6,10 @@ import Item from "@/components/ui/Item";
 import {Item as ItemType} from "@/types";
 import {styles} from "@/assets/style/items-list.styles";
 import lang from "@/lib/lang";
-import {useRouter} from "expo-router";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {LinearGradient} from "expo-linear-gradient";
 import {colors} from "@/constants/colors";
+import {useRouter} from "expo-router";
 
 interface ItemsListProps {
     storage?: "fridge" | "freezer" | "pantry";
@@ -52,7 +52,7 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
             <View style={styles.noItemsContainer}>
                 <Text style={styles.noItemsText}>{lang.noItems.title}</Text>
                 <Animated.View style={animatedStyle}>
-                    <Pressable onPress={() => router.push('/add-item')} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                    <Pressable onPress={() => router.push(`/add-item?storage=${storage}`)} onPressIn={handlePressIn} onPressOut={handlePressOut}>
                         <LinearGradient colors={colors.blackGradient} style={styles.addButton}>
                             <Text style={styles.addButtonText}>{lang.noItems.button}</Text>
                         </LinearGradient>

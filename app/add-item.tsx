@@ -11,7 +11,7 @@ import {LinearGradient} from "expo-linear-gradient";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import {useDatabase} from "@/stores/database";
 import {z} from "zod/v4";
-import { useRouter } from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 import {useNotifications} from "@/stores/notifications";
 import {useStats} from "@/stores/stats";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
@@ -33,17 +33,22 @@ const itemSchema = z.object({
     expirationDate: z.date().refine(date => date > new Date(), {message: "Expiration date must be in the future"}),
 });
 
+const storageParamSchema = z.enum(["fridge", "freezer", "pantry"]);
+
 const AddItem = () => {
+    const { storage: storageParam } = useLocalSearchParams();
     const [name, setName] = useState<string>("");
     const [quantity, setQuantity] = useState<{label: string, value: string}>({label: "1", value: "1"});
     const [unit, setUnit] = useState<{label: string, value: string}>({label: "pcs", value: "pcs"});
-    const [storage, setStorage] = useState<{label: string, value: string}>({label: lang.header.storageSelector.fridge, value: "fridge"});
+    const [storage, setStorage] = useState<{label: string, value: string}>(storageParam && storageParamSchema.safeParse(storageParam).success ? {label: lang.header.storageSelector[storageParam as "fridge" | "freezer" | "pantry"], value: storageParam as string} : {label: lang.header.storageSelector.fridge, value: "fridge"});
     const [expirationDate, setExpirationDate] = useState<Date>(new Date());
     const { scheduleItemNotifications } = useNotifications();
     const { addTotalAddedItems } = useStats();
 
     const { addItem } = useDatabase();
     const router = useRouter();
+
+    console.log(storageParam, storage);
 
     const quantityOptions = useMemo(() => {
         return getQuantityOptionsForUnit(unit.value);
