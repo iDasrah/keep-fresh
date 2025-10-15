@@ -26,6 +26,6 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.textMuted,
         marginTop: 12,
-        height: 40,
+        minHeight: 40,
     }
 });
