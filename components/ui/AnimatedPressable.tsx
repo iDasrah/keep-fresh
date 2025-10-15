@@ -1,5 +1,5 @@
 import {Pressable, PressableProps} from 'react-native';
-import {ReactNode, memo, useCallback} from 'react';
+import React, {ReactNode, memo, useCallback} from 'react';
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from 'react-native-reanimated';
 import {PRESS_SCALE} from '@/assets/style/shared.styles';
 
