@@ -144,7 +144,7 @@ export const useStats = create<StatsState>((set, get) => ({
         }));
         await get().saveData();
     },
-    resetStats: async () => {
+    resetStats: async (): Promise<void> => {
         set({
             userStats: {
                 antiWasteScore: 100,
