@@ -16,6 +16,7 @@ import {useNotifications} from "@/stores/notifications";
 import {useStats} from "@/stores/stats";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {units, getQuantityOptionsForUnit} from "@/lib/units";
+import {getRandomPlaceholder} from "@/lib/utils";
 
 
 
@@ -114,7 +115,7 @@ const AddItem = () => {
                     <View style={styles.inputField}>
                         <FormLabel>{lang.addItem.form.name.label}</FormLabel>
                         <FormInput
-                            placeholder={lang.addItem.form.name.placeholder}
+                            placeholder={getRandomPlaceholder(storage.value as "fridge" | "freezer" | "pantry")}
                             value={name}
                             onChangeText={setName}
                         />

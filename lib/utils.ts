@@ -34,3 +34,7 @@ export function getRandomAntiWasteMessage(score: number): {title: string, conten
     }
     return lang.stats.antiWasteMessages.high[Math.floor(Math.random() * lang.stats.antiWasteMessages.high.length)];
 }
+
+export function getRandomPlaceholder(storage: "fridge" | "freezer" | "pantry"): string {
+    return lang.addItem.form.name.placeholder[storage][Math.floor(Math.random() * lang.addItem.form.name.placeholder[storage].length)];
+}

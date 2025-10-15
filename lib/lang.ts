@@ -29,7 +29,29 @@ const fr = {
         form: {
             name: {
                 label: "Nom du produit",
-                placeholder: "Ex: Yaourt nature",
+                placeholder: {
+                    fridge: [
+                        "Ex: Yaourt nature",
+                        "Ex: Fromage râpé",
+                        "Ex: Jus d’orange",
+                        "Ex: Poulet rôti",
+                        "Ex: Lait demi-écrémé",
+                    ],
+                    freezer: [
+                        "Ex: Poisson pané",
+                        "Ex: Glace vanille",
+                        "Ex: Légumes surgelés",
+                        "Ex: Pizza",
+                        "Ex: Steaks hachés",
+                    ],
+                    pantry: [
+                        "Ex: Pâtes",
+                        "Ex: Riz basmati",
+                        "Ex: Biscuits",
+                        "Ex: Sauce tomate",
+                        "Ex: Huile d’olive",
+                    ],
+                },
             },
             quantity: {
                 label: "Quantité",
