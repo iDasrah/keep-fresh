@@ -10,7 +10,7 @@ interface DatabaseState {
     getAllItems: () => Promise<any[]>;
     getAllItemsByStorage: (storage: string) => Promise<any[]>;
     searchItems: (query: string, storage?: string) => Promise<any[]>;
-    addItem: (item: Omit<Item, 'id'>) => Promise<number>;
+    addItem: (item: Omit<Item, 'id' | 'createdAt'>) => Promise<number>;
     deleteItem: (id: number) => Promise<void>;
     clear: () => Promise<void>;
 }
@@ -42,7 +42,7 @@ export const useDatabase = create<DatabaseState>((set, get) => ({
         return await searchItems(query, storage as any);
     },
 
-    addItem: async (item: Omit<Item, 'id'>) => {
+    addItem: async (item: Omit<Item, 'id' | 'createdAt'>) => {
         if (!get().isConnected) throw new Error("Database not connected");
         return await addItem(item);
     },

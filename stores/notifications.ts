@@ -12,7 +12,7 @@ import {useDatabase} from "@/stores/database";
 interface NotificationsState {
     notifications: { ids: string[], itemId: number }[];
 
-    scheduleItemNotifications: (item: Item) => Promise<void>;
+    scheduleItemNotifications: (item: Omit<Item, 'createdAt'>) => Promise<void>;
     scheduleAllItemsExpiredNotifications: () => Promise<void>;
     scheduleAllItemsSoonExpiredNotifications: () => Promise<void>;
     cancelItemNotifications: (itemId: number) => void;
@@ -25,7 +25,7 @@ interface NotificationsState {
 export const useNotifications = create<NotificationsState>((set, get) => ({
     notifications: [],
 
-    scheduleItemNotifications: async (item: Item) => {
+    scheduleItemNotifications: async (item: Omit<Item, 'createdAt'>) => {
         const ids = (await scheduleItemNotifications(item.name, new Date(item.expirationDate), item.id.toString()))
             .filter((id): id is string => id !== null);
         set({notifications: [...get().notifications, {ids, itemId: item.id}]});
