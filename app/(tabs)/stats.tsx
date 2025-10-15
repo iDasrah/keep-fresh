@@ -6,11 +6,12 @@ import CircularProgress from "@/components/ui/CircularProgress";
 import lang from "@/lib/lang";
 import {styles} from "@/assets/style/stats.styles";
 import {useStats} from "@/stores/stats";
-import {getRandomAntiWasteMessage, getRandomConsumptionTimeMessage} from "@/lib/utils";
+import {getRandomAntiWasteMessage, getRandomConsumptionTimeMessage, getRandomExpiredThisWeekMessage} from "@/lib/utils";
+import StatCard from "@/components/ui/StatCard";
 
 const Stats = () => {
     const { userStats } = useStats();
-    const { antiWasteScore, averageConsumptionTime } = userStats;
+    const { antiWasteScore, averageConsumptionTime, expiredThisWeek } = userStats;
     const message = getRandomAntiWasteMessage(antiWasteScore);
 
     return (
@@ -26,11 +27,12 @@ const Stats = () => {
                     </View>
                 </Card>
                 <View style={styles.statCardsContainer}>
-                    <Card style={styles.statCard} contentStyle={styles.statCardContent}>
-                        <Text style={styles.statCardValue}>{averageConsumptionTime}</Text>
-                        <Text style={styles.statCardTitle}>{lang.stats.avgConsumptionTime.title}</Text>
-                        <Text style={styles.statCardSubtitle}>{getRandomConsumptionTimeMessage(averageConsumptionTime)}</Text>
-                    </Card>
+                    <StatCard
+                        statValue={averageConsumptionTime}
+                        title={lang.stats.avgConsumptionTime.title}
+                        subtitle={getRandomConsumptionTimeMessage(averageConsumptionTime)}
+                    />
+                    <StatCard statValue={expiredThisWeek} title={lang.stats.expiredThisWeek.title} subtitle={getRandomExpiredThisWeekMessage(expiredThisWeek)} />
                 </View>
             </View>
 

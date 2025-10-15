@@ -47,3 +47,14 @@ export function getRandomConsumptionTimeMessage(days: number): string {
 export function getRandomPlaceholder(storage: "fridge" | "freezer" | "pantry"): string {
     return lang.addItem.form.name.placeholder[storage][Math.floor(Math.random() * lang.addItem.form.name.placeholder[storage].length)];
 }
+
+export function getRandomExpiredThisWeekMessage(count: number): string {
+    if (count === 0) {
+        return lang.stats.expiredThisWeek.subtitle.none[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.none.length)];
+    } else if (count <= 3) {
+        return lang.stats.expiredThisWeek.subtitle.few[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.few.length)];
+    } else if (count <= 7) {
+        return lang.stats.expiredThisWeek.subtitle.several[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.several.length)];
+    }
+    return lang.stats.expiredThisWeek.subtitle.many[Math.floor(Math.random() * lang.stats.expiredThisWeek.subtitle.many.length)];
+}

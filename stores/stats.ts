@@ -1,16 +1,17 @@
 import {create} from 'zustand/react';
 import {Stats} from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {isSameWeek} from "date-fns";
 
 interface StatsState {
     userStats: Stats,
 
     consumptionTimes: number[],
+    lastUpdatedExpiredThisWeek: Date,
 
     addTotalAddedItems: () => void;
     addThrownAwayItems: () => void;
     addConsumptionTime: (time: number) => void;
-    addExpiredThisWeek: () => void;
     updateAverageConsumptionTime: () => Promise<void>;
     updateAntiWasteScore: () => void;
     addWeeklyAntiWasteScore: (score: number) => void;
@@ -31,6 +32,7 @@ export const useStats = create<StatsState>((set, get) => ({
     },
 
     consumptionTimes: [],
+    lastUpdatedExpiredThisWeek: new Date(),
 
     addTotalAddedItems: async () => {
         set((state) => ({
@@ -49,6 +51,18 @@ export const useStats = create<StatsState>((set, get) => ({
                 thrownAwayItems: state.userStats.thrownAwayItems + 1,
             }
         }));
+
+        const isSameWeekAsLastUpdate = isSameWeek(new Date(), get().lastUpdatedExpiredThisWeek);
+
+        set((state) => ({
+            userStats: {
+                ...state.userStats,
+                expiredThisWeek: isSameWeekAsLastUpdate ? state.userStats.expiredThisWeek + 1 : 1,
+            },
+            ...(isSameWeekAsLastUpdate ? {} : { lastUpdatedExpiredThisWeek: new Date() }),
+        }));
+
+
         get().updateAntiWasteScore();
         await get().saveData();
     },
@@ -67,16 +81,6 @@ export const useStats = create<StatsState>((set, get) => ({
                 }
             };
         });
-        await get().saveData();
-    },
-    addExpiredThisWeek: async () => {
-        set((state) => ({
-            userStats: {
-                ...state.userStats,
-                expiredThisWeek: state.userStats.expiredThisWeek + 1,
-            }
-        }));
-        get().updateAntiWasteScore();
         await get().saveData();
     },
     updateAverageConsumptionTime: async () => set((state) => ({
@@ -138,7 +142,8 @@ export const useStats = create<StatsState>((set, get) => ({
             expiredThisWeek,
             averageConsumptionTime,
             antiWasteScoreByWeek,
-            consumptionTimes
+            consumptionTimes,
+            lastUpdatedExpiredThisWeek,
         ] = await Promise.all([
             AsyncStorage.getItem('antiWasteScore'),
             AsyncStorage.getItem('totalAddedItems'),
@@ -147,6 +152,7 @@ export const useStats = create<StatsState>((set, get) => ({
             AsyncStorage.getItem('averageConsumptionTime'),
             AsyncStorage.getItem('antiWasteScoreByWeek'),
             AsyncStorage.getItem('consumptionTimes'),
+            AsyncStorage.getItem('lastUpdatedExpiredThisWeek'),
         ]);
 
         set(() => ({
@@ -159,6 +165,7 @@ export const useStats = create<StatsState>((set, get) => ({
                 antiWasteScoreByWeek: antiWasteScoreByWeek ? JSON.parse(antiWasteScoreByWeek) : [],
             },
             consumptionTimes: consumptionTimes ? JSON.parse(consumptionTimes) : [],
+            lastUpdatedExpiredThisWeek: lastUpdatedExpiredThisWeek ? new Date(lastUpdatedExpiredThisWeek) : new Date(),
         }));
     },
     saveData: async () => {
@@ -171,6 +178,7 @@ export const useStats = create<StatsState>((set, get) => ({
             AsyncStorage.setItem('averageConsumptionTime', state.averageConsumptionTime.toString()),
             AsyncStorage.setItem('antiWasteScoreByWeek', JSON.stringify(state.antiWasteScoreByWeek)),
             AsyncStorage.setItem('consumptionTimes', JSON.stringify(get().consumptionTimes)),
+            AsyncStorage.setItem('lastUpdatedExpiredThisWeek', get().lastUpdatedExpiredThisWeek.toISOString()),
         ]);
     }
 }));
