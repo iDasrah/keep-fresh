@@ -5,10 +5,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface StatsState {
     userStats: Stats,
 
+    consumptionTimes: number[],
+
     addTotalAddedItems: () => void;
     addThrownAwayItems: () => void;
+    addConsumptionTime: (time: number) => void;
     addExpiredThisWeek: () => void;
-    updateAverageConsumptionTime: (newTime: number) => void;
+    updateAverageConsumptionTime: () => Promise<void>;
     updateAntiWasteScore: () => void;
     addWeeklyAntiWasteScore: (score: number) => void;
     resetStats: () => Promise<void>;
@@ -26,6 +29,8 @@ export const useStats = create<StatsState>((set, get) => ({
         averageConsumptionTime: 0,
         antiWasteScoreByWeek: [],
     },
+
+    consumptionTimes: [],
 
     addTotalAddedItems: async () => {
         set((state) => ({
@@ -47,6 +52,23 @@ export const useStats = create<StatsState>((set, get) => ({
         get().updateAntiWasteScore();
         await get().saveData();
     },
+    addConsumptionTime: async (time: number) => {
+        set((state) => {
+            const newConsumptionTimes = [...state.consumptionTimes, time];
+            const newAverage = newConsumptionTimes.length > 0 ?
+                Math.round(newConsumptionTimes.reduce((a, b) => a + b, 0) / newConsumptionTimes.length)
+                : 0;
+
+            return {
+                consumptionTimes: newConsumptionTimes,
+                userStats: {
+                    ...state.userStats,
+                    averageConsumptionTime: newAverage,
+                }
+            };
+        });
+        await get().saveData();
+    },
     addExpiredThisWeek: async () => {
         set((state) => ({
             userStats: {
@@ -57,7 +79,14 @@ export const useStats = create<StatsState>((set, get) => ({
         get().updateAntiWasteScore();
         await get().saveData();
     },
-    updateAverageConsumptionTime: (newTime: number) => set((state) => ({})),
+    updateAverageConsumptionTime: async () => set((state) => ({
+        userStats: {
+            ...state.userStats,
+            averageConsumptionTime: state.consumptionTimes.length > 0 ?
+                Math.round(state.consumptionTimes.reduce((a, b) => a + b, 0) / state.consumptionTimes.length)
+                : 0,
+        }
+    })),
     updateAntiWasteScore: () => set((state) => {
         const {totalAddedItems, thrownAwayItems} = state.userStats;
         let newScore = 100;
@@ -93,7 +122,8 @@ export const useStats = create<StatsState>((set, get) => ({
                     expiredThisWeek: 0,
                     averageConsumptionTime: 0,
                     antiWasteScoreByWeek: [],
-                }
+                },
+                consumptionTimes: [],
             });
             await get().saveData();
             resolve();
@@ -108,6 +138,7 @@ export const useStats = create<StatsState>((set, get) => ({
             expiredThisWeek,
             averageConsumptionTime,
             antiWasteScoreByWeek,
+            consumptionTimes
         ] = await Promise.all([
             AsyncStorage.getItem('antiWasteScore'),
             AsyncStorage.getItem('totalAddedItems'),
@@ -115,6 +146,7 @@ export const useStats = create<StatsState>((set, get) => ({
             AsyncStorage.getItem('expiredThisWeek'),
             AsyncStorage.getItem('averageConsumptionTime'),
             AsyncStorage.getItem('antiWasteScoreByWeek'),
+            AsyncStorage.getItem('consumptionTimes'),
         ]);
 
         set(() => ({
@@ -125,7 +157,8 @@ export const useStats = create<StatsState>((set, get) => ({
                 expiredThisWeek: expiredThisWeek ? parseInt(expiredThisWeek) : 0,
                 averageConsumptionTime: averageConsumptionTime ? parseInt(averageConsumptionTime) : 0,
                 antiWasteScoreByWeek: antiWasteScoreByWeek ? JSON.parse(antiWasteScoreByWeek) : [],
-            }
+            },
+            consumptionTimes: consumptionTimes ? JSON.parse(consumptionTimes) : [],
         }));
     },
     saveData: async () => {
@@ -137,6 +170,7 @@ export const useStats = create<StatsState>((set, get) => ({
             AsyncStorage.setItem('expiredThisWeek', state.expiredThisWeek.toString()),
             AsyncStorage.setItem('averageConsumptionTime', state.averageConsumptionTime.toString()),
             AsyncStorage.setItem('antiWasteScoreByWeek', JSON.stringify(state.antiWasteScoreByWeek)),
+            AsyncStorage.setItem('consumptionTimes', JSON.stringify(get().consumptionTimes)),
         ]);
     }
 }));

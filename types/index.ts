@@ -4,7 +4,8 @@ export type Item = {
     quantity: number;
     unit: string;
     expirationDate: string;
-    storage: Storage
+    storage: Storage,
+    createdAt: string;
 }
 
 export type Stats = {

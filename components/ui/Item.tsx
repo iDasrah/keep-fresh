@@ -30,7 +30,7 @@ const Item = ({item}: ItemProps) => {
     const { deleteItem } = useDatabase();
     const {cancelItemNotifications} = useNotifications();
     const queryClient = useQueryClient();
-    const { addThrownAwayItems } = useStats();
+    const { addThrownAwayItems, addConsumptionTime } = useStats();
     const opacity = useSharedValue(1);
     const scale = useSharedValue(1);
 
@@ -38,7 +38,6 @@ const Item = ({item}: ItemProps) => {
         mutationKey: ['deleteItem', item.id],
         mutationFn: async (id: number) => await deleteItem(id),
         onSuccess: () => {
-            console.log("Item deleted", item.id);
             cancelItemNotifications(item.id);
             queryClient.refetchQueries({
                 queryKey: ['items'],
@@ -71,6 +70,9 @@ const Item = ({item}: ItemProps) => {
                     text: lang.alert.consume,
                     onPress: () => {
                         deleteItemMut.mutate(item.id);
+                        const time = Math.ceil((Date.now() - new Date(item.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+                        addConsumptionTime(time);
+
                     }
                 }
             ]);

@@ -35,6 +35,15 @@ export function getRandomAntiWasteMessage(score: number): {title: string, conten
     return lang.stats.antiWasteMessages.high[Math.floor(Math.random() * lang.stats.antiWasteMessages.high.length)];
 }
 
+export function getRandomConsumptionTimeMessage(days: number): string {
+    if (days <= 2) {
+        return lang.stats.avgConsumptionTime.subtitle.short[Math.floor(Math.random() * lang.stats.avgConsumptionTime.subtitle.short.length)];
+    } else if (days <= 5) {
+        return lang.stats.avgConsumptionTime.subtitle.medium[Math.floor(Math.random() * lang.stats.avgConsumptionTime.subtitle.medium.length)];
+    }
+    return lang.stats.avgConsumptionTime.subtitle.long[Math.floor(Math.random() * lang.stats.avgConsumptionTime.subtitle.long.length)];
+}
+
 export function getRandomPlaceholder(storage: "fridge" | "freezer" | "pantry"): string {
     return lang.addItem.form.name.placeholder[storage][Math.floor(Math.random() * lang.addItem.form.name.placeholder[storage].length)];
 }

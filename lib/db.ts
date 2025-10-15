@@ -16,7 +16,8 @@ export async function initDatabase() {
             quantity INTEGER NOT NULL,
             unit TEXT NOT NULL,
             expirationDate TEXT NOT NULL,
-            storage TEXT CHECK( storage IN ('fridge', 'freezer', 'pantry') ) NOT NULL
+            storage TEXT CHECK( storage IN ('fridge', 'freezer', 'pantry') ) NOT NULL,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `);
 
@@ -63,7 +64,7 @@ export async function searchItems(query: string, storage?: Storage): Promise<Ite
     }
 }
 
-export async function addItem(item: Omit<Item, 'id'>): Promise<number> {
+export async function addItem(item: Omit<Item, 'id' | 'createdAt'>): Promise<number> {
     if (!db) {
         throw new Error("Database not initialized. Call initDatabase() first.");
     }
@@ -101,7 +102,7 @@ async function seedDatabase() {
         throw new Error("Database not initialized. Call initDatabase() first.");
     }
 
-    const items: Omit<Item, 'id'>[] = [
+    const items: Omit<Item, 'id' | 'createdAt'>[] = [
         {
             name: "Lait",
             quantity: 2,

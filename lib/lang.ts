@@ -138,6 +138,40 @@ const fr = {
                     content: "Tu es un champion anti-gaspi !"
                 }
             ],
+        },
+        avgConsumptionTime: {
+            title: "jours",
+            subtitle: {
+                short: [
+                    "Ils ne font pas long feu.",
+                    "Rapides comme l’éclair.",
+                    "À peine stockés, déjà savourés.",
+                    "Pas le temps de s’installer.",
+                    "Ils passent en coup de vent.",
+                    "Toujours frais, jamais oubliés.",
+                    "Flash food.",
+                    "Ton frigo vit à 100 à l’heure."
+                ],
+                medium: [
+                    "Le bon tempo.",
+                    "Juste ce qu’il faut.",
+                    "Ils attendent sagement.",
+                    "Ni trop tôt, ni trop tard.",
+                    "À point pour être savourés.",
+                    "Un rythme bien rodé.",
+                    "Ils trouvent leur moment."
+                ],
+                long: [
+                    "Ils prennent leur temps.",
+                    "Ils hibernent un peu.",
+                    "Patience avant dégustation.",
+                    "Ils attendent leur heure.",
+                    "Ils se reposent au frais.",
+                    "Ils vivent une longue vie.",
+                    "Les repas prennent le large.",
+                    "C’est presque un garde-manger éternel."
+                ]
+            }
         }
     },
     settings: {

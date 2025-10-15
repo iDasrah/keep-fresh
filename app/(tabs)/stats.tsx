@@ -6,17 +6,17 @@ import CircularProgress from "@/components/ui/CircularProgress";
 import lang from "@/lib/lang";
 import {styles} from "@/assets/style/stats.styles";
 import {useStats} from "@/stores/stats";
-import {getRandomAntiWasteMessage} from "@/lib/utils";
+import {getRandomAntiWasteMessage, getRandomConsumptionTimeMessage} from "@/lib/utils";
 
 const Stats = () => {
     const { userStats } = useStats();
-    const { antiWasteScore } = userStats;
+    const { antiWasteScore, averageConsumptionTime } = userStats;
     const message = getRandomAntiWasteMessage(antiWasteScore);
 
     return (
         <View>
             <Header />
-            <View style={{padding: 16}}>
+            <View style={{padding: 16, gap: 16}}>
                 <Card contentStyle={styles.antiWasteContent}>
                     <CircularProgress progress={antiWasteScore} />
                     <View style={styles.antiWasteMsg}>
@@ -25,6 +25,13 @@ const Stats = () => {
                         <Text style={styles.antiWasteMsgContent}>{message.content}</Text>
                     </View>
                 </Card>
+                <View style={styles.statCardsContainer}>
+                    <Card style={styles.statCard} contentStyle={styles.statCardContent}>
+                        <Text style={styles.statCardValue}>{averageConsumptionTime}</Text>
+                        <Text style={styles.statCardTitle}>{lang.stats.avgConsumptionTime.title}</Text>
+                        <Text style={styles.statCardSubtitle}>{getRandomConsumptionTimeMessage(averageConsumptionTime)}</Text>
+                    </Card>
+                </View>
             </View>
 
         </View>
