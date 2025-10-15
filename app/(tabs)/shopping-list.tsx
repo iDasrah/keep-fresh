@@ -5,6 +5,7 @@ import {SolarIcon} from "react-native-solar-icons";
 import { colors } from "@/constants/colors";
 import lang from "@/lib/lang";
 import {LinearGradient} from "expo-linear-gradient";
+import AnimatedPressable from "@/components/ui/AnimatedPressable";
 
 const ShoppingList = () => {
     return (
@@ -25,11 +26,11 @@ const ShoppingList = () => {
                             placeholderTextColor={colors.textMuted}
                         />
                     </View>
-                    <Pressable style={styles.addItemButton}>
+                    <AnimatedPressable style={styles.addItemButton}>
                         <LinearGradient colors={colors.blackGradient} style={styles.addItemButtonContent}>
                             <Text style={styles.addItemButtonText}>+</Text>
                         </LinearGradient>
-                    </Pressable>
+                    </AnimatedPressable>
                 </View>
                 <ScrollView contentContainerStyle={{paddingBottom: 300}}>
                 </ScrollView>

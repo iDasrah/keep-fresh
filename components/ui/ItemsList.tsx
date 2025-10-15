@@ -10,6 +10,7 @@ import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-nati
 import {LinearGradient} from "expo-linear-gradient";
 import {colors} from "@/constants/colors";
 import {useRouter} from "expo-router";
+import AnimatedPressable from "@/components/ui/AnimatedPressable";
 
 interface ItemsListProps {
     storage?: "fridge" | "freezer" | "pantry";
@@ -40,23 +41,15 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
     }
 
     if (!items || items.length === 0) {
-        const handlePressIn = () => {
-            scale.value = withSpring(0.95);
-        }
-
-        const handlePressOut = () => {
-            scale.value = withSpring(1);
-        }
-
         return (
             <View style={styles.noItemsContainer}>
                 <Text style={styles.noItemsText}>{lang.noItems.title}</Text>
                 <Animated.View style={animatedStyle}>
-                    <Pressable onPress={() => router.push(`/add-item?storage=${storage}`)} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                    <AnimatedPressable onPress={() => router.push(`/add-item?storage=${storage}`)}>
                         <LinearGradient colors={colors.blackGradient} style={styles.addButton}>
                             <Text style={styles.addButtonText}>{lang.noItems.button}</Text>
                         </LinearGradient>
-                    </Pressable>
+                    </AnimatedPressable>
                 </Animated.View>
             </View>
         )

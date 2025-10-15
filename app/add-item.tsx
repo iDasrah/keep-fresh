@@ -17,6 +17,7 @@ import {useStats} from "@/stores/stats";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {units, getQuantityOptionsForUnit} from "@/lib/units";
 import {getRandomPlaceholder} from "@/lib/utils";
+import AnimatedPressable from "@/components/ui/AnimatedPressable";
 
 
 
@@ -136,13 +137,11 @@ const AddItem = () => {
                         <FormLabel>{lang.addItem.form.storage.label}</FormLabel>
                         <SelectorInput items={storageOptions} selectedItem={storage} onSelectItem={setStorage} />
                     </View>
-                    <Animated.View style={animatedStyle}>
+                    <AnimatedPressable onPress={handleAddItem}>
                         <LinearGradient style={styles.addBtn} colors={colors.blackGradient}>
-                            <Pressable onPress={handleAddItem} onPressIn={handlePressIn} onPressOut={handlePressOut}>
-                                <Text style={styles.addBtnText}>{lang.addItem.form.addButton}</Text>
-                            </Pressable>
+                            <Text style={styles.addBtnText}>{lang.addItem.form.addButton}</Text>
                         </LinearGradient>
-                    </Animated.View>
+                    </AnimatedPressable>
                 </View>
             </View>
         </View>
