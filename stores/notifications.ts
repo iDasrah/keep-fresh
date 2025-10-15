@@ -52,38 +52,44 @@ export const useNotifications = create<NotificationsState>((set, get) => ({
             await scheduleItemExpirationSoonNotification(item.name, new Date(item.expirationDate), item.id.toString());
         }
     },
-    cancelItemNotifications: (itemId: number) => {
+    cancelItemNotifications: async (itemId: number) => {
         const notif = get().notifications.find(n => n.itemId === itemId);
         if (notif) {
-            notif.ids.forEach(async (id) => await cancelScheduledNotificationAsync(id));
+            await Promise.all(notif.ids.map(id => cancelScheduledNotificationAsync(id)));
             set({notifications: get().notifications.filter(n => n.itemId !== itemId)});
         }
     },
-    clearAllNotifications: () => {
-        get().notifications.forEach(notif => {
-            notif.ids.forEach(async (id) => await cancelScheduledNotificationAsync(id));
-        });
+    clearAllNotifications: async () => {
+        const allIds = get().notifications.flatMap(notif => notif.ids);
+        await Promise.all(allIds.map(id => cancelScheduledNotificationAsync(id)));
         set({notifications: []});
-        return Promise.resolve();
     },
-    clearAllExpiredNotifications: () => {
-        get().notifications.forEach(async (notif) => {
-            if (notif.ids.length > 0) {
-                const [expiredId] = notif.ids;
-                await cancelScheduledNotificationAsync(expiredId);
-                notif.ids.splice(0, 1);
-            }
-        });
-        set({notifications: get().notifications.filter(n => n.ids.length > 0)});
+    clearAllExpiredNotifications: async () => {
+        const expiredIds = get().notifications
+            .filter(n => n.ids.length > 0)
+            .map(n => n.ids[0]);
+
+        await Promise.all(expiredIds.map(id => cancelScheduledNotificationAsync(id)));
+
+        const updatedNotifications = get().notifications.map(notif => ({
+            ...notif,
+            ids: notif.ids.slice(1)
+        })).filter(n => n.ids.length > 0);
+
+        set({notifications: updatedNotifications});
     },
-    clearAllSoonExpiredNotifications: () => {
-        get().notifications.forEach(notif => {
-            if (notif.ids.length > 1) {
-                const soonExpiredIds = notif.ids.slice(1);
-                soonExpiredIds.forEach(async (id) => await cancelScheduledNotificationAsync(id));
-                notif.ids.splice(1, notif.ids.length - 1);
-            }
-        });
-        set({notifications: get().notifications.filter(n => n.ids.length > 0)});
+    clearAllSoonExpiredNotifications: async () => {
+        const soonExpiredIds = get().notifications
+            .filter(n => n.ids.length > 1)
+            .flatMap(n => n.ids.slice(1));
+
+        await Promise.all(soonExpiredIds.map(id => cancelScheduledNotificationAsync(id)));
+
+        const updatedNotifications = get().notifications.map(notif => ({
+            ...notif,
+            ids: notif.ids.length > 0 ? [notif.ids[0]] : []
+        })).filter(n => n.ids.length > 0);
+
+        set({notifications: updatedNotifications});
     },
 }));

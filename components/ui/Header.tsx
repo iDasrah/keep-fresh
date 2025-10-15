@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native'
-import React from 'react'
+import React, {memo, useCallback} from 'react'
 import {styles} from "@/assets/style/header.styles";
 import { colors } from "@/constants/colors";
 import {Ionicons} from "@expo/vector-icons";
@@ -13,16 +13,19 @@ interface HeaderProps {
     variant?: 'index' | 'back';
 }
 
-const Header = ({variant}: HeaderProps) => {
+const Header = memo(({variant}: HeaderProps) => {
     const router = useRouter();
     const {selectedStorage} = useItems();
+
+    const handleBack = useCallback(() => router.back(), [router]);
+    const handleAdd = useCallback(() => router.push(`/add-item?storage=${selectedStorage}`), [router, selectedStorage]);
 
     return (
         <View style={styles.header}>
             <View style={styles.headerTitle}>
                 {
                     variant === 'back' && (
-                        <AnimatedPressable onPress={() => router.back()}>
+                        <AnimatedPressable onPress={handleBack}>
                             <Ionicons name="chevron-back" color={colors.bg} size={32} />
                         </AnimatedPressable>
                     )
@@ -32,7 +35,7 @@ const Header = ({variant}: HeaderProps) => {
                 </Text>
                 {
                     variant === 'index' && (
-                        <AnimatedPressable onPress={() => router.push(`/add-item?storage=${selectedStorage}`)}>
+                        <AnimatedPressable onPress={handleAdd}>
                             <Ionicons name="add" color={colors.bg} size={32} />
                         </AnimatedPressable>
                     )
@@ -48,5 +51,8 @@ const Header = ({variant}: HeaderProps) => {
             }
         </View>
     )
-}
+});
+
+Header.displayName = 'Header';
+
 export default Header
