@@ -1,9 +1,4 @@
 const fr = {
-    tab: {
-        index: "Frigos",
-        stats: "Stats",
-        settings: "Paramètres",
-    },
     header: {
         searchbar: {
             placeholder: {
@@ -229,6 +224,9 @@ const fr = {
     noItems: {
         title: "Vous n'avez ajouté aucun article !",
         button: "Ajouter un article",
+    },
+    shoppingList: {
+        addItemFieldPlaceholder: "Ajouter un article à la liste de courses...",
     }
 }
 

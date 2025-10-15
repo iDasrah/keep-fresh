@@ -58,7 +58,19 @@ const TabsLayout = () => {
                         type="outline"
                     />
                 </View>
-                {pathName === "/" && <Text style={styles.tabBarItemText}>{lang.tab.index}</Text>}
+            </TabTrigger>
+
+            <TabTrigger
+                name="shopping-list"
+                href="/shopping-list"
+                style={styles.tabTrigger}
+                onLayout={(e) => handleLayout('/shopping-list', e)}
+            >
+                <SolarIcon name="CartLarge"
+                            size={32}
+                            color={pathName === '/shopping-list' ? colors.bg : colors.black}
+                            type="outline"
+                />
             </TabTrigger>
 
             <TabTrigger
