@@ -1,9 +1,8 @@
-import {Text, LayoutChangeEvent, View} from "react-native";
+import {LayoutChangeEvent, View} from "react-native";
 import {styles} from "@/assets/style/tab.styles";
 import {TabList, Tabs, TabSlot, TabTrigger} from "expo-router/ui";
 import {usePathname} from "expo-router";
 import {colors} from "@/constants/colors";
-import lang from "@/lib/lang";
 import {LinearGradient} from "expo-linear-gradient";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {useEffect, useRef} from "react";
@@ -76,7 +75,6 @@ const TabsLayout = () => {
                         type="outline"
                     />
                 </View>
-                {pathName === "/stats" && <Text style={styles.tabBarItemText}>{lang.tab.stats}</Text>}
             </TabTrigger>
 
             <TabTrigger
@@ -85,7 +83,6 @@ const TabsLayout = () => {
                 style={styles.tabTrigger}
                 onLayout={(e) => handleLayout('/settings', e)}
             >
-                {pathName === "/settings" && <Text style={styles.tabBarItemText}>{lang.tab.settings}</Text>}
                 <View style={styles.tabBarItem}>
                     <SolarIcon
                         name="Settings"
