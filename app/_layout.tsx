@@ -18,7 +18,7 @@ setNotificationHandler({
 });
 
 export default function RootLayout() {
-    const { init, getAllItems, isConnected, isConnecting } = useDatabase();
+    const { init } = useDatabase();
     const { loadData } = useStats();
     const { loadSettings } = useSettings();
 
@@ -32,7 +32,7 @@ export default function RootLayout() {
             ])
         }
         initApp();
-    }, [getAllItems, init, isConnected, isConnecting, loadData, loadSettings]);
+    }, [init, loadData, loadSettings]);
 
     return (
         <GestureHandlerRootView>

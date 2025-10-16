@@ -1,7 +1,6 @@
 import {StyleSheet, ViewStyle, TextStyle} from "react-native";
 import {colors} from "@/constants/colors";
 
-// Shadow type that works for both View and Text styles
 const shadowStyles = {
     shadowColor: colors.black,
     shadowOffset: {

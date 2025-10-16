@@ -5,12 +5,33 @@ import {colors} from "@/constants/colors";
 import lang from "@/lib/lang";
 import {useItems} from "@/stores/items";
 
+/**
+ * COMPONENT : Searchbar (barre de recherche)
+ *
+ * Input de recherche avec icône loupe pour filtrer les items par nom.
+ *
+ * FONCTIONNEMENT :
+ * - searchText : État global Zustand (store items)
+ * - setSearchText : Met à jour l'état global
+ * - Placeholder dynamique selon le storage sélectionné :
+ *   * "Chercher dans le frigo..."
+ *   * "Chercher dans le congélateur..."
+ *   * "Chercher dans les placards..."
+ *   * "Chercher un produit..." (si "all")
+ *
+ * EFFET :
+ * Quand l'utilisateur tape, ItemsList détecte le changement via React Query
+ * (queryKey inclut searchText) et refetch automatiquement les items filtrés.
+ */
 const Searchbar = () => {
     const { searchText, setSearchText, selectedStorage } = useItems();
 
     return (
         <View style={styles.searchbar}>
+            {/* Icône de recherche (loupe) */}
             <Ionicons name="search" size={24} color={colors.textMuted} />
+
+            {/* Input avec placeholder dynamique selon le storage */}
             <TextInput
                 placeholder={lang.header.searchbar.placeholder[selectedStorage]}
                 placeholderTextColor={colors.textMuted}

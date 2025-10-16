@@ -1,9 +1,4 @@
 const fr = {
-    tab: {
-        index: "Frigos",
-        stats: "Stats",
-        settings: "Paramètres",
-    },
     header: {
         searchbar: {
             placeholder: {
@@ -29,7 +24,29 @@ const fr = {
         form: {
             name: {
                 label: "Nom du produit",
-                placeholder: "Ex: Yaourt nature",
+                placeholder: {
+                    fridge: [
+                        "Ex: Yaourt nature",
+                        "Ex: Fromage râpé",
+                        "Ex: Jus d’orange",
+                        "Ex: Poulet rôti",
+                        "Ex: Lait demi-écrémé",
+                    ],
+                    freezer: [
+                        "Ex: Poisson pané",
+                        "Ex: Glace vanille",
+                        "Ex: Légumes surgelés",
+                        "Ex: Pizza",
+                        "Ex: Steaks hachés",
+                    ],
+                    pantry: [
+                        "Ex: Pâtes",
+                        "Ex: Riz basmati",
+                        "Ex: Biscuits",
+                        "Ex: Sauce tomate",
+                        "Ex: Huile d’olive",
+                    ],
+                },
             },
             quantity: {
                 label: "Quantité",
@@ -116,6 +133,73 @@ const fr = {
                     content: "Tu es un champion anti-gaspi !"
                 }
             ],
+        },
+        avgConsumptionTime: {
+            title: "jours",
+            subtitle: {
+                short: [
+                    "Ils ne font pas long feu.",
+                    "Rapides comme l’éclair.",
+                    "À peine stockés, déjà savourés.",
+                    "Pas le temps de s’installer.",
+                    "Ils passent en coup de vent.",
+                    "Toujours frais, jamais oubliés.",
+                    "Flash food.",
+                    "Ton frigo vit à 100 à l’heure."
+                ],
+                medium: [
+                    "Le bon tempo.",
+                    "Juste ce qu’il faut.",
+                    "Ils attendent sagement.",
+                    "Ni trop tôt, ni trop tard.",
+                    "À point pour être savourés.",
+                    "Un rythme bien rodé.",
+                    "Ils trouvent leur moment."
+                ],
+                long: [
+                    "Ils prennent leur temps.",
+                    "Ils hibernent un peu.",
+                    "Patience avant dégustation.",
+                    "Ils attendent leur heure.",
+                    "Ils se reposent au frais.",
+                    "Ils vivent une longue vie.",
+                    "Les repas prennent le large.",
+                    "C’est presque un garde-manger éternel."
+                ]
+            }
+        },
+        expiredThisWeek: {
+            title: "produits expirés cette semaine",
+            subtitle: {
+                none: [
+                    "Rien n’a été perdu, tout est sauvé.",
+                    "Zéro perte, c’est du grand art.",
+                    "Tu gères comme un chef.",
+                    "Pas une miette de gâchée.",
+                    "Mission anti-gaspi accomplie."
+                ],
+                few: [
+                    "Ils n’ont pas tenu… mais toi si.",
+                    "Un petit oubli, ça arrive.",
+                    "Presque un sans faute.",
+                    "Juste un faux pas.",
+                    "Une perte minime, une leçon de plus."
+                ],
+                some: [
+                    "Ils sont tombés au combat.",
+                    "Un peu de gâchis cette semaine.",
+                    "On peut faire mieux, on le sait.",
+                    "Ils t’ont échappé de peu.",
+                    "Pas parfait, mais t’es sur la bonne voie."
+                ],
+                many: [
+                    "Ton frigo mérite un coup d’œil.",
+                    "Ils t’ont filé entre les doigts.",
+                    "Une semaine difficile.",
+                    "Gros dégât, mais rien d’irréversible.",
+                    "Le gaspillage a gagné cette manche."
+                ]
+            }
         }
     },
     settings: {
@@ -140,6 +224,25 @@ const fr = {
     noItems: {
         title: "Vous n'avez ajouté aucun article !",
         button: "Ajouter un article",
+    },
+    shoppingList: {
+        addItemFieldPlaceholder: "Ajouter un article à la liste de courses...",
+        emptyList: "Aucun article dans la liste",
+    },
+    tab: {
+        fridge: "Frigo",
+        shoppingList: "Courses",
+        stats: "Stats",
+        settings: "Réglages",
+    },
+    errors: {
+        generic: "Une erreur est survenue. Veuillez réessayer.",
+        shoppingList: {
+            emptyItemName: "Le nom de l'article ne peut pas être vide.",
+        },
+        addItem: {
+            requiredName: "Le nom du produit est requis.",
+        }
     }
 }
 

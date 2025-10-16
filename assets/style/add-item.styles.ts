@@ -41,5 +41,28 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: "600",
         letterSpacing: 0.5,
-    }
+    },
+    androidDatePicker: {
+        backgroundColor: colors.bg,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.cardStroke,
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2
+    },
+    androidDatePickerContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    androidDatePickerText: {
+        fontSize: 16,
+        color: colors.black,
+        fontWeight: '500',
+    },
 });

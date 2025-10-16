@@ -1,3 +1,33 @@
+/**
+ * === UNITÉS DE MESURE ===
+ *
+ * Définit toutes les unités disponibles pour les produits et génère
+ * les options de quantité adaptées à chaque type d'unité.
+ *
+ * CATÉGORIES D'UNITÉS :
+ * - Poids : mg, g, kg, ton, oz, lb/lbs
+ * - Volume : ml, cl, dl, L/l/liter/litre, fl oz
+ * - Cuisine : tsp/teaspoon, tbsp/tablespoon, cup/cups
+ * - Grands volumes : pint/pints, quart/quarts, gallon/gallons
+ * - Comptage : pc/pcs, piece/pieces, unit/units
+ * - Emballages : box/boxes, bag/bags, bottle/bottles, can/cans, jar/jars,
+ *                 pack/packs, package/packages, container/containers,
+ *                 carton/cartons, tube/tubes, sachet/sachets, pouch/pouches,
+ *                 bunch/bunches, bundle/bundles, tray/trays
+ *
+ * FONCTION getQuantityOptionsForUnit :
+ * Génère dynamiquement les options de quantité selon l'unité sélectionnée.
+ * Exemples :
+ * - mg : [50, 100, 150... 1000]
+ * - g : [1-20, 50, 100, 150... 1000]
+ * - kg : [0.1, 0.25, 0.5, 0.75, 1-20, 25, 30, 40, 50]
+ * - ml : [10, 25, 50, 75, 100, 150, 200, 250...]
+ * - pcs : [1-50]
+ * - tsp : [1/4, 1/2, 3/4, 1-10]
+ * - cups : [1/4, 1/3, 1/2, 2/3, 3/4, 1-12]
+ *
+ * Utilisé dans add-item.tsx pour le SelectorInput de quantité.
+ */
 export interface Unit {
     label: string;
     value: string;

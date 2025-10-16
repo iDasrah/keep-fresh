@@ -23,5 +23,10 @@ export const styles = StyleSheet.create({
     antiWasteMsgContent: {
         fontSize: 14,
         color: colors.textMuted
-    }
+    },
+    statCardsContainer: {
+        flexDirection: "row",
+        gap: 16,
+        justifyContent: "space-between"
+    },
 });
