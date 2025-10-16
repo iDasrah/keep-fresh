@@ -1,9 +1,4 @@
 const fr = {
-    tab: {
-        index: "Frigos",
-        stats: "Stats",
-        settings: "Paramètres",
-    },
     header: {
         searchbar: {
             placeholder: {
@@ -172,6 +167,39 @@ const fr = {
                     "C’est presque un garde-manger éternel."
                 ]
             }
+        },
+        expiredThisWeek: {
+            title: "produits expirés cette semaine",
+            subtitle: {
+                none: [
+                    "Rien n’a été perdu, tout est sauvé.",
+                    "Zéro perte, c’est du grand art.",
+                    "Tu gères comme un chef.",
+                    "Pas une miette de gâchée.",
+                    "Mission anti-gaspi accomplie."
+                ],
+                few: [
+                    "Ils n’ont pas tenu… mais toi si.",
+                    "Un petit oubli, ça arrive.",
+                    "Presque un sans faute.",
+                    "Juste un faux pas.",
+                    "Une perte minime, une leçon de plus."
+                ],
+                some: [
+                    "Ils sont tombés au combat.",
+                    "Un peu de gâchis cette semaine.",
+                    "On peut faire mieux, on le sait.",
+                    "Ils t’ont échappé de peu.",
+                    "Pas parfait, mais t’es sur la bonne voie."
+                ],
+                many: [
+                    "Ton frigo mérite un coup d’œil.",
+                    "Ils t’ont filé entre les doigts.",
+                    "Une semaine difficile.",
+                    "Gros dégât, mais rien d’irréversible.",
+                    "Le gaspillage a gagné cette manche."
+                ]
+            }
         }
     },
     settings: {
@@ -196,6 +224,25 @@ const fr = {
     noItems: {
         title: "Vous n'avez ajouté aucun article !",
         button: "Ajouter un article",
+    },
+    shoppingList: {
+        addItemFieldPlaceholder: "Ajouter un article à la liste de courses...",
+        emptyList: "Aucun article dans la liste",
+    },
+    tab: {
+        fridge: "Frigo",
+        shoppingList: "Courses",
+        stats: "Stats",
+        settings: "Réglages",
+    },
+    errors: {
+        generic: "Une erreur est survenue. Veuillez réessayer.",
+        shoppingList: {
+            emptyItemName: "Le nom de l'article ne peut pas être vide.",
+        },
+        addItem: {
+            requiredName: "Le nom du produit est requis.",
+        }
     }
 }
 

@@ -20,35 +20,36 @@
         "backgroundColor": "#020617",
         "foregroundImage": "./assets/images/icon.png"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "fr.keepfresh.app"
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/icon.png"
     },
-      "plugins": [
-          "expo-router",
-          [
-              "expo-splash-screen",
-              {
-                  "image": "./assets/images/icon.png",
-                  "imageWidth": 200,
-                  "resizeMode": "contain",
-                  "backgroundColor": "#ffffff",
-                  "dark": {
-                      "backgroundColor": "#000000"
-                  }
-              }
-          ],
-          [
-              "expo-dev-client",
-              {
-                  "launchMode": "most-recent"
-              }
-          ],
-          "expo-sqlite"
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
       ],
-      "experiments": {
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ],
+      "expo-sqlite"
+    ],
+    "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },

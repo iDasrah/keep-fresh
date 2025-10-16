@@ -22,4 +22,10 @@ export type Settings = {
     soonExpirationNotification: boolean;
 }
 
+export type ShoppingListItem = {
+    id: number;
+    name: string;
+    createdAt: string;
+}
+
 export type Storage = 'fridge' | 'freezer' | 'pantry';

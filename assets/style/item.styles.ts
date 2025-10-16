@@ -22,7 +22,9 @@ export const styles = StyleSheet.create({
     },
     itemName: {
         fontSize: 20,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        maxWidth: 120,
+        marginRight: 12
     },
     itemQuantity: {
         fontSize: 14,

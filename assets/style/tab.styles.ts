@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
         },
         shadowOpacity: 0.1,
         shadowRadius: 2,
-        elevation: 8,
+        elevation: 2,
     },
     tabBarItem: {
         paddingVertical: 16,
