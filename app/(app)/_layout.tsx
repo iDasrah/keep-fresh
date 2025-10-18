@@ -1,0 +1,41 @@
+import { Stack } from "expo-router";
+import {useEffect} from "react";
+import { useDatabase } from "@/stores/database";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {requestPermissionsAsync, setNotificationHandler} from "expo-notifications";
+import {handler} from "@/lib/notifications";
+import {useStats} from "@/stores/stats";
+import {useSettings} from "@/stores/settings";
+
+const queryClient = new QueryClient()
+
+setNotificationHandler({
+    handleNotification: handler
+});
+
+export default function AppLayout() {
+    const { init } = useDatabase();
+    const { loadData } = useStats();
+    const { loadSettings } = useSettings();
+
+    useEffect(() => {
+        const initApp = async () => {
+            await Promise.all([
+                init(),
+                requestPermissionsAsync(),
+                loadSettings(),
+                loadData()
+            ])
+        }
+        initApp();
+    }, [init, loadData, loadSettings]);
+
+    return (<>
+        <QueryClientProvider client={queryClient}>
+            <Stack screenOptions={{headerShown: false}}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="add-item" />
+            </Stack>
+        </QueryClientProvider>
+    </>);
+}
