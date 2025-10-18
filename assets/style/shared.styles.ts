@@ -35,7 +35,7 @@ export const inputBase: TextStyle = {
     ...shadowStyles,
 };
 
-export const styles = StyleSheet.create({
+export const sharedStyles = StyleSheet.create({
     label: {
         fontSize: 20,
         fontWeight: "500",
@@ -46,6 +46,43 @@ export const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "500",
         marginBottom: 16,
+    },
+    form: {
+        backgroundColor: colors.bgDark,
+        padding: 24,
+        minHeight: "100%",
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: "700",
+        color: colors.black,
+        marginBottom: 8,
+    },
+    inputField: {
+        marginBottom: 24,
+    },
+    button: {
+        padding: 18,
+        borderRadius: 16,
+        marginTop: 12,
+        shadowColor: colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 6,
+    },
+    buttonText: {
+        color: colors.bg,
+        fontSize: 18,
+        textAlign: "center",
+        fontWeight: "600",
+        letterSpacing: 0.5,
+    },
+    link: {
+        fontWeight: 'bold',
     },
 });
 

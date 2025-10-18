@@ -34,7 +34,7 @@ const TabsLayout = () => {
 
     // Valeurs animées Reanimated (position X et largeur de l'indicateur)
     const bgX = useSharedValue(0);
-    const width = useSharedValue(120);
+    const width = useSharedValue(150);
 
     /**
      * Ref pour stocker les dimensions de chaque tab.
@@ -121,15 +121,34 @@ const TabsLayout = () => {
                 style={styles.tabTrigger}
                 onLayout={(e) => handleLayout('/shopping-list', e)}
             >
-                <SolarIcon
-                    name="CartLarge"
-                    size={32}
-                    color={pathName === '/shopping-list' ? colors.bg : colors.black}
-                    type="outline"
-                />
+                <View style={styles.tabBarItem}>
+                    <SolarIcon
+                        name="CartLarge"
+                        size={32}
+                        color={pathName === '/shopping-list' ? colors.bg : colors.black}
+                        type="outline"
+                    />
+                </View>
             </TabTrigger>
 
-            {/* TAB 3 : Stats */}
+            {/* TAB 3 : Scan product */}
+            <TabTrigger
+                name="scan-product"
+                href="/scan-product"
+                style={styles.tabTrigger}
+                onLayout={(e) => handleLayout('/scan-product', e)}
+            >
+                <View style={styles.tabBarItem}>
+                    <SolarIcon
+                        name="Camera"
+                        size={32}
+                        color={pathName === '/scan-product' ? colors.bg : colors.black}
+                        type="outline"
+                    />
+                </View>
+            </TabTrigger>
+
+            {/* TAB 4 : Stats */}
             <TabTrigger
                 name="stats"
                 href="/stats"
@@ -146,18 +165,18 @@ const TabsLayout = () => {
                 </View>
             </TabTrigger>
 
-            {/* TAB 4 : Settings */}
+            {/* TAB 5 : Account */}
             <TabTrigger
-                name="settings"
-                href="/settings"
+                name="account"
+                href="/account"
                 style={styles.tabTrigger}
-                onLayout={(e) => handleLayout('/settings', e)}
+                onLayout={(e) => handleLayout('/account', e)}
             >
                 <View style={styles.tabBarItem}>
                     <SolarIcon
-                        name="Settings"
+                        name="User"
                         size={32}
-                        color={pathName === '/settings' ? colors.bg : colors.black}
+                        color={pathName === '/account' ? colors.bg : colors.black}
                         type="outline"
                     />
                 </View>

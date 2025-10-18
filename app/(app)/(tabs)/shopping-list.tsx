@@ -102,7 +102,7 @@ const ShoppingList = () => {
             createItemMut.mutate(parsed.data);
         } else {
             const errorMessage = parsed.error.issues[0]?.message || lang.errors.generic;
-            alert(errorMessage);
+            Alert.alert('', errorMessage);
         }
     }
 

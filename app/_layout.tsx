@@ -1,50 +1,29 @@
-import { Stack } from "expo-router";
-import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
+import { Stack } from 'expo-router';
+import {authClient} from "@/lib/auth-client";
 import {colors} from "@/constants/colors";
-import {StatusBar} from "expo-status-bar";
-import {useEffect} from "react";
-import { useDatabase } from "@/stores/database";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {requestPermissionsAsync, setNotificationHandler} from "expo-notifications";
-import {handler} from "@/lib/notifications";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
-import {useStats} from "@/stores/stats";
-import {useSettings} from "@/stores/settings";
+import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
+import {StatusBar} from "expo-status-bar";
 
-const queryClient = new QueryClient()
-
-setNotificationHandler({
-    handleNotification: handler
-});
-
-export default function RootLayout() {
-    const { init } = useDatabase();
-    const { loadData } = useStats();
-    const { loadSettings } = useSettings();
-
-    useEffect(() => {
-        const initApp = async () => {
-            await Promise.all([
-                init(),
-                requestPermissionsAsync(),
-                loadSettings(),
-                loadData()
-            ])
-        }
-        initApp();
-    }, [init, loadData, loadSettings]);
+export default function Root() {
+    const session = authClient.useSession();
 
     return (
         <GestureHandlerRootView>
             <SafeAreaProvider>
                 <SafeAreaView style={{flex: 1, backgroundColor: colors.black}} edges={['top', 'right', 'left']}>
                     <StatusBar style="light" />
-                    <QueryClientProvider client={queryClient}>
-                        <Stack screenOptions={{headerShown: false}}>
-                            <Stack.Screen name="(tabs)" />
-                            <Stack.Screen name="add-item" />
-                        </Stack>
-                    </QueryClientProvider>
+                    <Stack screenOptions={{headerShown: false}}>
+                        <Stack.Protected guard={!!session?.data?.session}>
+                            <Stack.Screen name="(app)" />
+                        </Stack.Protected>
+
+                        <Stack.Protected guard={!session?.data?.session}>
+                            <Stack.Screen name="sign-in" />
+                            <Stack.Screen name="sign-up" />
+                            <Stack.Screen name="request-reset-password" />
+                        </Stack.Protected>
+                    </Stack>
                 </SafeAreaView>
             </SafeAreaProvider>
         </GestureHandlerRootView>

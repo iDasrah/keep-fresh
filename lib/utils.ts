@@ -119,3 +119,7 @@ export function getRandomExpiredThisWeekMessage(count: number): string {
     }
     return getRandomItem(lang.stats.expiredThisWeek.subtitle.many);
 }
+
+export function getBetterAuthErrorMessage(errorCode: string): string {
+    return lang.errors.betterAuth[errorCode as keyof typeof lang.errors.betterAuth] ?? lang.errors.generic;
+}

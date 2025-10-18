@@ -1,6 +1,6 @@
 import {Text, TextProps, StyleProp, TextStyle} from 'react-native';
 import React from 'react';
-import {styles} from '@/assets/style/shared.styles';
+import {sharedStyles} from '@/assets/style/shared.styles';
 
 /**
  * COMPONENT : FormLabel (label de formulaire)
@@ -29,7 +29,7 @@ interface FormLabelProps extends TextProps {
 
 const FormLabel = ({children, style, ...props}: FormLabelProps) => {
     return (
-        <Text style={[styles.label, style]} {...props}>
+        <Text style={[sharedStyles.label, style]} {...props}>
             {children}
         </Text>
     );

@@ -4,7 +4,7 @@ import {colors} from "@/constants/colors";
 export const styles = StyleSheet.create({
     tabBar: {
         backgroundColor: colors.bg,
-        marginHorizontal: 48,
+        marginHorizontal: 20,
         borderRadius: 64,
         position: "absolute",
         bottom: 32,
@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     },
     tabBarItem: {
         paddingVertical: 16,
-        paddingHorizontal: 6,
+        paddingHorizontal: 3,
     },
     tabBarItemText: {
         fontSize: 16,
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
         left: 0,
         top: 0,
         bottom: 0,
-        width: 120,
+        width: 150,
         zIndex: 0,
     },
     tabTrigger: {

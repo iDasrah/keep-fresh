@@ -242,7 +242,103 @@ const fr = {
         },
         addItem: {
             requiredName: "Le nom du produit est requis.",
-        }
+        },
+        signIn: {
+            invalidCredentials: "Email ou mot de passe invalide.",
+            invalidEmail: "L'email n'est pas valide.",
+            requiredPassword: "Le mot de passe est requis.",
+        },
+        signUp: {
+            requiredFirstname: "Le prénom est requis.",
+            requiredLastname: "Le nom est requis.",
+            requiredName: "Le nom d'utilisateur est requis.",
+            requiredPassword: "Le mot de passe est requis.",
+            requiredPasswordConfirmation: "Le mot de passe de confirmation est requis.",
+            passwordMismatch: "Les mots de passe ne correspondent pas.",
+            firstnameTooLong: "Le prénom est trop long.",
+            lastnameTooLong: "Le nom est trop long.",
+            nameTooLong: "Le nom d'utilisateur est trop long.",
+            invalidEmail: "L'email n'est pas valide.",
+            invalidPassword: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un caractère spécial et un chiffre.",
+            passwordTooShort: "Le mot de passe est trop court.",
+            passwordTooLong: "Le mot de passe est trop long.",
+            passwordConfirmationTooShort: "Le mot de passe est trop court.",
+            passwordConfirmationTooLong: "Le mot de passe est trop long.",
+            invalidFirstname: "Le prénom ne peut contenir que des lettres et des traits d'union.",
+            invalidLastname: "Le nom ne peut contenir que des lettres et des traits d'union.",
+            invalidName: "Le nom d'utilisateur ne peut contenir que des lettres, des chiffres et des underscores.",
+        },
+        betterAuth: {
+            INVALID_EMAIL_OR_PASSWORD: "Email ou mot de passe invalide.",
+        },
+    },
+    account: {
+        signIn: {
+            title: "Se connecter",
+            form: {
+                email: {
+                    label: "Email",
+                    placeholder: "Entrez votre adresse email",
+                },
+                password: {
+                    label: "Mot de passe",
+                    placeholder: "Entrez votre mot de passe",
+                },
+                button: "Se connecter",
+            },
+            noAccountYet: {
+                text: "Pas encore de compte ?",
+                action: "Inscrivez-vous.",
+            },
+            forgotPassword: "Mot de passe oublié ?",
+        },
+        signUp: {
+            title: "Créer un compte",
+            form: {
+                firstname: {
+                    label: "Prénom",
+                    placeholder: "Entrez votre prénom",
+                },
+                lastname: {
+                    label: "Nom",
+                    placeholder: "Entrez votre nom",
+                },
+                name: {
+                    label: "Nom d'utilisateur",
+                    placeholder: "Entrez votre nom d'utilisateur",
+                },
+                email: {
+                    label: "Email",
+                    placeholder: "Entrez votre adresse email",
+                },
+                password: {
+                    label: "Mot de passe",
+                    placeholder: "Entrez votre mot de passe",
+                },
+                confirmationPassword: {
+                    label: "Confirmer le mot de passe",
+                    placeholder: "Entrez votre mot de passe",
+                },
+                button: "S'inscrire",
+            },
+            alreadyHaveAnAccount: {
+                text: "Vous avez déjà un compte ?",
+                action: "Connectez-vous.",
+            },
+        },
+        disconnect: {
+            button: "Se déconnecter",
+        },
+        requestResetPassword: {
+            title: "Réinitialiser le mot de passe",
+            form: {
+                email: {
+                    label: "Email",
+                    placeholder: "Entrez votre adresse email",
+                },
+                button: "Envoyer le lien de réinitialisation",
+            },
+        },
     }
 }
 

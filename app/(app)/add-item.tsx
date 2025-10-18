@@ -1,4 +1,4 @@
-import {View, Text, Platform} from 'react-native'
+import {View, Text, Platform, Alert} from 'react-native'
 import {useState, useMemo} from 'react'
 import Header from "@/components/ui/Header";
 import FormInput from "@/components/ui/FormInput";
@@ -151,9 +151,9 @@ const AddItem = () => {
         if (!parsedItem.success) {
             const firstError = parsedItem.error.issues[0]?.message;
             if (firstError) {
-                alert(firstError);
+                Alert.alert('', firstError);
             } else {
-                alert(lang.errors.generic);
+                Alert.alert('', lang.errors.generic);
             }
             return;
         }
