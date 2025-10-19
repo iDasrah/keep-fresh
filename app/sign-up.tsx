@@ -26,7 +26,7 @@ const signUpSchema = z.object({
     name: z.string()
         .nonempty({error: lang.errors.signUp.requiredName})
         .max(15, {error: lang.errors.signUp.nameTooLong})
-        .regex(/^[_a-z1-9]*$/, {error: lang.errors.signUp.invalidName}),
+        .regex(/^[_a-z0-9]*$/, {error: lang.errors.signUp.invalidName}),
     email: z.email({error: lang.errors.signUp.invalidEmail}),
     password: z.string()
         .min(8, {error: lang.errors.signUp.passwordTooShort})
