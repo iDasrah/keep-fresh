@@ -1,18 +1,13 @@
-import {Alert, ScrollView, Text, View} from "react-native";
+import {Alert, KeyboardAvoidingView, Platform, ScrollView, View} from "react-native";
 import Header from "@/components/ui/Header";
 import {useState} from "react";
 import {authClient} from "@/lib/auth-client";
-import FormLabel from "@/components/ui/FormLabel";
 import lang from "@/lib/lang";
-import FormInput from "@/components/ui/FormInput";
-import AnimatedPressable from "@/components/ui/AnimatedPressable";
-import {LinearGradient} from "expo-linear-gradient";
-import {colors} from "@/constants/colors";
 import {z} from "zod/v4";
 import {useRouter} from "expo-router";
-import AnimatedLink from "@/components/ui/AnimatedLink";
-import {getBetterAuthErrorMessage} from "@/lib/utils";
-import {sharedStyles} from "@/assets/style/shared.styles";
+import {handleAuthError, validateFormData} from "@/lib/utils";
+import {signUpStyles as styles} from "@/assets/style/sign-up.styles";
+import {ProgressIndicator, SignUpStep1, SignUpStep2, SignUpStep3} from "@/components/onboarding";
 
 const signUpSchema = z.object({
     firstname: z.string()
@@ -37,8 +32,13 @@ const signUpSchema = z.object({
         .max(30, {error: lang.errors.signUp.passwordConfirmationTooLong}),
 });
 
+type SignUpMethod = 'email' | 'apple' | 'google' | null;
+
 const SignUp = () => {
     const router = useRouter();
+
+    const [step, setStep] = useState<1 | 2 | 3>(1);
+    const [signUpMethod, setSignUpMethod] = useState<SignUpMethod>(null);
 
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
@@ -47,158 +47,131 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-    const handleSignIn = async () => {
-        const parsedItem = signUpSchema.safeParse({
-            firstname,
-            lastname,
-            name,
-            email,
-            password,
-            passwordConfirmation
-        });
+    const [isLoading, setIsLoading] = useState(false);
 
-        // Si validation échoue : Affiche le premier message d'erreur
-        if (!parsedItem.success) {
-            const firstError = parsedItem.error.issues[0]?.message;
-            if (firstError) {
-                Alert.alert('', firstError);
-            } else {
-                Alert.alert('', lang.errors.generic);
-            }
-            return;
-        }
+    const handleSignUp = async () => {
+        if (isLoading) return;
+        setIsLoading(true);
 
-        if (parsedItem.data.password !== parsedItem.data.passwordConfirmation) {
-            Alert.alert('', lang.errors.signUp.passwordMismatch);
-            return;
-        }
+        try {
+            const validation = validateFormData(signUpSchema, {
+                firstname,
+                lastname,
+                name,
+                email,
+                password,
+                passwordConfirmation
+            });
 
-        const { error } = await authClient.signUp.email({
-            ...parsedItem.data,
-        });
-
-        if (error) {
-            if (!error.code) {
-                Alert.alert('', lang.errors.generic);
+            if (!validation.success) {
+                Alert.alert('', validation.error);
                 return;
             }
 
-            Alert.alert('', getBetterAuthErrorMessage(error.code));
+            if (validation.data.password !== validation.data.passwordConfirmation) {
+                Alert.alert('', lang.errors.signUp.passwordMismatch);
+                return;
+            }
+
+            const { error } = await authClient.signUp.email(validation.data);
+
+            if (error) {
+                Alert.alert('', handleAuthError(error));
+                return;
+            }
+
+            setFirstname("");
+            setLastname("");
+            setName("");
+            setEmail("");
+            setPassword("");
+            setPasswordConfirmation("");
+
+            router.replace("/(app)/(tabs)");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSocialSignUp = async (method: 'apple' | 'google') => {
+        Alert.alert('', `Connexion ${method === 'apple' ? 'Apple' : 'Google'} en cours de développement`);
+    };
+
+    const handleMethodSelect = (method: SignUpMethod) => {
+        setSignUpMethod(method);
+        if (method === 'email') {
+            setStep(2);
+        } else if (method) {
+            handleSocialSignUp(method);
+        }
+    };
+
+    const handleStep2Next = () => {
+        // Validation des champs de l'étape 2
+        const step2Schema = z.object({
+            firstname: signUpSchema.shape.firstname,
+            lastname: signUpSchema.shape.lastname,
+            name: signUpSchema.shape.name,
+        });
+
+        const validation = validateFormData(step2Schema, {firstname, lastname, name});
+
+        if (!validation.success) {
+            Alert.alert('', validation.error);
             return;
         }
 
-        setFirstname("");
-        setLastname("");
-        setName("");
-        setEmail("");
-        setPassword("");
-        setPasswordConfirmation("");
-
-        router.replace("/(app)/(tabs)");
+        setStep(3);
     };
 
     return (
-        <View>
-            <Header />
+        <View style={styles.wrapper}>
+            <Header variant="back" />
 
-            <ScrollView
-                style={sharedStyles.form}
-                contentContainerStyle={{paddingBottom: 200}}
+            <KeyboardAvoidingView
+                style={{flex: 1}}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
             >
-                {/* Titre de la page */}
-                <Text style={sharedStyles.title}>{lang.account.signUp.title}</Text>
+                <ScrollView
+                    style={styles.container}
+                    contentContainerStyle={styles.scrollContent}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <ProgressIndicator currentStep={step} />
 
-                <View style={{marginTop: 30}}>
-                    <View style={[sharedStyles.inputField, {flexDirection: "row", gap: 12}]}>
-                        {/* Prénom */}
-                        <View style={{flex: 1}}>
-                            <FormLabel>{lang.account.signUp.form.firstname.label}</FormLabel>
-                            <FormInput
-                                placeholder={lang.account.signUp.form.firstname.placeholder}
-                                value={firstname}
-                                onChangeText={setFirstname}
-                                textContentType={"name"}
-                            />
-                        </View>
+                    {step === 1 && (
+                        <SignUpStep1 onMethodSelect={handleMethodSelect} />
+                    )}
 
-                        {/* Nom */}
-                        <View style={{flex: 1}}>
-                            <FormLabel>{lang.account.signUp.form.lastname.label}</FormLabel>
-                            <FormInput
-                                placeholder={lang.account.signUp.form.lastname.placeholder}
-                                value={lastname}
-                                onChangeText={setLastname}
-                                textContentType={"name"}
-                            />
-                        </View>
-                    </View>
-
-                    {/* Nom d'utilisateur */}
-                    <View style={sharedStyles.inputField}>
-                        <FormLabel>{lang.account.signUp.form.name.label}</FormLabel>
-                        <FormInput
-                            placeholder={lang.account.signUp.form.name.placeholder}
-                            value={name}
-                            onChangeText={setName}
-                            textContentType={"name"}
+                    {step === 2 && (
+                        <SignUpStep2
+                            firstname={firstname}
+                            lastname={lastname}
+                            name={name}
+                            onFirstnameChange={setFirstname}
+                            onLastnameChange={setLastname}
+                            onNameChange={setName}
+                            onBack={() => setStep(1)}
+                            onNext={handleStep2Next}
                         />
-                    </View>
+                    )}
 
-                    {/* Email */}
-                    <View style={sharedStyles.inputField}>
-                        <FormLabel>{lang.account.signUp.form.email.label}</FormLabel>
-                        <FormInput
-                            placeholder={lang.account.signUp.form.email.placeholder}
-                            value={email}
-                            onChangeText={setEmail}
-                            textContentType={"emailAddress"}
+                    {step === 3 && (
+                        <SignUpStep3
+                            email={email}
+                            password={password}
+                            passwordConfirmation={passwordConfirmation}
+                            onEmailChange={setEmail}
+                            onPasswordChange={setPassword}
+                            onPasswordConfirmationChange={setPasswordConfirmation}
+                            onBack={() => setStep(2)}
+                            onSubmit={handleSignUp}
+                            isLoading={isLoading}
                         />
-                    </View>
-
-                    {/* Mot de passe */}
-                    <View style={sharedStyles.inputField}>
-                        <FormLabel>{lang.account.signUp.form.password.label}</FormLabel>
-                        <FormInput
-                            placeholder={lang.account.signUp.form.password.placeholder}
-                            value={password}
-                            onChangeText={setPassword}
-                            textContentType={"password"}
-                            secureTextEntry={true}
-                        />
-                    </View>
-
-                    {/* Confirmation de mot de passe */}
-                    <View style={sharedStyles.inputField}>
-                        <FormLabel>{lang.account.signUp.form.confirmationPassword.label}</FormLabel>
-                        <FormInput
-                            placeholder={lang.account.signUp.form.confirmationPassword.placeholder}
-                            value={passwordConfirmation}
-                            onChangeText={setPasswordConfirmation}
-                            textContentType={"password"}
-                            secureTextEntry={true}
-                        />
-                    </View>
-
-                    {/* Se connecter */}
-                    <AnimatedPressable onPress={handleSignIn}>
-                        <LinearGradient style={sharedStyles.button} colors={colors.blackGradient}>
-                            <Text style={sharedStyles.buttonText}>{lang.account.signUp.form.button}</Text>
-                        </LinearGradient>
-                    </AnimatedPressable>
-                </View>
-
-                {/* Se connecter */}
-                <View style={{display: 'flex', flexDirection: 'row'}}>
-                    <Text>
-                        {lang.account.signUp.alreadyHaveAnAccount.text}{" "}
-                    </Text>
-                    <AnimatedLink
-                        onPress={() => router.canGoBack() ? router.back() : router.replace('/sign-in')}
-                    >
-                        <Text style={sharedStyles.link}>{lang.account.signUp.alreadyHaveAnAccount.action}</Text>
-                    </AnimatedLink>
-                </View>
-            </ScrollView>
+                    )}
+                </ScrollView>
+            </KeyboardAvoidingView>
         </View>
     )
 }

@@ -1,3 +1,5 @@
+export const appName = "keep fresh";
+
 const fr = {
     header: {
         searchbar: {
@@ -272,7 +274,15 @@ const fr = {
             INVALID_EMAIL_OR_PASSWORD: "Email ou mot de passe invalide.",
         },
     },
-    account: {
+    auth: {
+        root: {
+            welcomeTitle: "Bienvenue sur",
+            subtitle: "Ne gaspille plus jamais ! Suis tes aliments et reçois une alerte avant qu’ils ne périment.",
+            actions: {
+                signIn: "J'ai déjà un compte",
+                signUp: "Je veux créer un compte",
+            }
+        },
         signIn: {
             title: "Se connecter",
             form: {
@@ -285,6 +295,7 @@ const fr = {
                     placeholder: "Entrez votre mot de passe",
                 },
                 button: "Se connecter",
+                loadingBtn: "Connexion en cours...",
             },
             noAccountYet: {
                 text: "Pas encore de compte ?",
@@ -293,38 +304,62 @@ const fr = {
             forgotPassword: "Mot de passe oublié ?",
         },
         signUp: {
-            title: "Créer un compte",
-            form: {
-                firstname: {
+            step1: {
+                title: "Créer un compte",
+                subtitle: "Choisis ta méthode d'inscription",
+                methods: {
+                    email: {
+                        title: "S'inscrire avec Email",
+                        description: "Créer un compte en utilisant votre adresse email",
+                    },
+                    apple: {
+                        title: "S'inscrire avec Apple",
+                        description: "Inscription rapide et sécurisée avec Apple",
+                    },
+                    google: {
+                        title: "S'inscrire avec Google",
+                        description: "Inscription rapide et sécurisée avec Google",
+                    }
+                },
+                alreadyHaveAccount: {
+                    text: "Vous avez déjà un compte ?",
+                    action: "Connectez-vous.",
+                }
+            },
+            step2: {
+                title: "Informations personnelles",
+                subtitle: "Parlez-nous un peu de vous",
+                firstName: {
                     label: "Prénom",
-                    placeholder: "Entrez votre prénom",
+                    placeholder: "Ex: John",
                 },
-                lastname: {
+                lastName: {
                     label: "Nom",
-                    placeholder: "Entrez votre nom",
+                    placeholder: "Ex: Doe",
                 },
-                name: {
+                username: {
                     label: "Nom d'utilisateur",
-                    placeholder: "Entrez votre nom d'utilisateur",
-                },
+                    placeholder: "Ex: john_doe",
+                }
+            },
+            step3: {
+                title: "Sécuriser le compte",
+                subtitle: "Configurez votre email et mot de passe",
                 email: {
                     label: "Email",
-                    placeholder: "Entrez votre adresse email",
+                    placeholder: `Ex: john.doe@${appName.replace(/\s+/g, '').toLowerCase()}.app`,
                 },
                 password: {
                     label: "Mot de passe",
                     placeholder: "Entrez votre mot de passe",
                 },
-                confirmationPassword: {
+                passwordConfirmation: {
                     label: "Confirmer le mot de passe",
-                    placeholder: "Entrez votre mot de passe",
+                    placeholder: "Confirmez votre mot de passe",
                 },
-                button: "S'inscrire",
-            },
-            alreadyHaveAnAccount: {
-                text: "Vous avez déjà un compte ?",
-                action: "Connectez-vous.",
-            },
+                button: "Créer un compte",
+                loadingBtn: "Création du compte...",
+            }
         },
         disconnect: {
             button: "Se déconnecter",
@@ -339,7 +374,9 @@ const fr = {
                 button: "Envoyer le lien de réinitialisation",
             },
         },
-    }
+    },
+    back: "Retour",
+    continue: "Continuer",
 }
 
 const lang = fr;

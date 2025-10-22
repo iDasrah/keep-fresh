@@ -66,14 +66,14 @@ const RequestResetPassword = () => {
 
             <View style={sharedStyles.form}>
                 {/* Titre de la page */}
-                <Text style={sharedStyles.title}>{lang.account.requestResetPassword.title}</Text>
+                <Text style={sharedStyles.title}>{lang.auth.requestResetPassword.title}</Text>
 
                 <View style={{marginTop: 30}}>
                     {/* Email */}
                     <View style={sharedStyles.inputField}>
-                        <FormLabel>{lang.account.requestResetPassword.form.email.label}</FormLabel>
+                        <FormLabel>{lang.auth.requestResetPassword.form.email.label}</FormLabel>
                         <FormInput
-                            placeholder={lang.account.requestResetPassword.form.email.placeholder}
+                            placeholder={lang.auth.requestResetPassword.form.email.placeholder}
                             value={email}
                             onChangeText={setEmail}
                             textContentType={"emailAddress"}
@@ -83,7 +83,7 @@ const RequestResetPassword = () => {
                     {/* Demande de réinitialisation du mot de passe */}
                     <AnimatedPressable onPress={handleRequestResetPassword}>
                         <LinearGradient style={sharedStyles.button} colors={colors.blackGradient}>
-                            <Text style={sharedStyles.buttonText}>{lang.account.requestResetPassword.form.button}</Text>
+                            <Text style={sharedStyles.buttonText}>{lang.auth.requestResetPassword.form.button}</Text>
                         </LinearGradient>
                     </AnimatedPressable>
                 </View>

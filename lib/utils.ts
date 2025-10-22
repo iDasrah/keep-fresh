@@ -120,6 +120,66 @@ export function getRandomExpiredThisWeekMessage(count: number): string {
     return getRandomItem(lang.stats.expiredThisWeek.subtitle.many);
 }
 
+/**
+ * Retourne un message d'erreur localisé pour les erreurs BetterAuth.
+ *
+ * @param errorCode - Code d'erreur BetterAuth
+ * @returns Message d'erreur traduit ou message générique
+ */
 export function getBetterAuthErrorMessage(errorCode: string): string {
     return lang.errors.betterAuth[errorCode as keyof typeof lang.errors.betterAuth] ?? lang.errors.generic;
+}
+
+/**
+ * Valide les données d'un formulaire avec Zod et retourne le premier message d'erreur.
+ *
+ * @param schema - Schéma de validation Zod
+ * @param data - Données à valider
+ * @returns Objet contenant success (boolean) et data/error
+ *
+ * @example
+ * const result = validateFormData(signInSchema, { email, password });
+ * if (!result.success) {
+ *   Alert.alert('', result.error);
+ *   return;
+ * }
+ */
+export function validateFormData<T>(
+    schema: { safeParse: (data: unknown) => { success: boolean; data?: T; error?: { issues: { message?: string }[] } } },
+    data: unknown
+): { success: true; data: T } | { success: false; error: string } {
+    const parsedData = schema.safeParse(data);
+
+    if (!parsedData.success) {
+        const firstError = parsedData.error?.issues[0]?.message;
+        return {
+            success: false,
+            error: firstError || lang.errors.generic
+        };
+    }
+
+    return {
+        success: true,
+        data: parsedData.data as T
+    };
+}
+
+/**
+ * Gère les erreurs d'authentification et affiche un message approprié.
+ *
+ * @param error - Objet d'erreur de BetterAuth (peut contenir un code d'erreur)
+ * @param fallbackMessage - Message à afficher si l'erreur n'a pas de code
+ * @returns Message d'erreur formaté
+ *
+ * @example
+ * const { error } = await authClient.signIn.email(data);
+ * if (error) {
+ *   const message = handleAuthError(error);
+ *   Alert.alert('', message);
+ * }
+ */
+export function handleAuthError(error: { code?: string } | null | undefined, fallbackMessage?: string): string {
+    if (!error) return fallbackMessage || lang.errors.generic;
+    if (!error.code) return fallbackMessage || lang.errors.generic;
+    return getBetterAuthErrorMessage(error.code);
 }

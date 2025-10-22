@@ -37,7 +37,7 @@ const SignIn = () => {
                     {/* Se déconnecter */}
                     <AnimatedPressable onPress={handleSignOut}>
                         <LinearGradient style={sharedStyles.button} colors={colors.blackGradient}>
-                            <Text style={sharedStyles.buttonText}>{lang.account.disconnect.button}</Text>
+                            <Text style={sharedStyles.buttonText}>{lang.auth.disconnect.button}</Text>
                         </LinearGradient>
                     </AnimatedPressable>
                 </View>
