@@ -5,11 +5,11 @@ import * as SecureStore from "expo-secure-store";
 export const authClient = createAuthClient({
     baseURL: process.env.EXPO_PUBLIC_API_URL,
     basePath: 'auth',
-    trustedOrigins: ["mobile://"],
+    trustedOrigins: ["keepfresh://"],
     plugins: [
         expoClient({
-            scheme: "mobile",
-            storagePrefix: "mobile",
+            scheme: "keepfresh",
+            storagePrefix: "keepfresh",
             storage: SecureStore,
         })
     ]
