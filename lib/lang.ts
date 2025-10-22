@@ -1,3 +1,5 @@
+export const appName = "keep fresh";
+
 const fr = {
     header: {
         searchbar: {
@@ -272,7 +274,15 @@ const fr = {
             INVALID_EMAIL_OR_PASSWORD: "Email ou mot de passe invalide.",
         },
     },
-    account: {
+    auth: {
+        root: {
+            welcomeTitle: "Bienvenue sur",
+            subtitle: "Ne gaspille plus jamais ! Suis tes aliments et reçois une alerte avant qu’ils ne se périment.",
+            actions: {
+                signIn: "J'ai déjà un compte",
+                signUp: "Je veux créer un compte",
+            }
+        },
         signIn: {
             title: "Se connecter",
             form: {

@@ -64,7 +64,6 @@ export const sharedStyles = StyleSheet.create({
     button: {
         padding: 18,
         borderRadius: 16,
-        marginTop: 12,
         shadowColor: colors.black,
         shadowOffset: {
             width: 0,

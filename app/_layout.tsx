@@ -19,6 +19,7 @@ export default function Root() {
                         </Stack.Protected>
 
                         <Stack.Protected guard={!session?.data?.session}>
+                            <Stack.Screen name="index" />
                             <Stack.Screen name="sign-in" />
                             <Stack.Screen name="sign-up" />
                             <Stack.Screen name="request-reset-password" />
