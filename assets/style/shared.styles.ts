@@ -81,7 +81,8 @@ export const sharedStyles = StyleSheet.create({
         letterSpacing: 0.5,
     },
     link: {
-        fontWeight: 'bold',
+        color: colors.black,
+        fontWeight: '600',
     },
 });
 
