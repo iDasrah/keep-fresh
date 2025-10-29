@@ -64,7 +64,6 @@ export const sharedStyles = StyleSheet.create({
     button: {
         padding: 18,
         borderRadius: 16,
-        marginTop: 12,
         shadowColor: colors.black,
         shadowOffset: {
             width: 0,
@@ -82,7 +81,8 @@ export const sharedStyles = StyleSheet.create({
         letterSpacing: 0.5,
     },
     link: {
-        fontWeight: 'bold',
+        color: colors.black,
+        fontWeight: '600',
     },
 });
 

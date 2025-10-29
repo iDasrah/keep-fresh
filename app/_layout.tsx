@@ -19,11 +19,12 @@ export default function Root() {
                         <SafeAreaView style={{flex: 1, backgroundColor: colors.black}} edges={['top', 'right', 'left']}>
                             <StatusBar style="light" />
                             <Stack screenOptions={{headerShown: false}}>
-                                    <Stack.Protected guard={!!session?.data?.session}>
-                                            <Stack.Screen name="(after-auth)" />
-                                    </Stack.Protected>
+                                <Stack.Protected guard={!!session?.data?.session}>
+                                        <Stack.Screen name="(after-auth)" />
+                                </Stack.Protected>
 
                                 <Stack.Protected guard={!session?.data?.session}>
+                                    <Stack.Screen name="index" />
                                     <Stack.Screen name="sign-in" />
                                     <Stack.Screen name="sign-up" />
                                     <Stack.Screen name="request-reset-password" />
