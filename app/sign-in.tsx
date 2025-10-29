@@ -47,7 +47,7 @@ const SignIn = () => {
 
             setEmail("");
             setPassword("");
-            router.replace("/");
+            router.replace("/(after-auth)/(app)/(tabs)");
         } finally {
             setIsLoading(false);
         }

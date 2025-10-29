@@ -87,7 +87,7 @@ const SignUp = () => {
             setPassword("");
             setPasswordConfirmation("");
 
-            router.replace("/(app)/(tabs)");
+            router.replace("/(after-auth)/(app)/(tabs)");
         } finally {
             setIsLoading(false);
         }
