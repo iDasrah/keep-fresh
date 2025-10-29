@@ -32,12 +32,12 @@ import {useDatabase} from "@/stores/database";
  * - Permet d'activer/désactiver les types de notifications
  */
 interface NotificationsState {
-    notifications: { ids: string[], itemId: number }[];
+    notifications: { ids: string[], itemId: string }[];
 
     scheduleItemNotifications: (item: Omit<Item, 'createdAt'>) => Promise<void>;
     scheduleAllItemsExpiredNotifications: () => Promise<void>;
     scheduleAllItemsSoonExpiredNotifications: () => Promise<void>;
-    cancelItemNotifications: (itemId: number) => void;
+    cancelItemNotifications: (itemId: string) => void;
 
     clearAllNotifications: () => Promise<void>;
     clearAllExpiredNotifications: () => void;
@@ -126,7 +126,7 @@ export const useNotifications = create<NotificationsState>((set, get) => ({
      * IMPORTANT : Promise.all au lieu de forEach pour attendre toutes les annulations
      * (bug critique corrigé : forEach + async ne marchait pas)
      */
-    cancelItemNotifications: async (itemId: number) => {
+    cancelItemNotifications: async (itemId: string) => {
         const notif = get().notifications.find(n => n.itemId === itemId);
         if (notif) {
             await Promise.all(notif.ids.map(id => cancelScheduledNotificationAsync(id)));

@@ -1,5 +1,5 @@
 export type Item = {
-    id: number;
+    id: string;
     name: string;
     quantity: number;
     unit: string;
@@ -28,4 +28,4 @@ export type ShoppingListItem = {
     createdAt: string;
 }
 
-export type Storage = 'fridge' | 'freezer' | 'pantry';
+export type Storage = 'FRIDGE' | 'FREEZER' | 'PANTRY' | 'OTHER';

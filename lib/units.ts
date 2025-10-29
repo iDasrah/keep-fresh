@@ -26,7 +26,7 @@
  * - tsp : [1/4, 1/2, 3/4, 1-10]
  * - cups : [1/4, 1/3, 1/2, 2/3, 3/4, 1-12]
  *
- * Utilisé dans add-item.tsx pour le SelectorInput de quantité.
+ * Utilisé dans add-item/[productId].tsx pour le SelectorInput de quantité.
  */
 export interface Unit {
     label: string;

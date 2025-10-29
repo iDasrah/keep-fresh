@@ -9,7 +9,7 @@ import {inputBase} from '@/assets/style/shared.styles';
  * TextInput réutilisable avec styles par défaut de l'app.
  *
  * UTILISATION :
- * - Formulaire add-item : Champ "Nom du produit"
+ * - Formulaire add-item/[productId] : Champ "Nom du produit"
  * - Hérite de tous les props de TextInput (value, onChangeText, etc.)
  *
  * STYLES :

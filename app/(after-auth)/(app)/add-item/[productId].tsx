@@ -1,7 +1,6 @@
 import {View, Text, Platform, Alert} from 'react-native'
-import {useState, useMemo} from 'react'
+import {useState, useMemo, useCallback} from 'react'
 import Header from "@/components/ui/Header";
-import FormInput from "@/components/ui/FormInput";
 import FormLabel from "@/components/ui/FormLabel";
 import {styles} from "@/assets/style/add-item.styles";
 import lang from "@/lib/lang";
@@ -9,15 +8,18 @@ import {colors} from "@/constants/colors";
 import SelectorInput from "@/components/ui/SelectorInput";
 import {LinearGradient} from "expo-linear-gradient";
 import RNDateTimePicker, {DateTimePickerAndroid} from "@react-native-community/datetimepicker";
-import {useDatabase} from "@/stores/database";
 import {z} from "zod/v4";
-import {useLocalSearchParams, useRouter} from "expo-router";
+import {useFocusEffect, useLocalSearchParams, useRouter} from "expo-router";
 import {useNotifications} from "@/stores/notifications";
 import {useStats} from "@/stores/stats";
 import {units, getQuantityOptionsForUnit} from "@/lib/units";
-import {getRandomPlaceholder} from "@/lib/utils";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {addDays} from "date-fns";
+import {useApiMutation} from "@/lib/useApiMutation";
+import {api} from "@/lib/api";
+import {AxiosError} from "axios";
+import {CreateLocationProductDto, Product} from "@/generated-api";
+import {useLocation} from "@/providers/location";
 
 /**
  * SCREEN : Formulaire d'ajout d'un produit
@@ -44,9 +46,10 @@ import {addDays} from "date-fns";
 
 // Options pour le sélecteur de stockage
 const storageOptions = [
-    {label: lang.header.storageSelector.fridge, value: "fridge"},
-    {label: lang.header.storageSelector.freezer, value: "freezer"},
-    {label: lang.header.storageSelector.pantry, value: "pantry"},
+    {label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"},
+    {label: lang.header.storageSelector.FREEZER, value: "FREEZER"},
+    {label: lang.header.storageSelector.PANTRY, value: "PANTRY"},
+    {label: lang.header.storageSelector.OTHER, value: "OTHER"},
 ];
 
 /**
@@ -58,10 +61,9 @@ const storageOptions = [
  * - expirationDate : Date dans le futur (refine custom)
  */
 const itemSchema = z.object({
-    name: z.string().min(1, {error: lang.errors.addItem.requiredName}),
     quantity: z.number().min(1),
     unit: z.string().min(1),
-    storage: z.enum(["fridge", "freezer", "pantry"]),
+    storage: z.enum(["FRIDGE", "FREEZER", "PANTRY", "OTHER"]),
     expirationDate: z.date().refine(date => date > new Date()),
 });
 
@@ -69,14 +71,44 @@ const itemSchema = z.object({
  * Schema Zod pour valider le query param ?storage=...
  * Permet de pré-sélectionner le type de stockage depuis la page d'accueil.
  */
-const storageParamSchema = z.enum(["fridge", "freezer", "pantry"]);
+const storageParamSchema = z.enum(["FRIDGE", "FREEZER", "PANTRY", "OTHER"]);
 
 const AddItem = () => {
+    const { productId } = useLocalSearchParams<{ productId: string }>();
+    const [product, setProduct] = useState<Product>({} as Product);
+    const { location } = useLocation();
+
+    const getProductV1 = useApiMutation((data: string) => api.product.getProductV1(data));
+    const createLocationProductV1 = useApiMutation(({locationId, data}: {locationId: string, data: CreateLocationProductDto}) => api.locationProduct.createLocationProductV1(locationId, data));
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchProduct = async (productId: string) => {
+                try {
+                    const scannedProduct = await getProductV1.mutateAsync(productId);
+
+                    if (!location) {
+                        Alert.alert('Error', lang.errors.generic);
+                        return;
+                    }
+                    setProduct(scannedProduct.data);
+                } catch (error: unknown) {
+                    if (error instanceof AxiosError && error.response?.data?.message) {
+                        Alert.alert('Error', error.response.data.message);
+                        return;
+                    }
+                    Alert.alert('Error', lang.errors.generic);
+                }
+            }
+
+            void fetchProduct(productId);
+        }, [])
+    );
+
     // Récupère le query param ?storage=... (optionnel)
     const { storage: storageParam } = useLocalSearchParams();
 
     // États locaux pour chaque champ du formulaire
-    const [name, setName] = useState<string>("");
     const [quantity, setQuantity] = useState<{label: string, value: string}>({label: "1", value: "1"});
     const [unit, setUnit] = useState<{label: string, value: string}>({label: "pcs", value: "pcs"});
 
@@ -88,8 +120,8 @@ const AddItem = () => {
      */
     const [storage, setStorage] = useState<{label: string, value: string}>(
         storageParam && storageParamSchema.safeParse(storageParam).success
-            ? {label: lang.header.storageSelector[storageParam as "fridge" | "freezer" | "pantry"], value: storageParam as string}
-            : {label: lang.header.storageSelector.fridge, value: "fridge"}
+            ? {label: lang.header.storageSelector[storageParam as "FRIDGE" | "FREEZER" | "PANTRY" | "OTHER"], value: storageParam as string}
+            : {label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"}
     );
 
     // Date d'expiration par défaut = demain (addDays évite d'ajouter des produits déjà expirés)
@@ -97,7 +129,6 @@ const AddItem = () => {
 
     const { scheduleItemNotifications } = useNotifications();
     const { addTotalAddedItems } = useStats();
-    const { addItem } = useDatabase();
     const router = useRouter();
 
     /**
@@ -138,57 +169,76 @@ const AddItem = () => {
      *    e. Redirect vers l'accueil
      */
     const handleAddItem = async () => {
-        // Validation Zod avec safeParse (ne throw pas, retourne un objet result)
-        const parsedItem = itemSchema.safeParse({
-            name,
-            quantity: Number(quantity.value),
-            unit: unit.value,
-            storage: storage.value as "fridge" | "freezer" | "pantry",
-            expirationDate,
-        });
-
-        // Si validation échoue : Affiche le premier message d'erreur
-        if (!parsedItem.success) {
-            const firstError = parsedItem.error.issues[0]?.message;
-            if (firstError) {
-                Alert.alert('', firstError);
-            } else {
-                Alert.alert('', lang.errors.generic);
+        try {
+            if (!location) {
+                Alert.alert('Error', lang.errors.generic);
+                return;
             }
-            return;
+
+            // Validation Zod avec safeParse (ne throw pas, retourne un objet result)
+            const parsedItem = itemSchema.safeParse({
+                quantity: Number(quantity.value),
+                unit: unit.value,
+                storage: storage.value as "FRIDGE" | "FREEZER" | "PANTRY" | "OTHER",
+                expirationDate,
+            });
+
+            // Si validation échoue : Affiche le premier message d'erreur
+            if (!parsedItem.success) {
+                const firstError = parsedItem.error.issues[0]?.message;
+                if (firstError) {
+                    Alert.alert('', firstError);
+                } else {
+                    Alert.alert('', lang.errors.generic);
+                }
+                return;
+            }
+
+            const newItem = await createLocationProductV1.mutateAsync({
+                locationId: location,
+                data: {
+                    productId: product.id,
+                    containerType: parsedItem.data.storage,
+                    expirations: [],
+                } as any //TODO: CHANGER L'API POUR POUVOIR AJOUTER UNE DATE DE PEREMPTION
+            });
+
+            // Schedule les notifications (expired + soon expired)
+            await scheduleItemNotifications({
+                id: newItem.data.id,
+                name: product.name,
+                quantity: parsedItem.data.quantity,
+                unit: parsedItem.data.unit,
+                storage: parsedItem.data.storage,
+                expirationDate: parsedItem.data.expirationDate.toISOString(),
+            });
+
+            // Incrémente le compteur d'items ajoutés (pour le score anti-gaspi)
+            addTotalAddedItems();
+
+            // Reset complet du formulaire
+            setQuantity({label: "1", value: "1"});
+            setUnit({label: "pcs", value: "pcs"});
+            setStorage({label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"});
+            setExpirationDate(new Date());
+
+            // Retour à l'accueil (replace pour éviter de garder /add-item dans l'historique)
+            router.replace("/");
+        } catch (error: unknown) {
+            if (error instanceof AxiosError && error.response?.data?.message) {
+                if (typeof error.response.data.message === 'string') {
+                    Alert.alert('Error', error.response.data.message);
+                    return;
+                } else if (Array.isArray(error.response.data.message)
+                    && error.response.data.message.length > 0
+                    && error.response.data.message[0]?.constraints
+                ) {
+                    Alert.alert('Error', Object.values(error.response.data.message[0].constraints)[0] as string);
+                    return;
+                }
+            }
+            Alert.alert('Error', lang.errors.generic);
         }
-
-        // Insertion en DB (retourne l'ID du nouvel item)
-        const newItemId = await addItem({
-            name: parsedItem.data.name,
-            quantity: parsedItem.data.quantity,
-            unit: parsedItem.data.unit,
-            storage: parsedItem.data.storage,
-            expirationDate: parsedItem.data.expirationDate.toISOString(),
-        });
-
-        // Schedule les notifications (expired + soon expired)
-        await scheduleItemNotifications({
-            id: newItemId,
-            name: parsedItem.data.name,
-            quantity: parsedItem.data.quantity,
-            unit: parsedItem.data.unit,
-            storage: parsedItem.data.storage,
-            expirationDate: parsedItem.data.expirationDate.toISOString(),
-        });
-
-        // Incrémente le compteur d'items ajoutés (pour le score anti-gaspi)
-        addTotalAddedItems();
-
-        // Reset complet du formulaire
-        setName("");
-        setQuantity({label: "1", value: "1"});
-        setUnit({label: "pcs", value: "pcs"});
-        setStorage({label: lang.header.storageSelector.fridge, value: "fridge"});
-        setExpirationDate(new Date());
-
-        // Retour à l'accueil (replace pour éviter de garder /add-item dans l'historique)
-        router.replace("/");
     }
 
     return (
@@ -198,20 +248,10 @@ const AddItem = () => {
 
             <View style={styles.addItem}>
                 {/* Titre et sous-titre de la page */}
-                <Text style={styles.title}>{lang.addItem.title}</Text>
+                <Text style={styles.title}>{lang.addItem.title}{" "}{product.name}</Text>
                 <Text style={styles.subtitle}>{lang.addItem.subtitle}</Text>
 
                 <View style={{marginTop: 30}}>
-                    {/* CHAMP 1 : Nom du produit */}
-                    <View style={styles.inputField}>
-                        <FormLabel>{lang.addItem.form.name.label}</FormLabel>
-                        <FormInput
-                            placeholder={getRandomPlaceholder(storage.value as "fridge" | "freezer" | "pantry")}
-                            value={name}
-                            onChangeText={setName}
-                        />
-                    </View>
-
                     {/* CHAMPS 2 & 3 : Quantité et Unité (côte à côte) */}
                     <View style={[styles.inputField, {flexDirection: "row", gap: 12}]}>
                         <View style={{flex: 1}}>
@@ -242,7 +282,7 @@ const AddItem = () => {
                                 onChange={(_, date) => setExpirationDate(date!)}
                                 minimumDate={addDays(new Date(), 1)} // Minimum = demain
                             />
-                            ) : (
+                        ) : (
                             <AnimatedPressable
                                 onPress={() => DateTimePickerAndroid.open({
                                     value: expirationDate,
@@ -262,7 +302,7 @@ const AddItem = () => {
                                     </Text>
                                 </View>
                             </AnimatedPressable>
-                            )
+                        )
                         }
                     </View>
 

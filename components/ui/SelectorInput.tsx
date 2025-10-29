@@ -12,7 +12,7 @@ import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from
  * avec la liste des options.
  *
  * UTILISATION :
- * - Formulaire add-item : Quantité, Unité, Stockage
+ * - Formulaire add-item/[productId] : Quantité, Unité, Stockage
  * - Permet de choisir parmi une liste d'options {label, value}
  *
  * ANIMATIONS :
