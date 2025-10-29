@@ -7,9 +7,8 @@ import {useApiMutation} from "@/lib/useApiMutation";
 import {api} from "@/lib/api";
 import {useLocation} from "@/providers/location";
 
-SplashScreen.preventAutoHideAsync();
-
-export default function Root() {
+export default function AfterAuthLayout() {
+    SplashScreen.preventAutoHideAsync();
     const { location, setLocation, deleteLocation, isLoading } = useLocation();
     const [isLocationLoading, setIsLocationLoading] = useState<boolean>(true);
 

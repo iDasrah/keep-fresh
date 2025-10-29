@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import {SplashScreen, Stack} from 'expo-router';
 import {authClient} from "@/lib/auth-client";
 import {colors} from "@/constants/colors";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
@@ -7,9 +7,14 @@ import {StatusBar} from "expo-status-bar";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {LocationProvider} from "@/providers/location";
 
-export default function Root() {
+export default function AuthLayout() {
+    SplashScreen.preventAutoHideAsync();
     const session = authClient.useSession();
     const queryClient = new QueryClient();
+
+    if (!session.isPending) {
+        SplashScreen.hide();
+    }
 
     return (
         <GestureHandlerRootView>
