@@ -199,8 +199,9 @@ const AddItem = () => {
                 data: {
                     productId: product.id,
                     containerType: parsedItem.data.storage,
-                    expirations: [],
-                } as any //TODO: CHANGER L'API POUR POUVOIR AJOUTER UNE DATE DE PEREMPTION
+                    quantity: parsedItem.data.quantity,
+                    expirationDate: parsedItem.data.expirationDate.toISOString(),
+                }, // TODO ajouter unit quand le backend le supportera
             });
 
             // Schedule les notifications (expired + soon expired)
