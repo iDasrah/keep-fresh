@@ -10,16 +10,17 @@ const fr = {
         },
         storageSelector: {
             all: "Tous",
-            fridge: "Frigo",
-            freezer: "Congélateur",
-            pantry: "Placards",
+            FRIDGE: "Frigo",
+            FREEZER: "Congélateur",
+            PANTRY: "Placard",
+            OTHER: "Autre",
         }
     },
     product: {
         expiringIn: "Expire dans",
     },
     addItem: {
-        title: "Ajouter un nouvel article",
+        title: "Ajouter",
         subtitle: "Ajoutez rapidement un produit à votre frigo.",
         form: {
             name: {
@@ -271,6 +272,9 @@ const fr = {
         betterAuth: {
             INVALID_EMAIL_OR_PASSWORD: "Email ou mot de passe invalide.",
         },
+        addLocation: {
+            invalidName: "Le nom de l'emplacement est requis.",
+        },
     },
     account: {
         signIn: {
@@ -339,6 +343,16 @@ const fr = {
                 button: "Envoyer le lien de réinitialisation",
             },
         },
+    },
+    addLocation: {
+        title: "Ajouter un emplacement",
+        form: {
+            name: {
+                label: "Nom de l'emplacement",
+                placeholder: "Ex: Maison...",
+            },
+            button: "Ajouter l'emplacement",
+        }
     }
 }
 
