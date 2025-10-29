@@ -50,8 +50,8 @@ export default function SignUpStep2({
                             placeholder={lang.auth.signUp.step2.firstName.placeholder}
                             value={firstname}
                             onChangeText={onFirstnameChange}
-                            textContentType={"name"}
-                            autoComplete="given-name"
+                            textContentType={"givenName"}
+                            autoComplete={"given-name"}
                         />
                     </View>
 
@@ -61,8 +61,8 @@ export default function SignUpStep2({
                             placeholder={lang.auth.signUp.step2.lastName.placeholder}
                             value={lastname}
                             onChangeText={onLastnameChange}
-                            textContentType={"name"}
-                            autoComplete="family-name"
+                            textContentType={"familyName"}
+                            autoComplete={"family-name"}
                         />
                     </View>
                 </View>
