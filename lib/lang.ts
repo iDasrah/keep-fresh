@@ -4,14 +4,15 @@ const fr = {
     header: {
         searchbar: {
             placeholder: {
-                all: "Rechercher dans tous les frigos...",
-                fridge: "Rechercher dans le frigo...",
-                freezer: "Rechercher dans le congélateur...",
-                pantry: "Rechercher dans les placards...",
+                ALL: "Rechercher dans tous les rangements...",
+                FRIDGE: "Rechercher dans le frigo...",
+                FREEZER: "Rechercher dans le congélateur...",
+                PANTRY: "Rechercher dans les placards...",
+                OTHER: "Rechercher dans les autres rangements...",
             }
         },
         storageSelector: {
-            all: "Tous",
+            ALL: "Tous",
             FRIDGE: "Frigo",
             FREEZER: "Congélateur",
             PANTRY: "Placard",

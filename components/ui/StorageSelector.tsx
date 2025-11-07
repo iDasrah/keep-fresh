@@ -4,6 +4,7 @@ import {styles} from "@/assets/style/storage-selector.styles";
 import {Link, useLocalSearchParams} from "expo-router";
 import lang from "@/lib/lang";
 import {useItems} from "@/stores/items";
+import {Storage} from "@/types";
 
 /**
  * COMPONENT : StorageSelector (sélecteur de type de stockage)
@@ -31,7 +32,7 @@ import {useItems} from "@/stores/items";
  */
 const StorageSelector = () => {
     // Query param actuel (?storage=fridge, ?storage=freezer, etc.)
-    const {storage} = useLocalSearchParams();
+    const {storage} = useLocalSearchParams<{ storage: Storage }>();
     const {setSelectedStorage} = useItems();
 
     /**
@@ -41,9 +42,7 @@ const StorageSelector = () => {
      * - Sinon : ignore (protection contre valeurs invalides)
      */
     useEffect(() => {
-        if (storage === undefined || storage === "fridge" || storage === "freezer" || storage === "pantry") {
-            setSelectedStorage(storage === undefined ? "all" : storage);
-        }
+        setSelectedStorage(storage);
     }, [setSelectedStorage, storage]);
 
     return (
@@ -56,40 +55,40 @@ const StorageSelector = () => {
                     storage === undefined && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.all}
+                {lang.header.storageSelector.ALL}
             </Link>
 
             {/* LIEN 2 : Frigo (?storage=fridge) */}
             <Link
-                href="/?storage=fridge"
+                href="/?storage=FRIDGE"
                 style={[
                     styles.storageSelectorLink,
-                    storage === "fridge" && styles.activeStorageSelectorLink
+                    storage === "FRIDGE" && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.fridge}
+                {lang.header.storageSelector.FRIDGE}
             </Link>
 
             {/* LIEN 3 : Congélateur (?storage=freezer) */}
             <Link
-                href="/?storage=freezer"
+                href="/?storage=FREEZER"
                 style={[
                     styles.storageSelectorLink,
-                    storage === "freezer" && styles.activeStorageSelectorLink
+                    storage === "FREEZER" && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.freezer}
+                {lang.header.storageSelector.FREEZER}
             </Link>
 
             {/* LIEN 4 : Placards (?storage=pantry) */}
             <Link
-                href="/?storage=pantry"
+                href="/?storage=PANTRY"
                 style={[
                     styles.storageSelectorLink,
-                    storage === "pantry" && styles.activeStorageSelectorLink
+                    storage === "PANTRY" && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.pantry}
+                {lang.header.storageSelector.PANTRY}
             </Link>
         </View>
     )

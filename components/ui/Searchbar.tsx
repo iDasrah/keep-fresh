@@ -33,7 +33,7 @@ const Searchbar = () => {
 
             {/* Input avec placeholder dynamique selon le storage */}
             <TextInput
-                placeholder={lang.header.searchbar.placeholder[selectedStorage]}
+                placeholder={lang.header.searchbar.placeholder[selectedStorage ?? "ALL"]}
                 placeholderTextColor={colors.textMuted}
                 value={searchText}
                 onChangeText={setSearchText}
