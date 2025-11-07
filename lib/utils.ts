@@ -19,10 +19,9 @@ import lang from "@/lib/lang";
  * @example
  * getItemStatus('2025-10-16') // 'expiringSoon' si on est le 15/10/2025
  */
-export function getItemStatus(expirationDate: string): 'expired' | 'expiringSoon' | 'fresh' {
+export function getItemStatus(expirationDate: Date): 'expired' | 'expiringSoon' | 'fresh' {
     const now = new Date();
-    const expDate = new Date(expirationDate);
-    const diffTime = expDate.getTime() - now.getTime();
+    const diffTime = expirationDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {

@@ -3,9 +3,9 @@ import {useEffect, useState} from "react";
 import {Alert} from "react-native";
 import lang from "@/lib/lang";
 import {AxiosError} from "axios";
-import {useApiMutation} from "@/lib/useApiMutation";
+import {useApiMutation} from "@/hooks/useApiMutation";
 import {api} from "@/lib/api";
-import {useLocation} from "@/providers/location";
+import {useLocation} from "@/hooks/useLocation";
 
 export default function AfterAuthLayout() {
     SplashScreen.preventAutoHideAsync();

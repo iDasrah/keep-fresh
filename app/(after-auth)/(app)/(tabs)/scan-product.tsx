@@ -4,7 +4,7 @@ import {CameraType, CameraView, useCameraPermissions} from "expo-camera";
 import {BarcodeScanningResult} from "expo-camera/src/Camera.types";
 import {api} from "@/lib/api";
 import {useFocusEffect, useRouter} from "expo-router";
-import {useApiMutation} from "@/lib/useApiMutation";
+import {useApiMutation} from "@/hooks/useApiMutation";
 import {CreateProductDto} from "@/generated-api";
 import {AxiosError} from "axios";
 import lang from "@/lib/lang";

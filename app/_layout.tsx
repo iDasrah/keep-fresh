@@ -5,7 +5,7 @@ import {GestureHandlerRootView} from "react-native-gesture-handler";
 import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {LocationProvider} from "@/providers/location";
+import {LocationProvider} from "@/hooks/useLocation";
 
 export default function AuthLayout() {
     SplashScreen.preventAutoHideAsync();
@@ -25,7 +25,7 @@ export default function AuthLayout() {
                             <StatusBar style="light" />
                             <Stack screenOptions={{headerShown: false}}>
                                 <Stack.Protected guard={!!session?.data?.session}>
-                                        <Stack.Screen name="(after-auth)" />
+                                    <Stack.Screen name="(after-auth)" />
                                 </Stack.Protected>
 
                                 <Stack.Protected guard={!session?.data?.session}>

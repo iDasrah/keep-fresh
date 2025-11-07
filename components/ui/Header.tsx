@@ -34,7 +34,7 @@ const Header = memo(({variant}: HeaderProps) => {
     // Fonction pour revenir à la page précédente
     const handleBack = useCallback(() => router.back(), [router]);
     // Fonction pour naviguer vers la page d'ajout d'item avec le stockage sélectionné
-    const handleAdd = useCallback(() => router.push(`/add-item?storage=${selectedStorage}`), [router, selectedStorage]);
+    const handleAdd = useCallback(() => router.push(`/(after-auth)/(app)/(tabs)/scan-product?storage=${selectedStorage}`), [router, selectedStorage]);
 
     return (
         <View style={styles.header}>

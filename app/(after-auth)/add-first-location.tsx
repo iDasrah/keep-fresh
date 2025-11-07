@@ -10,11 +10,11 @@ import {colors} from "@/constants/colors";
 import {z} from "zod/v4";
 import {useRouter} from "expo-router";
 import {sharedStyles} from "@/assets/style/shared.styles";
-import {useApiMutation} from "@/lib/useApiMutation";
+import {useApiMutation} from "@/hooks/useApiMutation";
 import {api} from "@/lib/api";
 import {CreateLocationDto} from "@/generated-api";
 import {AxiosError} from "axios";
-import {useLocation} from "@/providers/location";
+import {useLocation} from "@/hooks/useLocation";
 
 const addLocationSchema = z.object({
     name: z.string({error: lang.errors.addLocation.invalidName}),
