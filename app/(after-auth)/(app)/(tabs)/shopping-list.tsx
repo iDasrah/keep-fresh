@@ -7,10 +7,9 @@ import lang from "@/lib/lang";
 import {LinearGradient} from "expo-linear-gradient";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {useState, useMemo} from "react";
-import {useDatabase} from "@/stores/database";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import Card from "@/components/ui/Card";
 import {z} from "zod/v4";
+import {ShoppingListItem} from "@/types";
 
 /**
  * SCREEN : Liste de courses
@@ -29,8 +28,11 @@ import {z} from "zod/v4";
  * - Persistance SQLite via store database
  */
 const ShoppingList = () => {
+    // TODO: Ajouter la récupération, l'ajout et la suppression des items depuis l'API
+
     // État local pour l'input d'ajout
     const [newItem, setNewItem] = useState('');
+    const items: ShoppingListItem[] = [];
 
     /**
      * Schema Zod pour valider l'item avant ajout.
@@ -41,54 +43,6 @@ const ShoppingList = () => {
         z.string().min(1, {error: lang.errors.shoppingList.emptyItemName}),
         []
     );
-    const { addShoppingListItem, getShoppingList } = useDatabase();
-    const queryClient = useQueryClient();
-
-    /**
-     * useQuery : Récupère tous les items de la shopping list.
-     * - queryKey : identifiant unique pour le cache
-     * - queryFn : fonction async qui retourne les données
-     * React Query gère automatiquement :
-     * - Le loading state
-     * - Le caching
-     * - Le refetch automatique
-     */
-    const { data: items } = useQuery({
-        queryKey: ['shoppingListItems'],
-        queryFn: async () => await getShoppingList(),
-    });
-
-    /**
-     * Mutation pour AJOUTER un item.
-     * - mutationFn : fonction async d'insertion SQLite
-     * - onSuccess : Actions après succès
-     *   1. Vide l'input
-     *   2. Invalide le cache React Query pour refetch automatiquement
-     */
-    const createItemMut = useMutation({
-        mutationKey: ['addShoppingListItem'],
-        mutationFn: async (item: string) => await addShoppingListItem(item),
-        onSuccess: () => {
-            setNewItem('');
-            queryClient.invalidateQueries({ queryKey: ['shoppingListItems'] });
-        }
-    });
-
-    /**
-     * Mutation pour SUPPRIMER un item.
-     * - Récupère deleteShoppingListItem depuis le store global (getState)
-     * - onSuccess : Invalide le cache pour refetch la liste mise à jour
-     */
-    const deleteItemMut = useMutation({
-        mutationKey: ['deleteShoppingListItem'],
-        mutationFn: async (id: number) => {
-            const { deleteShoppingListItem } = useDatabase.getState();
-            await deleteShoppingListItem(id);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['shoppingListItems'] });
-        }
-    });
 
     /**
      * Handler d'ajout d'item.
@@ -99,7 +53,7 @@ const ShoppingList = () => {
     const handleAddItem = async () => {
         const parsed = itemSchema.safeParse(newItem.trim());
         if (parsed.success) {
-            createItemMut.mutate(parsed.data);
+            Alert.alert('En travaux', 'L\'ajout d\'items sera disponible dans une prochaine version.');
         } else {
             const errorMessage = parsed.error.issues[0]?.message || lang.errors.generic;
             Alert.alert('', errorMessage);
@@ -111,7 +65,7 @@ const ShoppingList = () => {
      * Lance simplement la mutation avec l'ID de l'item.
      */
     const handleDeleteItem = async (id: number) => {
-        deleteItemMut.mutate(id);
+        Alert.alert('En travaux', 'La suppression des items de la liste de courses sera disponible dans une prochaine version.');
     }
 
     return (

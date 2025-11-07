@@ -5,14 +5,9 @@ import {colors} from "@/constants/colors";
 import lang from "@/lib/lang";
 import {styles} from "@/assets/style/settings.styles";
 import {Ionicons} from "@expo/vector-icons";
-import {useDatabase} from "@/stores/database";
-import {useStats} from "@/stores/stats";
-import {useSettings} from "@/stores/settings";
 import {requestReview} from "expo-store-review";
-import {useNotifications} from "@/stores/notifications";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {useRouter} from "expo-router";
-import {useQueryClient} from "@tanstack/react-query";
 
 /**
  * SCREEN : Page des paramètres
@@ -33,19 +28,8 @@ import {useQueryClient} from "@tanstack/react-query";
  * Les settings sont persistés dans AsyncStorage via useSettings store.
  */
 const Settings = () => {
-    // Stores nécessaires pour les actions de suppression
-    const { clear } = useDatabase();
-    const { resetStats } = useStats();
-    const {
-        clearAllExpiredNotifications,
-        clearAllSoonExpiredNotifications,
-        scheduleAllItemsExpiredNotifications,
-        scheduleAllItemsSoonExpiredNotifications,
-        clearAllNotifications
-    } = useNotifications();
-    const { settings, resetSettings, setSettings } = useSettings();
+    //TODO: Ajouter les settings de l'API
     const router = useRouter();
-    const queryClient = useQueryClient();
 
     /**
      * Handler pour le toggle "Produit expiré"
@@ -53,12 +37,6 @@ const Settings = () => {
      * - Si désactivé : Annule toutes les notifs d'expiration
      */
     const onExpiredNotificationChange = async (value: boolean) => {
-        setSettings({ expiredNotification: value });
-        if (!value) {
-            clearAllExpiredNotifications();
-        } else {
-            await scheduleAllItemsExpiredNotifications();
-        }
     }
 
     /**
@@ -67,12 +45,6 @@ const Settings = () => {
      * - Si désactivé : Annule toutes les notifs "soon expired"
      */
     const onSoonExpirationNotificationChange = async (value: boolean) => {
-        setSettings({ soonExpirationNotification: value });
-        if (!value) {
-            clearAllSoonExpiredNotifications();
-        } else {
-            await scheduleAllItemsSoonExpiredNotifications();
-        }
     }
 
     /**
@@ -100,26 +72,13 @@ const Settings = () => {
                     text: lang.alert.deleteData.delete,
                     style: 'destructive',
                     onPress: async () => {
-                        // Execute toutes les suppressions en parallèle
-                        await Promise.all([
-                            clear(),
-                            resetStats(),
-                            resetSettings(),
-                            clearAllNotifications(),
-                        ]);
-                        // Invalide tous les caches pour forcer un rafraîchissement
-                        await queryClient.invalidateQueries({
-                            queryKey: ['items']
-                        });
-                        await queryClient.invalidateQueries({
-                            queryKey: ['shoppingListItems']
-                        });
                         // Retour à l'accueil après reset complet
                         router.push('/');
                     }
                 }
             ]
         );
+        Alert.alert('En travaux', 'La suppression des données sera disponible dans une prochaine version.');
     }
 
     return (
@@ -144,7 +103,7 @@ const Settings = () => {
                             </Text>
                         </View>
                         <Switch
-                            value={settings.expiredNotification}
+                            value={false}
                             onValueChange={onExpiredNotificationChange}
                         />
                     </View>
@@ -160,7 +119,7 @@ const Settings = () => {
                             </Text>
                         </View>
                         <Switch
-                            value={settings.soonExpirationNotification}
+                            value={false}
                             onValueChange={onSoonExpirationNotificationChange}
                         />
                     </View>

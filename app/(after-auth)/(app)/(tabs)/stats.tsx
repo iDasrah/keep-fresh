@@ -5,7 +5,6 @@ import Card from "@/components/ui/Card";
 import CircularProgress from "@/components/ui/CircularProgress";
 import lang from "@/lib/lang";
 import {styles} from "@/assets/style/stats.styles";
-import {useStats} from "@/stores/stats";
 import {getRandomAntiWasteMessage, getRandomConsumptionTimeMessage, getRandomExpiredThisWeekMessage} from "@/lib/utils";
 import StatCard from "@/components/ui/StatCard";
 
@@ -28,12 +27,8 @@ import StatCard from "@/components/ui/StatCard";
  * Les messages varient aléatoirement pour garder l'UI dynamique.
  */
 const Stats = () => {
-    // Récupère les stats depuis AsyncStorage (chargées au démarrage)
-    const { userStats } = useStats();
-    const { antiWasteScore, averageConsumptionTime, expiredThisWeek } = userStats;
-
-    // Sélectionne un message aléatoire selon le score (low/medium/high)
-    const message = getRandomAntiWasteMessage(antiWasteScore);
+    //TODO: Ajouter les stats de l'API
+    const message = getRandomAntiWasteMessage(0); //TODO: Changer la valeur
 
     return (
         <View>
@@ -43,7 +38,7 @@ const Stats = () => {
                 {/* Carte principale : Score Anti-Gaspi avec CircularProgress */}
                 <Card contentStyle={styles.antiWasteContent}>
                     {/* CircularProgress : cercle animé avec couleur selon score */}
-                    <CircularProgress progress={antiWasteScore} />
+                    <CircularProgress progress={0} />
 
                     {/* Message motivant qui change selon le score */}
                     <View style={styles.antiWasteMsg}>
@@ -69,9 +64,9 @@ const Stats = () => {
                         - Sous-titre variable selon la durée (rapide/moyen/long)
                     */}
                     <StatCard
-                        statValue={averageConsumptionTime}
+                        statValue={0}
                         title={lang.stats.avgConsumptionTime.title}
-                        subtitle={getRandomConsumptionTimeMessage(averageConsumptionTime)}
+                        subtitle={getRandomConsumptionTimeMessage(0)}
                     />
 
                     {/*
@@ -80,9 +75,9 @@ const Stats = () => {
                         - Message encourageant si 0, sinon motivant à faire mieux
                     */}
                     <StatCard
-                        statValue={expiredThisWeek}
+                        statValue={0}
                         title={lang.stats.expiredThisWeek.title}
-                        subtitle={getRandomExpiredThisWeekMessage(expiredThisWeek)}
+                        subtitle={getRandomExpiredThisWeekMessage(0)}
                     />
                 </View>
             </View>
