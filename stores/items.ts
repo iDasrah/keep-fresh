@@ -1,4 +1,5 @@
 import {create} from "zustand/react";
+import {Storage} from "@/types";
 
 /**
  * Store Zustand pour gérer l'état de l'UI de la liste des produits.
@@ -23,16 +24,16 @@ import {create} from "zustand/react";
  * L'état est reset à chaque redémarrage de l'app.
  */
 interface ItemsState {
-    selectedStorage: "all" | "fridge" | "freezer" | "pantry";
+    selectedStorage?: Storage;
     searchText: string;
 
-    setSelectedStorage: (storage: "all" | "fridge" | "freezer" | "pantry") => void;
+    setSelectedStorage: (storage: Storage) => void;
     setSearchText: (text: string) => void;
 }
 
 export const useItems = create<ItemsState>((set, get) => ({
     // États initiaux
-    selectedStorage: 'all', // Par défaut : Affiche tous les produits
+    selectedStorage: undefined, // Par défaut : Affiche tous les produits
     searchText: '', // Par défaut : Pas de recherche
 
     /**

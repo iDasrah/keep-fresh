@@ -1,5 +1,5 @@
 import {View, Text, Platform, Alert} from 'react-native'
-import {useState, useMemo, useCallback} from 'react'
+import {useState, useCallback} from 'react'
 import Header from "@/components/ui/Header";
 import FormLabel from "@/components/ui/FormLabel";
 import {styles} from "@/assets/style/add-item.styles";
@@ -10,16 +10,15 @@ import {LinearGradient} from "expo-linear-gradient";
 import RNDateTimePicker, {DateTimePickerAndroid} from "@react-native-community/datetimepicker";
 import {z} from "zod/v4";
 import {useFocusEffect, useLocalSearchParams, useRouter} from "expo-router";
-import {useNotifications} from "@/stores/notifications";
-import {useStats} from "@/stores/stats";
-import {units, getQuantityOptionsForUnit} from "@/lib/units";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {addDays} from "date-fns";
-import {useApiMutation} from "@/lib/useApiMutation";
+import {useApiMutation} from "@/hooks/useApiMutation";
 import {api} from "@/lib/api";
 import {AxiosError} from "axios";
 import {CreateLocationProductDto, Product} from "@/generated-api";
-import {useLocation} from "@/providers/location";
+import {useLocation} from "@/hooks/useLocation";
+import FormInput from "@/components/ui/FormInput";
+import {Storage} from "@/types";
 
 /**
  * SCREEN : Formulaire d'ajout d'un produit
@@ -62,8 +61,7 @@ const storageOptions = [
  */
 const itemSchema = z.object({
     quantity: z.number().min(1),
-    unit: z.string().min(1),
-    storage: z.enum(["FRIDGE", "FREEZER", "PANTRY", "OTHER"]),
+    storage: z.enum(Storage),
     expirationDate: z.date().refine(date => date > new Date()),
 });
 
@@ -71,7 +69,7 @@ const itemSchema = z.object({
  * Schema Zod pour valider le query param ?storage=...
  * Permet de pré-sélectionner le type de stockage depuis la page d'accueil.
  */
-const storageParamSchema = z.enum(["FRIDGE", "FREEZER", "PANTRY", "OTHER"]);
+const storageParamSchema = z.enum(Storage);
 
 const AddItem = () => {
     const { productId } = useLocalSearchParams<{ productId: string }>();
@@ -106,11 +104,10 @@ const AddItem = () => {
     );
 
     // Récupère le query param ?storage=... (optionnel)
-    const { storage: storageParam } = useLocalSearchParams();
+    const { storage: storageParam } = useLocalSearchParams<{ storage: Storage }>();
 
     // États locaux pour chaque champ du formulaire
-    const [quantity, setQuantity] = useState<{label: string, value: string}>({label: "1", value: "1"});
-    const [unit, setUnit] = useState<{label: string, value: string}>({label: "pcs", value: "pcs"});
+    const [quantity, setQuantity] = useState("1");
 
     /**
      * État storage avec pré-remplissage intelligent :
@@ -120,40 +117,14 @@ const AddItem = () => {
      */
     const [storage, setStorage] = useState<{label: string, value: string}>(
         storageParam && storageParamSchema.safeParse(storageParam).success
-            ? {label: lang.header.storageSelector[storageParam as "FRIDGE" | "FREEZER" | "PANTRY" | "OTHER"], value: storageParam as string}
+            ? {label: lang.header.storageSelector[storageParam], value: storageParam as string}
             : {label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"}
     );
 
     // Date d'expiration par défaut = demain (addDays évite d'ajouter des produits déjà expirés)
     const [expirationDate, setExpirationDate] = useState<Date>(addDays(new Date(), 1));
 
-    const { scheduleItemNotifications } = useNotifications();
-    const { addTotalAddedItems } = useStats();
     const router = useRouter();
-
-    /**
-     * Options de quantité dynamiques selon l'unité.
-     * useMemo recalcule uniquement quand unit.value change.
-     *
-     * Exemples :
-     * - pcs : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-     * - kg : [0.1, 0.25, 0.5, 1, 2, 5]
-     * - mL : [100, 250, 500, 750, 1000]
-     */
-    const quantityOptions = useMemo(() => {
-        return getQuantityOptionsForUnit(unit.value);
-    }, [unit.value]);
-
-    /**
-     * Handler du changement d'unité.
-     * IMPORTANT : Reset la quantité à la première option disponible
-     * pour éviter une quantité invalide (ex: "10 kg" n'existe pas dans les options)
-     */
-    const handleUnitChange = (newUnit: {label: string, value: string}) => {
-        setUnit(newUnit);
-        const newOptions = getQuantityOptionsForUnit(newUnit.value);
-        setQuantity(newOptions[0]); // Auto-select première option
-    };
 
     /**
      * Handler de soumission du formulaire.
@@ -177,9 +148,8 @@ const AddItem = () => {
 
             // Validation Zod avec safeParse (ne throw pas, retourne un objet result)
             const parsedItem = itemSchema.safeParse({
-                quantity: Number(quantity.value),
-                unit: unit.value,
-                storage: storage.value as "FRIDGE" | "FREEZER" | "PANTRY" | "OTHER",
+                quantity: Number(quantity),
+                storage: storage.value as Storage,
                 expirationDate,
             });
 
@@ -194,32 +164,18 @@ const AddItem = () => {
                 return;
             }
 
-            const newItem = await createLocationProductV1.mutateAsync({
+            await createLocationProductV1.mutateAsync({
                 locationId: location,
                 data: {
                     productId: product.id,
                     containerType: parsedItem.data.storage,
                     quantity: parsedItem.data.quantity,
                     expirationDate: parsedItem.data.expirationDate.toISOString(),
-                }, // TODO ajouter unit quand le backend le supportera
+                },
             });
-
-            // Schedule les notifications (expired + soon expired)
-            await scheduleItemNotifications({
-                id: newItem.data.id,
-                name: product.name,
-                quantity: parsedItem.data.quantity,
-                unit: parsedItem.data.unit,
-                storage: parsedItem.data.storage,
-                expirationDate: parsedItem.data.expirationDate.toISOString(),
-            });
-
-            // Incrémente le compteur d'items ajoutés (pour le score anti-gaspi)
-            addTotalAddedItems();
 
             // Reset complet du formulaire
-            setQuantity({label: "1", value: "1"});
-            setUnit({label: "pcs", value: "pcs"});
+            setQuantity("1");
             setStorage({label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"});
             setExpirationDate(new Date());
 
@@ -257,19 +213,12 @@ const AddItem = () => {
                     <View style={[styles.inputField, {flexDirection: "row", gap: 12}]}>
                         <View style={{flex: 1}}>
                             <FormLabel>{lang.addItem.form.quantity.label}</FormLabel>
-                            <SelectorInput
-                                items={quantityOptions}
-                                selectedItem={quantity}
-                                onSelectItem={setQuantity}
-                            />
-                        </View>
-                        <View style={{flex: 1}}>
-                            <FormLabel>{lang.addItem.form.unit.label}</FormLabel>
-                            {/* handleUnitChange reset la quantité quand l'unité change */}
-                            <SelectorInput
-                                items={units}
-                                selectedItem={unit}
-                                onSelectItem={handleUnitChange}
+                            <FormInput
+                                value={quantity}
+                                onChangeText={setQuantity}
+                                keyboardType="numeric"
+                                accessibilityLabel="Quantity input"
+                                accessibilityHint="Enter the quantity of the product"
                             />
                         </View>
                     </View>

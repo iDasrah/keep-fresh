@@ -1,10 +1,31 @@
-export type Item = {
+export type LocationProduct = {
+    id: string;
+    productId: string;
+    locationId: string;
+    containerType: keyof typeof Storage;
+    expirationDate: string;
+    quantity: number;
+    createdAt: string;
+    product?: Product;
+}
+
+export type Product = {
     id: string;
     name: string;
+    barcode: string;
     quantity: number;
-    unit: string;
-    expirationDate: string;
-    storage: Storage,
+    unit: Unit;
+    isComplete: boolean;
+    createdAt: string;
+    updatedAt: string;
+    images?: ProductImage[];
+}
+
+export type ProductImage = {
+    id: string;
+    url: string;
+    type: ProductImageType;
+    productId: string;
     createdAt: string;
 }
 
@@ -28,4 +49,13 @@ export type ShoppingListItem = {
     createdAt: string;
 }
 
-export type Storage = 'FRIDGE' | 'FREEZER' | 'PANTRY' | 'OTHER';
+export type ProductImageType = 'FULL' | 'SMALL' | 'THUMB';
+
+export type Unit = 'g' | 'kg' | 'L' | 'ml' | 'cl' | 'pcs';
+
+export enum Storage {
+    'FRIDGE' = 'FRIDGE',
+    'FREEZER' = 'FREEZER',
+    'PANTRY' = 'PANTRY',
+    'OTHER' = 'OTHER',
+}

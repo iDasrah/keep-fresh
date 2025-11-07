@@ -1,6 +1,5 @@
 import {Alert, Text, View} from 'react-native'
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
-import {Item as ItemType} from "@/types";
 import {styles} from "@/assets/style/item.styles";
 import {formatDistanceToNow} from "date-fns";
 import {fr} from "date-fns/locale";
@@ -8,12 +7,9 @@ import lang from "@/lib/lang";
 import {getItemStatus} from "@/lib/utils";
 import {colors} from "@/constants/colors";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {useDatabase} from "@/stores/database";
-import {useNotifications} from "@/stores/notifications";
 import Card from "@/components/ui/Card";
-import {useStats} from "@/stores/stats";
 import {selectionAsync} from "expo-haptics";
+import {LocationProduct} from "@/types";
 
 /**
  * Composant Item - Affiche une carte de produit du frigo avec interaction longPress.
@@ -31,7 +27,7 @@ import {selectionAsync} from "expo-haptics";
  * @param item - Produit à afficher (contient name, quantity, expirationDate, etc.)
  */
 interface ItemProps {
-    item: ItemType
+    item: LocationProduct
 }
 
 // Mapping des statuts vers les couleurs UI
@@ -42,25 +38,9 @@ const statusColors: Record<string, string> = {
 }
 
 const Item = ({item}: ItemProps) => {
-    const itemStatus = getItemStatus(item.expirationDate);
-    const { deleteItem } = useDatabase();
-    const {cancelItemNotifications} = useNotifications();
-    const queryClient = useQueryClient();
-    const { addThrownAwayItems, addConsumptionTime } = useStats();
+    const itemStatus = getItemStatus(new Date(item.expirationDate));
     const opacity = useSharedValue(1);
     const scale = useSharedValue(1);
-
-    const deleteItemMut = useMutation({
-        mutationKey: ['deleteItem', item.id],
-        mutationFn: async (id: number) => await deleteItem(id),
-        onSuccess: () => {
-            cancelItemNotifications(item.id);
-            queryClient.refetchQueries({
-                queryKey: ['items'],
-                type: 'active'
-            });
-        }
-    });
 
     /**
      * Gesture handler pour le LongPress.
@@ -86,17 +66,11 @@ const Item = ({item}: ItemProps) => {
                     text: lang.alert.throw,
                     style: 'destructive',
                     onPress: () => {
-                        deleteItemMut.mutate(item.id);
-                        addThrownAwayItems(); // Impacte le score anti-gaspi
                     }
                 },
                 {
                     text: lang.alert.consume,
                     onPress: () => {
-                        deleteItemMut.mutate(item.id);
-                        // Calcul du temps de vie du produit pour stats
-                        const time = Math.ceil((Date.now() - new Date(item.createdAt).getTime()) / (1000 * 60 * 60 * 24));
-                        addConsumptionTime(time);
                     }
                 }
             ]);
@@ -117,13 +91,32 @@ const Item = ({item}: ItemProps) => {
         <GestureDetector gesture={longPress}>
             <Animated.View style={animatedStyle}>
                 <Card style={styles.item} contentStyle={styles.itemContent}>
-                    {/*<View style={styles.itemImg}></View>*/}
+                    {
+                        item.product?.images && item.product.images.length > 0 && (
+                            <View>
+                                <Animated.Image
+                                    source={{uri: item.product.images[0].url}}
+                                    style={styles.itemImg}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                        )
+                    }
                     <View style={styles.itemInfo}>
-                        <Text style={styles.itemName}>{item.name}</Text>
-                        <Text style={styles.itemQuantity}>{item.quantity} {item.unit}</Text>
+                        <Text style={styles.itemName}>{item.product?.name}</Text>
                     </View>
+                    {
+                        item.quantity === 1 ? (
+                            <Text style={styles.itemQuantity}>{item.product?.quantity} {item.product?.unit}</Text>
+                        ) : (
+                            <Text style={styles.itemQuantity}>{item.quantity} x {item.product?.quantity} {item.product?.unit}</Text>
+                        )
+                    }
                     <Text style={[styles.itemExpiration, {color: statusColors[itemStatus]}]}>
-                        {lang.product.expiringIn} {formatDistanceToNow(new Date(item.expirationDate), {locale: fr})}
+                        {lang.product.expiringIn} {formatDistanceToNow(new Date(item.expirationDate), {
+                            includeSeconds: false,
+                            locale: fr,
+                        })}
                     </Text>
                 </Card>
             </Animated.View>

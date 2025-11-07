@@ -40,7 +40,7 @@ export default function Index() {
                     pour récupérer tous les items
                 */}
                 <ItemsList
-                    storage={selectedStorage !== "all" ? selectedStorage : undefined}
+                    storage={selectedStorage}
                     searchText={searchText}
                 />
             </ScrollView>

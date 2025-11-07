@@ -1,16 +1,18 @@
-import {View, ActivityIndicator, Text, Pressable} from 'react-native'
-import React from 'react'
-import {useDatabase} from "@/stores/database";
-import {useQuery} from "@tanstack/react-query";
+import {View, ActivityIndicator, Text, Alert} from 'react-native'
+import React, {useCallback, useEffect, useState} from 'react'
 import Item from "@/components/ui/Item";
-import {Item as ItemType} from "@/types";
 import {styles} from "@/assets/style/items-list.styles";
 import lang from "@/lib/lang";
-import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
+import Animated, {useAnimatedStyle, useSharedValue} from "react-native-reanimated";
 import {LinearGradient} from "expo-linear-gradient";
 import {colors} from "@/constants/colors";
 import {useRouter} from "expo-router";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
+import {useLocation} from "@/hooks/useLocation";
+import {useApiMutation} from "@/hooks/useApiMutation";
+import {api} from "@/lib/api";
+import {AxiosError} from "axios";
+import {LocationProduct, Storage} from "@/types";
 
 /**
  * COMPONENT : Liste des produits avec filtres
@@ -35,13 +37,24 @@ import AnimatedPressable from "@/components/ui/AnimatedPressable";
  * - Cache automatique des résultats
  */
 interface ItemsListProps {
-    storage?: "fridge" | "freezer" | "pantry";
+    storage?: Storage;
     searchText?: string;
 }
 
 const ItemsList = ({storage, searchText}: ItemsListProps) => {
-    const { searchItems, getAllItemsByStorage, getAllItems, isConnected } = useDatabase();
     const router = useRouter();
+    const { location } = useLocation();
+    const [products, setProducts] = useState<LocationProduct[]>([]);
+
+    const getLocationProductsV1 = useApiMutation(
+        (data: string) => api.locationProduct.getLocationProductsV1(
+            data,
+            ['product',],
+            'FULL',
+            storage,
+            searchText,
+        )
+    );
 
     // Shared value pour animation de scale (non utilisée actuellement mais disponible)
     const scale = useSharedValue(1);
@@ -59,35 +72,43 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
      * - Si storage uniquement : Filtre par type de stockage
      * - Si aucun filtre : Récupère tous les items
      */
-    const { data: items, isLoading } = useQuery({
-        queryKey: ['items', storage, searchText],
-        queryFn: async () => {
-            if (searchText) return searchItems(searchText, storage);
-            return storage ? getAllItemsByStorage(storage) : getAllItems();
-        },
-        enabled: isConnected // Ne lance pas la query si la DB n'est pas connectée
-    });
+    useEffect(
+        useCallback(() => {
+            const fetchProducts = async () => {
+                try {
+                    if (!location) {
+                        Alert.alert('Error', lang.errors.generic);
+                        return;
+                    }
 
-    /**
-     * TRI par date d'expiration (plus proche en premier).
-     * IMPORTANT : [...items] crée une COPIE pour éviter de muter le cache React Query.
-     * Sans copie, items?.sort() modifierait directement le cache et causerait des bugs.
-     */
-    const sortedItems = items ? [...items].sort((a, b) => new Date(a.expirationDate).getTime() - new Date(b.expirationDate).getTime()) : [];
+                    const locationProducts = await getLocationProductsV1.mutateAsync(location);
+                    setProducts(locationProducts.data);
+                } catch (error: unknown) {
+                    if (error instanceof AxiosError && error.response?.data?.message) {
+                        Alert.alert('Error', error.response.data.message);
+                        return;
+                    }
+                    Alert.alert('Error', lang.errors.generic);
+                }
+            }
+
+            void fetchProducts();
+        }, [])
+    , [location, storage, searchText]);
 
     // ÉTAT 1 : Loading (requête en cours)
-    if (isLoading) {
+    if (getLocationProductsV1.isPending) {
         return <ActivityIndicator />
     }
 
     // ÉTAT 2 : Empty state (aucun item trouvé)
-    if (!sortedItems || sortedItems.length === 0) {
+    if (products.length === 0) {
         return (
             <View style={styles.noItemsContainer}>
                 <Text style={styles.noItemsText}>{lang.noItems.title}</Text>
                 {/* Bouton "Ajouter un produit" qui redirige vers /add-item */}
                 <Animated.View style={animatedStyle}>
-                    <AnimatedPressable onPress={() => router.push(`/add-item?storage=${storage}`)}>
+                    <AnimatedPressable onPress={() => router.push(`/(after-auth)/(app)/(tabs)/scan-product?storage=${storage}`)}>
                         <LinearGradient colors={colors.blackGradient} style={styles.addButton}>
                             <Text style={styles.addButtonText}>{lang.noItems.button}</Text>
                         </LinearGradient>
@@ -101,10 +122,11 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
     return (
         <View style={styles.itemsList}>
             {/* Map sur les items triés et render d'un composant Item pour chaque */}
-            {sortedItems.map((item: ItemType) => (
+            {products.map((item: LocationProduct) => (
                 <Item key={item.id} item={item} />
             ))}
         </View>
     )
 }
-export default ItemsList
+
+export default ItemsList;
