@@ -48,7 +48,12 @@ ngrok http 8000
 EXPO_PUBLIC_API_URL="https://votre-url-ngrok.ngrok-free.app"
 ```
 
-4. **Lancer l'app mobile** :
+4. **Générer le client de l'API** :
+```sh
+npm run openapi
+```
+
+5. **Lancer l'app mobile** :
 ```sh
 npx expo start
 ```
@@ -58,7 +63,7 @@ npx expo start
 - [ ] Storages personnalisés
 - [ ] Partage entre utilisateurs (famille, coloc)
 - [ ] Synchronisation multi-device
-- [ ] Scanner de codes-barres
+- [x] Scanner de codes-barres
 - [ ] Suggestions de recettes (IA)
 - [ ] Stats avancées avec graphiques
 
