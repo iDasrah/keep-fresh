@@ -2,7 +2,6 @@ import {Alert, Text, View} from "react-native";
 import Header from "@/components/ui/Header";
 import {useState} from "react";
 import FormLabel from "@/components/ui/FormLabel";
-import lang from "@/lib/lang";
 import FormInput from "@/components/ui/FormInput";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {LinearGradient} from "expo-linear-gradient";
@@ -15,17 +14,23 @@ import {api} from "@/lib/api";
 import {CreateLocationDto} from "@/generated-api";
 import {AxiosError} from "axios";
 import {useLocation} from "@/hooks/useLocation";
-
-const addLocationSchema = z.object({
-    name: z.string({error: lang.errors.addLocation.invalidName}),
-});
+import {useTranslation} from "react-i18next";
 
 const AddFirstLocation = () => {
+    const { t, ready } = useTranslation(['common', 'error']);
     const router = useRouter();
     const [name, setName] = useState("");
     const { setLocation } = useLocation();
 
     const createLocationV1 = useApiMutation((data: CreateLocationDto) => api.location.createLocationV1(data));
+
+    if (!ready) {
+        return;
+    }
+
+    const addLocationSchema = z.object({
+        name: z.string({error: t('addLocation.invalidName', { ns: 'error' })}),
+    });
 
     const handleAddLocation = async () => {
         const parsedLocation = addLocationSchema.safeParse({
@@ -38,7 +43,7 @@ const AddFirstLocation = () => {
             if (firstError) {
                 Alert.alert('', firstError);
             } else {
-                Alert.alert('', lang.errors.generic);
+                Alert.alert('', t('generic', { ns: 'error' }));
             }
             return;
         }
@@ -56,7 +61,7 @@ const AddFirstLocation = () => {
                 Alert.alert('Error', error.response.data.message);
                 return;
             }
-            Alert.alert('Error', lang.errors.generic);
+            Alert.alert('Error', t('generic', { ns: 'error' }));
         }
     };
 
@@ -66,14 +71,14 @@ const AddFirstLocation = () => {
 
             <View style={sharedStyles.form}>
                 {/* Titre de la page */}
-                <Text style={sharedStyles.title}>{lang.addLocation.title}</Text>
+                <Text style={sharedStyles.title}>{t('addLocation.title')}</Text>
 
                 <View style={{marginTop: 30}}>
                     {/* Nom */}
                     <View style={sharedStyles.inputField}>
-                        <FormLabel>{lang.addLocation.form.name.label}</FormLabel>
+                        <FormLabel>{t('addLocation.form.name.label')}</FormLabel>
                         <FormInput
-                            placeholder={lang.addLocation.form.name.placeholder}
+                            placeholder={t('addLocation.form.name.placeholder')}
                             value={name}
                             onChangeText={setName}
                         />
@@ -82,7 +87,7 @@ const AddFirstLocation = () => {
                     {/* Créer */}
                     <AnimatedPressable onPress={handleAddLocation}>
                         <LinearGradient style={sharedStyles.button} colors={colors.blackGradient}>
-                            <Text style={sharedStyles.buttonText}>{lang.addLocation.form.button}</Text>
+                            <Text style={sharedStyles.buttonText}>{t('addLocation.form.button')}</Text>
                         </LinearGradient>
                     </AnimatedPressable>
                 </View>

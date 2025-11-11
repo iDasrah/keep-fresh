@@ -1,0 +1,343 @@
+{
+    "header": {
+        "searchbar": {
+            "placeholder": {
+                "ALL": "Search in all storage...",
+                "FRIDGE": "Look in the fridge...",
+                "FREEZER": "Look in the freezer...",
+                "PANTRY": "Search the cupboards...",
+                "OTHER": "Search in other storage..."
+            }
+        },
+        "storageSelector": {
+            "ALL": "All",
+            "FRIDGE": "Fridge",
+            "FREEZER": "Freezer",
+            "PANTRY": "Closet",
+            "OTHER": "Other"
+        }
+    },
+    "product": {
+        "expiringIn": "Expires in"
+    },
+    "addItem": {
+        "title": "Add",
+        "subtitle": "Quickly add a product to your fridge.",
+        "form": {
+            "name": {
+                "label": "Product Name",
+                "placeholder": {
+                    "fridge": [
+                        "Ex: Plain yogurt",
+                        "Ex: Grated cheese",
+                        "Ex: Orange juice",
+                        "Ex: Roast chicken",
+                        "Ex: Semi-skimmed milk"
+                    ],
+                    "freezer": [
+                        "Ex: Breaded fish",
+                        "Ex: Vanilla ice cream",
+                        "Ex: Frozen vegetables",
+                        "Ex: Pizza",
+                        "Ex: Chopped steaks"
+                    ],
+                    "pantry": [
+                        "Ex: Pasta",
+                        "Ex: Basmati rice",
+                        "Ex: Cookies",
+                        "Ex: Tomato sauce",
+                        "Ex: Olive oil"
+                    ]
+                }
+            },
+            "quantity": {
+                "label": "Quantity",
+                "placeholder": "Ex: 6"
+            },
+            "unit": {
+                "label": "Unit",
+                "placeholder": "Ex: coins, g, ml..."
+            },
+            "storage": {
+                "label": "Storage"
+            },
+            "expirationDate": {
+                "label": "Expiration date",
+                "placeholder": "Select a date"
+            },
+            "addButton": "Add item"
+        }
+    },
+    "alert": {
+        "cancel": "Cancel",
+        "deleteItem": "Delete item",
+        "deleteItemMessage": "Are you sure you want to delete this article? ",
+        "throw": "Throw",
+        "consume": "Consume",
+        "deleteData": {
+            "title": "Delete my data",
+            "message": "Are you sure you want to delete all your data? ",
+            "delete": "DELETE"
+        }
+    },
+    "stats": {
+        "antiWasteTitle": "Anti-Waste Score",
+        "antiWasteMessages": {
+            "low": [
+                {
+                    "title": "Too much waste! ",
+                    "content": "Many products expired this month."
+                },
+                {
+                    "title": "Action required! ",
+                    "content": "Activate notifications so you don't miss anything."
+                },
+                {
+                    "title": "Now is the time to act! ",
+                    "content": "Plan your meals better to waste less."
+                }
+            ],
+            "medium": [
+                {
+                    "title": "Attention ⚠️",
+                    "content": "A few products were thrown out this month."
+                },
+                {
+                    "title": "We can do better 💪",
+                    "content": "Remember to check the dates regularly."
+                },
+                {
+                    "title": "Not bad ! ",
+                    "content": "But there is still room for improvement."
+                }
+            ],
+            "high": [
+                {
+                    "title": "Excellent ! ",
+                    "content": "Keep it up, you waste very little!"
+                },
+                {
+                    "title": "Well done ! ",
+                    "content": "Your fridge is well managed, zero waste!"
+                },
+                {
+                    "title": "Great! ",
+                    "content": "You are an anti-waste champion!"
+                }
+            ]
+        },
+        "avgConsumptionTime": {
+            "title": "days",
+            "subtitle": {
+                "short": [
+                    "They don't last long.",
+                    "Fast as lightning.",
+                    "Barely stored, already savored.",
+                    "No time to settle down.",
+                    "They fly by.",
+                    "Always fresh, never forgotten.",
+                    "Flash food.",
+                    "Your fridge runs at 100 miles an hour."
+                ],
+                "medium": [
+                    "The right tempo.",
+                    "Just what is needed.",
+                    "They wait quietly.",
+                    "Neither too early nor too late.",
+                    "Just ready to be savored.",
+                    "A well-established rhythm.",
+                    "They find their moment."
+                ],
+                "long": [
+                    "They take their time.",
+                    "They hibernate a little.",
+                    "Patience before tasting.",
+                    "They are biding their time.",
+                    "They rest in the cool.",
+                    "They live a long life.",
+                    "Meals take off.",
+                    "It’s almost an everlasting pantry."
+                ]
+            }
+        },
+        "expiredThisWeek": {
+            "title": "products expired this week",
+            "subtitle": {
+                "none": [
+                    "Nothing was lost, everything is saved.",
+                    "Zero loss is great art.",
+                    "You manage like a boss.",
+                    "Not a crumb wasted.",
+                    "Anti-waste mission accomplished."
+                ],
+                "few": [
+                    "They didn't last... but you did.",
+                    "A small oversight happens.",
+                    "Almost flawless.",
+                    "Just a misstep.",
+                    "A minimal loss, one more lesson."
+                ],
+                "some": [
+                    "They fell in battle.",
+                    "A bit of a mess this week.",
+                    "We can do better, we know it.",
+                    "They narrowly escaped you.",
+                    "Not perfect, but you're on the right track."
+                ],
+                "many": [
+                    "Your fridge deserves a look.",
+                    "They slipped through your fingers.",
+                    "A difficult week.",
+                    "Big damage, but nothing irreversible.",
+                    "Waste won this round."
+                ]
+            }
+        }
+    },
+    "settings": {
+        "notifications": {
+            "title": "Notifications",
+            "expiredProduct": {
+                "title": "Expired product",
+                "description": "Receive a notification the day a product expires."
+            },
+            "expiringSoonProduct": {
+                "title": "Product expired soon",
+                "description": "Receive a notification a few days before a product expires."
+            }
+        },
+        "feedback": {
+            "title": "Send a comment"
+        },
+        "deleteData": {
+            "title": "Delete my data"
+        }
+    },
+    "noItems": {
+        "title": "You haven't added any items!",
+        "button": "Add an item"
+    },
+    "shoppingList": {
+        "addItemFieldPlaceholder": "Add an item to the shopping list...",
+        "emptyList": "No items in the list"
+    },
+    "tab": {
+        "fridge": "Fridge",
+        "shoppingList": "Races",
+        "stats": "Stats",
+        "settings": "Settings"
+    },
+    "auth": {
+        "root": {
+            "welcomeTitle": "Welcome to",
+            "subtitle": "Never waste again! ",
+            "actions": {
+                "signIn": "I already have an account",
+                "signUp": "I want to create an account"
+            }
+        },
+        "signIn": {
+            "title": "Log in",
+            "form": {
+                "email": {
+                    "label": "E-mail",
+                    "placeholder": "Enter your email address"
+                },
+                "password": {
+                    "label": "Password",
+                    "placeholder": "Enter your password"
+                },
+                "button": "Log in",
+                "loadingBtn": "Connection in progress..."
+            },
+            "noAccountYet": {
+                "text": "No account yet?",
+                "action": "Sign up."
+            },
+            "forgotPassword": "Forgotten password?"
+        },
+        "signUp": {
+            "step1": {
+                "title": "Create an account",
+                "subtitle": "Choose your registration method",
+                "methods": {
+                    "email": {
+                        "title": "Register with Email",
+                        "description": "Create an account using your email address"
+                    },
+                    "apple": {
+                        "title": "Sign up with Apple",
+                        "description": "Quick and secure registration with Apple"
+                    },
+                    "google": {
+                        "title": "Sign up with Google",
+                        "description": "Fast and secure registration with Google"
+                    }
+                },
+                "alreadyHaveAccount": {
+                    "text": "Already have an account?",
+                    "action": "Log in."
+                }
+            },
+            "step2": {
+                "title": "Personal information",
+                "subtitle": "Tell us a little about yourself",
+                "firstName": {
+                    "label": "First name",
+                    "placeholder": "Ex: John"
+                },
+                "lastName": {
+                    "label": "Name",
+                    "placeholder": "Ex: Doe"
+                },
+                "username": {
+                    "label": "User name",
+                    "placeholder": "Ex: john_doe"
+                }
+            },
+            "step3": {
+                "title": "Secure the account",
+                "subtitle": "Configure your email and password",
+                "email": {
+                    "label": "E-mail",
+                    "placeholder": "Ex: john.doe@{{appName}}.app"
+                },
+                "password": {
+                    "label": "Password",
+                    "placeholder": "Enter your password"
+                },
+                "passwordConfirmation": {
+                    "label": "Confirm password",
+                    "placeholder": "Confirm your password"
+                },
+                "button": "Create an account",
+                "loadingBtn": "Creating the account..."
+            }
+        },
+        "disconnect": {
+            "button": "Log out"
+        },
+        "requestResetPassword": {
+            "title": "Reset Password",
+            "form": {
+                "email": {
+                    "label": "E-mail",
+                    "placeholder": "Enter your email address"
+                },
+                "button": "Send reset link"
+            }
+        }
+    },
+    "back": "Back",
+    "continue": "Continue",
+    "addLocation": {
+        "title": "Add a location",
+        "form": {
+            "name": {
+                "label": "Location Name",
+                "placeholder": "Ex: House..."
+            },
+            "button": "Add location"
+        }
+    }
+}

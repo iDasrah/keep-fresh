@@ -2,39 +2,18 @@ import {Alert, KeyboardAvoidingView, Platform, ScrollView, View} from "react-nat
 import Header from "@/components/ui/Header";
 import {useState} from "react";
 import {authClient} from "@/lib/auth-client";
-import lang from "@/lib/lang";
 import {z} from "zod/v4";
 import {useRouter} from "expo-router";
 import {handleAuthError, validateFormData} from "@/lib/utils";
 import {signUpStyles as styles} from "@/assets/style/sign-up.styles";
 import {ProgressIndicator, SignUpStep1, SignUpStep2, SignUpStep3} from "@/components/onboarding";
-
-const signUpSchema = z.object({
-    firstname: z.string()
-        .nonempty({error: lang.errors.signUp.requiredFirstname})
-        .max(20, {error: lang.errors.signUp.firstnameTooLong})
-        .regex(/^[a-zA-ZÀ-ÿ]+(?:-[a-zA-ZÀ-ÿ]+)*$/, {error: lang.errors.signUp.invalidFirstname}),
-    lastname: z.string()
-        .nonempty({error: lang.errors.signUp.requiredLastname})
-        .max(20, {error: lang.errors.signUp.lastnameTooLong})
-        .regex(/^[a-zA-ZÀ-ÿ]+(?:-[a-zA-ZÀ-ÿ]+)*$/, {error: lang.errors.signUp.invalidLastname}),
-    name: z.string()
-        .nonempty({error: lang.errors.signUp.requiredName})
-        .max(15, {error: lang.errors.signUp.nameTooLong})
-        .regex(/^[_a-z0-9]*$/, {error: lang.errors.signUp.invalidName}),
-    email: z.email({error: lang.errors.signUp.invalidEmail}),
-    password: z.string()
-        .min(8, {error: lang.errors.signUp.passwordTooShort})
-        .max(30, {error: lang.errors.signUp.passwordTooLong})
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/gm, {error: lang.errors.signUp.invalidPassword}),
-    passwordConfirmation: z.string()
-        .min(8, {error: lang.errors.signUp.passwordConfirmationTooShort})
-        .max(30, {error: lang.errors.signUp.passwordConfirmationTooLong}),
-});
+import {useTranslation} from "react-i18next";
 
 type SignUpMethod = 'email' | 'apple' | 'google' | null;
 
 const SignUp = () => {
+    const { t, ready } = useTranslation(['common', 'error']);
+
     const router = useRouter();
 
     const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -48,6 +27,33 @@ const SignUp = () => {
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
+
+    if (!ready) {
+        return;
+    }
+
+    const signUpSchema = z.object({
+        firstname: z.string()
+            .nonempty({error: t('signUp.requiredFirstname', { ns: 'error' })})
+            .max(20, {error: t('signUp.firstnameTooLong', { ns: 'error' })})
+            .regex(/^[a-zA-ZÀ-ÿ]+(?:-[a-zA-ZÀ-ÿ]+)*$/, {error: t('signUp.invalidFirstname', { ns: 'error' })}),
+        lastname: z.string()
+            .nonempty({error: t('signUp.requiredLastname', { ns: 'error' })})
+            .max(20, {error: t('signUp.lastnameTooLong', { ns: 'error' })})
+            .regex(/^[a-zA-ZÀ-ÿ]+(?:-[a-zA-ZÀ-ÿ]+)*$/, {error: t('signUp.invalidLastname', { ns: 'error' })}),
+        name: z.string()
+            .nonempty({error: t('signUp.requiredName', { ns: 'error' })})
+            .max(15, {error: t('signUp.nameTooLong', { ns: 'error' })})
+            .regex(/^[_a-z0-9]*$/, {error: t('signUp.invalidName', { ns: 'error' })}),
+        email: z.email({error: t('signUp.invalidEmail', { ns: 'error' })}),
+        password: z.string()
+            .min(8, {error: t('signUp.passwordTooShort', { ns: 'error' })})
+            .max(30, {error: t('signUp.passwordTooLong', { ns: 'error' })})
+            .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/gm, {error: t('signUp.invalidPassword', { ns: 'error' })}),
+        passwordConfirmation: z.string()
+            .min(8, {error: t('signUp.passwordConfirmationTooShort', { ns: 'error' })})
+            .max(30, {error: t('signUp.passwordConfirmationTooLong', { ns: 'error' })}),
+    });
 
     const handleSignUp = async () => {
         if (isLoading) return;
@@ -69,7 +75,7 @@ const SignUp = () => {
             }
 
             if (validation.data.password !== validation.data.passwordConfirmation) {
-                Alert.alert('', lang.errors.signUp.passwordMismatch);
+                Alert.alert('', t('signUp.passwordMismatch', { ns: 'error' }));
                 return;
             }
 

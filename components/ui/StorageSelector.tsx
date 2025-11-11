@@ -2,9 +2,9 @@ import {View} from 'react-native'
 import React, {useEffect} from 'react'
 import {styles} from "@/assets/style/storage-selector.styles";
 import {Link, useLocalSearchParams} from "expo-router";
-import lang from "@/lib/lang";
 import {useItems} from "@/stores/items";
 import {Storage} from "@/types";
+import {useTranslation} from "react-i18next";
 
 /**
  * COMPONENT : StorageSelector (sélecteur de type de stockage)
@@ -31,6 +31,7 @@ import {Storage} from "@/types";
  * useEffect vérifie que storage est valide avant de l'appliquer.
  */
 const StorageSelector = () => {
+    const { t, ready } = useTranslation();
     // Query param actuel (?storage=fridge, ?storage=freezer, etc.)
     const {storage} = useLocalSearchParams<{ storage: Storage }>();
     const {setSelectedStorage} = useItems();
@@ -45,6 +46,10 @@ const StorageSelector = () => {
         setSelectedStorage(storage);
     }, [setSelectedStorage, storage]);
 
+    if (!ready) {
+        return;
+    }
+
     return (
         <View style={styles.storageSelector}>
             {/* LIEN 1 : Tous (pas de query param) */}
@@ -55,7 +60,7 @@ const StorageSelector = () => {
                     storage === undefined && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.ALL}
+                {t('header.storageSelector.ALL')}
             </Link>
 
             {/* LIEN 2 : Frigo (?storage=fridge) */}
@@ -66,7 +71,7 @@ const StorageSelector = () => {
                     storage === "FRIDGE" && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.FRIDGE}
+                {t('header.storageSelector.FRIDGE')}
             </Link>
 
             {/* LIEN 3 : Congélateur (?storage=freezer) */}
@@ -77,7 +82,7 @@ const StorageSelector = () => {
                     storage === "FREEZER" && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.FREEZER}
+                {t('header.storageSelector.FREEZER')}
             </Link>
 
             {/* LIEN 4 : Placards (?storage=pantry) */}
@@ -88,7 +93,7 @@ const StorageSelector = () => {
                     storage === "PANTRY" && styles.activeStorageSelectorLink
                 ]}
             >
-                {lang.header.storageSelector.PANTRY}
+                {t('header.storageSelector.PANTRY')}
             </Link>
         </View>
     )

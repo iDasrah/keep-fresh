@@ -6,7 +6,7 @@ import FormInput from "@/components/ui/FormInput";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {LinearGradient} from "expo-linear-gradient";
 import {colors} from "@/constants/colors";
-import lang from "@/lib/lang";
+import {useTranslation} from "react-i18next";
 
 interface SignUpStep3Props {
     email: string;
@@ -35,20 +35,26 @@ export default function SignUpStep3({
     onSubmit,
     isLoading,
 }: SignUpStep3Props) {
+    const { t, ready } = useTranslation();
+
+    if (!ready) {
+        return;
+    }
+
     return (
         <View style={styles.stepContainer}>
             <View style={styles.header}>
-                <Text style={styles.title}>{lang.auth.signUp.step3.title}</Text>
+                <Text style={styles.title}>{t('auth.signUp.step3.title')}</Text>
                 <Text style={styles.subtitle}>
-                    {lang.auth.signUp.step3.subtitle}
+                    {t('auth.signUp.step3.subtitle')}
                 </Text>
             </View>
 
             <View style={styles.formContainer}>
                 <View style={sharedStyles.inputField}>
-                    <FormLabel>{lang.auth.signUp.step3.email.label}</FormLabel>
+                    <FormLabel>{t('auth.signUp.step3.email.label')}</FormLabel>
                     <FormInput
-                        placeholder={lang.auth.signUp.step3.email.placeholder}
+                        placeholder={t('auth.signUp.step3.email.placeholder', { appName: String(process.env.EXPO_PUBLIC_APP_NAME).replace(/\s+/g, '').toLowerCase() })}
                         value={email}
                         onChangeText={onEmailChange}
                         textContentType={"emailAddress"}
@@ -59,9 +65,9 @@ export default function SignUpStep3({
                 </View>
 
                 <View style={sharedStyles.inputField}>
-                    <FormLabel>{lang.auth.signUp.step3.password.label}</FormLabel>
+                    <FormLabel>{t('auth.signUp.step3.password.label')}</FormLabel>
                     <FormInput
-                        placeholder={lang.auth.signUp.step3.password.placeholder}
+                        placeholder={t('auth.signUp.step3.password.placeholder')}
                         value={password}
                         onChangeText={onPasswordChange}
                         textContentType="password"
@@ -71,9 +77,9 @@ export default function SignUpStep3({
                 </View>
 
                 <View style={sharedStyles.inputField}>
-                    <FormLabel>{lang.auth.signUp.step3.passwordConfirmation.label}</FormLabel>
+                    <FormLabel>{t('auth.signUp.step3.passwordConfirmation.label')}</FormLabel>
                     <FormInput
-                        placeholder={lang.auth.signUp.step3.passwordConfirmation.placeholder}
+                        placeholder={t('auth.signUp.step3.passwordConfirmation.placeholder')}
                         value={passwordConfirmation}
                         onChangeText={onPasswordConfirmationChange}
                         textContentType="password"
@@ -85,12 +91,12 @@ export default function SignUpStep3({
 
             <View style={styles.buttonsContainer}>
                 <AnimatedPressable onPress={onBack} style={styles.secondaryButton} disabled={isLoading}>
-                    <Text style={styles.secondaryButtonText}>{lang.back}</Text>
+                    <Text style={styles.secondaryButtonText}>{t('back')}</Text>
                 </AnimatedPressable>
                 <AnimatedPressable onPress={onSubmit} disabled={isLoading}>
                     <LinearGradient style={[sharedStyles.button, isLoading && styles.buttonDisabled]} colors={colors.blackGradient}>
                         <Text style={sharedStyles.buttonText}>
-                            {isLoading ? lang.auth.signUp.step3.loadingBtn : lang.auth.signUp.step3.button}
+                            {isLoading ? t('auth.signUp.step3.loadingBtn') : t('auth.signUp.step3.button')}
                         </Text>
                     </LinearGradient>
                 </AnimatedPressable>

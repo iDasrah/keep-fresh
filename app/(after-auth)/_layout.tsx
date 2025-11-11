@@ -1,14 +1,15 @@
 import {SplashScreen, Stack} from 'expo-router';
 import {useEffect, useState} from "react";
 import {Alert} from "react-native";
-import lang from "@/lib/lang";
 import {AxiosError} from "axios";
 import {useApiMutation} from "@/hooks/useApiMutation";
 import {api} from "@/lib/api";
 import {useLocation} from "@/hooks/useLocation";
+import {useTranslation} from "react-i18next";
 
 export default function AfterAuthLayout() {
     SplashScreen.preventAutoHideAsync();
+    const { t, ready } = useTranslation(['common', 'error']);
     const { location, setLocation, deleteLocation, isLoading } = useLocation();
     const [isLocationLoading, setIsLocationLoading] = useState<boolean>(true);
 
@@ -38,14 +39,14 @@ export default function AfterAuthLayout() {
                     Alert.alert('Error', error.response.data.message);
                     return;
                 }
-                Alert.alert('Error', lang.errors.generic);
+                Alert.alert('Error', t('generic', { ns: 'error' }));
             }
         };
 
         void fetchLocation();
     }, []);
 
-    if (!isLoading && !isLocationLoading) {
+    if (!isLoading && !isLocationLoading && ready) {
         SplashScreen.hide();
     }
 

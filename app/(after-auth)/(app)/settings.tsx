@@ -2,12 +2,12 @@ import {View, Text, Switch, Alert} from 'react-native'
 import Header from "@/components/ui/Header"
 import Card from "@/components/ui/Card";
 import {colors} from "@/constants/colors";
-import lang from "@/lib/lang";
 import {styles} from "@/assets/style/settings.styles";
 import {Ionicons} from "@expo/vector-icons";
 import {requestReview} from "expo-store-review";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {useRouter} from "expo-router";
+import {useTranslation} from "react-i18next";
 
 /**
  * SCREEN : Page des paramètres
@@ -29,7 +29,12 @@ import {useRouter} from "expo-router";
  */
 const Settings = () => {
     //TODO: Ajouter les settings de l'API
+    const { t, ready } = useTranslation();
     const router = useRouter();
+
+    if (!ready) {
+        return;
+    }
 
     /**
      * Handler pour le toggle "Produit expiré"
@@ -61,15 +66,15 @@ const Settings = () => {
      */
     const onDeleteData = async () => {
         Alert.alert(
-            lang.alert.deleteData.title,
-            lang.alert.deleteData.message,
+            t('alert.deleteData.title'),
+            t('alert.deleteData.message'),
             [
                 {
-                    text: lang.alert.cancel,
+                    text: t('alert.cancel'),
                     style: 'cancel'
                 },
                 {
-                    text: lang.alert.deleteData.delete,
+                    text: t('alert.deleteData.delete'),
                     style: 'destructive',
                     onPress: async () => {
                         // Retour à l'accueil après reset complet
@@ -89,17 +94,17 @@ const Settings = () => {
                 {/* SECTION 1 : Notifications */}
                 <Card>
                     <Text style={styles.notificationsTitle}>
-                        {lang.settings.notifications.title}
+                        {t('settings.notifications.title')}
                     </Text>
 
                     {/* Toggle 1 : Notification d'expiration */}
                     <View style={styles.notificationItem}>
                         <View>
                             <Text style={styles.notificationItemTitle}>
-                                {lang.settings.notifications.expiredProduct.title}
+                                {t('settings.notifications.expiredProduct.title')}
                             </Text>
                             <Text style={styles.notificationItemDesc}>
-                                {lang.settings.notifications.expiredProduct.description}
+                                {t('settings.notifications.expiredProduct.description')}
                             </Text>
                         </View>
                         <Switch
@@ -112,10 +117,10 @@ const Settings = () => {
                     <View style={styles.notificationItem}>
                         <View>
                             <Text style={styles.notificationItemTitle}>
-                                {lang.settings.notifications.expiringSoonProduct.title}
+                                {t('settings.notifications.expiringSoonProduct.title')}
                             </Text>
                             <Text style={styles.notificationItemDesc}>
-                                {lang.settings.notifications.expiringSoonProduct.description}
+                                {t('settings.notifications.expiringSoonProduct.description')}
                             </Text>
                         </View>
                         <Switch
@@ -129,7 +134,7 @@ const Settings = () => {
                 <AnimatedPressable scale={.98} onPress={requestReview}>
                     <Card contentStyle={styles.feedbackContent}>
                         <Text style={styles.feedbackTitle}>
-                            {lang.settings.feedback.title}
+                            {t('settings.feedback.title')}
                         </Text>
                         <Ionicons name="chevron-forward" size={32} color={colors.textMuted} />
                     </Card>
@@ -139,7 +144,7 @@ const Settings = () => {
                 <AnimatedPressable scale={.98} onPress={onDeleteData}>
                     <Card contentStyle={styles.deleteDataContent}>
                         <Text style={styles.deleteDataTitle}>
-                            {lang.settings.deleteData.title}
+                            {t('settings.deleteData.title')}
                         </Text>
                     </Card>
                 </AnimatedPressable>

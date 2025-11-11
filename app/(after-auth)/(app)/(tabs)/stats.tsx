@@ -3,10 +3,10 @@ import React from 'react'
 import Header from "@/components/ui/Header";
 import Card from "@/components/ui/Card";
 import CircularProgress from "@/components/ui/CircularProgress";
-import lang from "@/lib/lang";
 import {styles} from "@/assets/style/stats.styles";
 import {getRandomAntiWasteMessage, getRandomConsumptionTimeMessage, getRandomExpiredThisWeekMessage} from "@/lib/utils";
 import StatCard from "@/components/ui/StatCard";
+import {useTranslation} from "react-i18next";
 
 /**
  * SCREEN : Page des statistiques anti-gaspi
@@ -28,6 +28,12 @@ import StatCard from "@/components/ui/StatCard";
  */
 const Stats = () => {
     //TODO: Ajouter les stats de l'API
+    const { t, ready } = useTranslation();
+
+    if (!ready) {
+        return;
+    }
+
     const message = getRandomAntiWasteMessage(0); //TODO: Changer la valeur
 
     return (
@@ -43,7 +49,7 @@ const Stats = () => {
                     {/* Message motivant qui change selon le score */}
                     <View style={styles.antiWasteMsg}>
                         <Text style={styles.antiWasteTitle}>
-                            {lang.stats.antiWasteTitle}
+                            {t('stats.antiWasteTitle')}
                         </Text>
                         {/* Titre du message */}
                         <Text style={styles.antiWasteMsgTitle}>
@@ -65,7 +71,7 @@ const Stats = () => {
                     */}
                     <StatCard
                         statValue={0}
-                        title={lang.stats.avgConsumptionTime.title}
+                        title={t('stats.avgConsumptionTime.title')}
                         subtitle={getRandomConsumptionTimeMessage(0)}
                     />
 
@@ -76,7 +82,7 @@ const Stats = () => {
                     */}
                     <StatCard
                         statValue={0}
-                        title={lang.stats.expiredThisWeek.title}
+                        title={t('stats.expiredThisWeek.title')}
                         subtitle={getRandomExpiredThisWeekMessage(0)}
                     />
                 </View>

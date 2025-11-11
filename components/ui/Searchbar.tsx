@@ -2,8 +2,8 @@ import {View, TextInput} from "react-native";
 import {styles} from "@/assets/style/searchbar.styles";
 import {Ionicons} from "@expo/vector-icons";
 import {colors} from "@/constants/colors";
-import lang from "@/lib/lang";
 import {useItems} from "@/stores/items";
+import {useTranslation} from "react-i18next";
 
 /**
  * COMPONENT : Searchbar (barre de recherche)
@@ -24,7 +24,12 @@ import {useItems} from "@/stores/items";
  * (queryKey inclut searchText) et refetch automatiquement les items filtrés.
  */
 const Searchbar = () => {
+    const { t, ready } = useTranslation();
     const { searchText, setSearchText, selectedStorage } = useItems();
+
+    if (!ready) {
+        return;
+    }
 
     return (
         <View style={styles.searchbar}>
@@ -33,7 +38,7 @@ const Searchbar = () => {
 
             {/* Input avec placeholder dynamique selon le storage */}
             <TextInput
-                placeholder={lang.header.searchbar.placeholder[selectedStorage ?? "ALL"]}
+                placeholder={t(`header.searchbar.placeholder.${selectedStorage ?? "ALL"}`)}
                 placeholderTextColor={colors.textMuted}
                 value={searchText}
                 onChangeText={setSearchText}

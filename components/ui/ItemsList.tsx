@@ -2,7 +2,6 @@ import {View, ActivityIndicator, Text, Alert} from 'react-native'
 import React, {useCallback, useEffect, useState} from 'react'
 import Item from "@/components/ui/Item";
 import {styles} from "@/assets/style/items-list.styles";
-import lang from "@/lib/lang";
 import Animated, {useAnimatedStyle, useSharedValue} from "react-native-reanimated";
 import {LinearGradient} from "expo-linear-gradient";
 import {colors} from "@/constants/colors";
@@ -13,6 +12,7 @@ import {useApiMutation} from "@/hooks/useApiMutation";
 import {api} from "@/lib/api";
 import {AxiosError} from "axios";
 import {LocationProduct, Storage} from "@/types";
+import {useTranslation} from "react-i18next";
 
 /**
  * COMPONENT : Liste des produits avec filtres
@@ -42,6 +42,7 @@ interface ItemsListProps {
 }
 
 const ItemsList = ({storage, searchText}: ItemsListProps) => {
+    const { t, ready } = useTranslation(['common', 'error']);
     const router = useRouter();
     const { location } = useLocation();
     const [products, setProducts] = useState<LocationProduct[]>([]);
@@ -77,7 +78,7 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
             const fetchProducts = async () => {
                 try {
                     if (!location) {
-                        Alert.alert('Error', lang.errors.generic);
+                        Alert.alert('Error', t('generic', { ns: 'error' }));
                         return;
                     }
 
@@ -88,7 +89,7 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
                         Alert.alert('Error', error.response.data.message);
                         return;
                     }
-                    Alert.alert('Error', lang.errors.generic);
+                    Alert.alert('Error', t('generic', { ns: 'error' }));
                 }
             }
 
@@ -97,7 +98,7 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
     , [location, storage, searchText]);
 
     // ÉTAT 1 : Loading (requête en cours)
-    if (getLocationProductsV1.isPending) {
+    if (getLocationProductsV1.isPending || !ready) {
         return <ActivityIndicator />
     }
 
@@ -105,12 +106,12 @@ const ItemsList = ({storage, searchText}: ItemsListProps) => {
     if (products.length === 0) {
         return (
             <View style={styles.noItemsContainer}>
-                <Text style={styles.noItemsText}>{lang.noItems.title}</Text>
+                <Text style={styles.noItemsText}>{t('noItems.title')}</Text>
                 {/* Bouton "Ajouter un produit" qui redirige vers /add-item */}
                 <Animated.View style={animatedStyle}>
                     <AnimatedPressable onPress={() => router.push(`/(after-auth)/(app)/(tabs)/scan-product?storage=${storage}`)}>
                         <LinearGradient colors={colors.blackGradient} style={styles.addButton}>
-                            <Text style={styles.addButtonText}>{lang.noItems.button}</Text>
+                            <Text style={styles.addButtonText}>{t('noItems.button')}</Text>
                         </LinearGradient>
                     </AnimatedPressable>
                 </Animated.View>

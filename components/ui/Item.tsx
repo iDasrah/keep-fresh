@@ -2,14 +2,15 @@ import {Alert, Text, View} from 'react-native'
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withTiming} from "react-native-reanimated";
 import {styles} from "@/assets/style/item.styles";
 import {formatDistanceToNow} from "date-fns";
-import {fr} from "date-fns/locale";
-import lang from "@/lib/lang";
+import {fr, enGB} from "date-fns/locale";
 import {getItemStatus} from "@/lib/utils";
 import {colors} from "@/constants/colors";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import Card from "@/components/ui/Card";
 import {selectionAsync} from "expo-haptics";
 import {LocationProduct} from "@/types";
+import {useTranslation} from "react-i18next";
+import {getLocales} from "expo-localization";
 
 /**
  * Composant Item - Affiche une carte de produit du frigo avec interaction longPress.
@@ -38,9 +39,19 @@ const statusColors: Record<string, string> = {
 }
 
 const Item = ({item}: ItemProps) => {
+    const { t, ready } = useTranslation();
     const itemStatus = getItemStatus(new Date(item.expirationDate));
     const opacity = useSharedValue(1);
     const scale = useSharedValue(1);
+    const animatedStyle = useAnimatedStyle(() => ({
+        opacity: opacity.value,
+        transform: [{ scale: scale.value }]
+    }));
+    const locale = getLocales()[0]?.languageCode === 'en' ? enGB : fr;
+
+    if (!ready) {
+        return;
+    }
 
     /**
      * Gesture handler pour le LongPress.
@@ -57,19 +68,19 @@ const Item = ({item}: ItemProps) => {
             scale.value = withSpring(.95);
         })
         .onStart(async () => {
-            Alert.alert(lang.alert.deleteItem, lang.alert.deleteItemMessage, [
+            Alert.alert(t('alert.deleteItem'), t('alert.deleteItemMessage'), [
                 {
-                    text: lang.alert.cancel,
+                    text: t('alert.cancel'),
                     style: 'cancel'
                 },
                 {
-                    text: lang.alert.throw,
+                    text: t('alert.throw'),
                     style: 'destructive',
                     onPress: () => {
                     }
                 },
                 {
-                    text: lang.alert.consume,
+                    text: t('alert.consume'),
                     onPress: () => {
                     }
                 }
@@ -81,11 +92,6 @@ const Item = ({item}: ItemProps) => {
             scale.value = withSpring(1);
         })
         .runOnJS(true);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-        opacity: opacity.value,
-        transform: [{ scale: scale.value }]
-    }));
 
     return (
         <GestureDetector gesture={longPress}>
@@ -113,9 +119,9 @@ const Item = ({item}: ItemProps) => {
                         )
                     }
                     <Text style={[styles.itemExpiration, {color: statusColors[itemStatus]}]}>
-                        {lang.product.expiringIn} {formatDistanceToNow(new Date(item.expirationDate), {
+                        {t('product.expiringIn')} {formatDistanceToNow(new Date(item.expirationDate), {
                             includeSeconds: false,
-                            locale: fr,
+                            locale,
                         })}
                     </Text>
                 </Card>

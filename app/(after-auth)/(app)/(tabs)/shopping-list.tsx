@@ -3,13 +3,13 @@ import Header from "@/components/ui/Header";
 import {styles} from "@/assets/style/shopping-list.styles";
 import {SolarIcon} from "react-native-solar-icons";
 import { colors } from "@/constants/colors";
-import lang from "@/lib/lang";
 import {LinearGradient} from "expo-linear-gradient";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {useState, useMemo} from "react";
 import Card from "@/components/ui/Card";
 import {z} from "zod/v4";
 import {ShoppingListItem} from "@/types";
+import {useTranslation} from "react-i18next";
 
 /**
  * SCREEN : Liste de courses
@@ -29,6 +29,7 @@ import {ShoppingListItem} from "@/types";
  */
 const ShoppingList = () => {
     // TODO: Ajouter la récupération, l'ajout et la suppression des items depuis l'API
+    const { t, ready } = useTranslation(['common', 'error']);
 
     // État local pour l'input d'ajout
     const [newItem, setNewItem] = useState('');
@@ -40,9 +41,13 @@ const ShoppingList = () => {
      * min(1) garantit qu'on n'ajoute pas de string vide.
      */
     const itemSchema = useMemo(() =>
-        z.string().min(1, {error: lang.errors.shoppingList.emptyItemName}),
+        z.string().min(1, {error: t('shoppingList.emptyItemName', { ns: 'error' })}),
         []
     );
+
+    if (!ready) {
+        return;
+    }
 
     /**
      * Handler d'ajout d'item.
@@ -55,7 +60,7 @@ const ShoppingList = () => {
         if (parsed.success) {
             Alert.alert('En travaux', 'L\'ajout d\'items sera disponible dans une prochaine version.');
         } else {
-            const errorMessage = parsed.error.issues[0]?.message || lang.errors.generic;
+            const errorMessage = parsed.error.issues[0]?.message || t('generic', { ns: 'error' });
             Alert.alert('', errorMessage);
         }
     }
@@ -84,7 +89,7 @@ const ShoppingList = () => {
                         />
                         <TextInput
                             style={styles.addItemInput}
-                            placeholder={lang.shoppingList.addItemFieldPlaceholder}
+                            placeholder={t('shoppingList.addItemFieldPlaceholder')}
                             placeholderTextColor={colors.textMuted}
                             value={newItem}
                             onChangeText={setNewItem}
@@ -130,7 +135,7 @@ const ShoppingList = () => {
                                     type="outline"
                                 />
                                 <Text style={styles.emptyStateText}>
-                                    {lang.shoppingList.emptyList}
+                                    {t('shoppingList.emptyList')}
                                 </Text>
                             </View>
                         )

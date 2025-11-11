@@ -7,9 +7,10 @@ import {useFocusEffect, useRouter} from "expo-router";
 import {useApiMutation} from "@/hooks/useApiMutation";
 import {CreateProductDto} from "@/generated-api";
 import {AxiosError} from "axios";
-import lang from "@/lib/lang";
+import {useTranslation} from "react-i18next";
 
 const ScanProduct = () => {
+  const { t, ready } = useTranslation(['common', 'error']);
   const [facing, _] = useState<CameraType>('back');
   const camera = useRef<CameraView>(null);
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -53,12 +54,12 @@ const ScanProduct = () => {
             Alert.alert('Error', error.response.data.message);
             return;
         }
-        Alert.alert('Error', lang.errors.generic);
+        Alert.alert('Error', t('generic', { ns: 'error' }));
       }
     }
   }, []);
 
-  if (!permission) {
+  if (!permission || !ready) {
     return <View />;
   }
 

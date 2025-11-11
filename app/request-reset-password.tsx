@@ -3,7 +3,6 @@ import Header from "@/components/ui/Header";
 import {useState} from "react";
 import {authClient} from "@/lib/auth-client";
 import FormLabel from "@/components/ui/FormLabel";
-import lang from "@/lib/lang";
 import FormInput from "@/components/ui/FormInput";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {LinearGradient} from "expo-linear-gradient";
@@ -12,15 +11,21 @@ import {z} from "zod/v4";
 import {useRouter} from "expo-router";
 import {getBetterAuthErrorMessage} from "@/lib/utils";
 import {sharedStyles} from "@/assets/style/shared.styles";
-
-const signInSchema = z.object({
-    email: z.email({error: lang.errors.signIn.invalidEmail}),
-});
+import {useTranslation} from "react-i18next";
 
 const RequestResetPassword = () => {
+    const { t, ready } = useTranslation(['common', 'error']);
     const router = useRouter();
 
     const [email, setEmail] = useState("");
+
+    if (!ready) {
+        return;
+    }
+
+    const signInSchema = z.object({
+        email: z.email({error: t('signIn.invalidEmail', { ns: 'error' })}),
+    });
 
     const handleRequestResetPassword = async () => {
         const parsedItem = signInSchema.safeParse({
@@ -33,7 +38,7 @@ const RequestResetPassword = () => {
             if (firstError) {
                 Alert.alert('', firstError);
             } else {
-                Alert.alert('', lang.errors.generic);
+                Alert.alert('', t('generic', { ns: 'error' }));
             }
             return;
         }
@@ -46,7 +51,7 @@ const RequestResetPassword = () => {
 
         if (error) {
             if (!error.code) {
-                Alert.alert('', lang.errors.generic);
+                Alert.alert('', t('generic', { ns: 'error' }));
                 return;
             }
 
@@ -66,14 +71,14 @@ const RequestResetPassword = () => {
 
             <View style={sharedStyles.form}>
                 {/* Titre de la page */}
-                <Text style={sharedStyles.title}>{lang.auth.requestResetPassword.title}</Text>
+                <Text style={sharedStyles.title}>{t('auth.requestResetPassword.title')}</Text>
 
                 <View style={{marginTop: 30}}>
                     {/* Email */}
                     <View style={sharedStyles.inputField}>
-                        <FormLabel>{lang.auth.requestResetPassword.form.email.label}</FormLabel>
+                        <FormLabel>{t('auth.requestResetPassword.form.email.label')}</FormLabel>
                         <FormInput
-                            placeholder={lang.auth.requestResetPassword.form.email.placeholder}
+                            placeholder={t('auth.requestResetPassword.form.email.placeholder')}
                             value={email}
                             onChangeText={setEmail}
                             textContentType={"emailAddress"}
@@ -83,7 +88,7 @@ const RequestResetPassword = () => {
                     {/* Demande de réinitialisation du mot de passe */}
                     <AnimatedPressable onPress={handleRequestResetPassword}>
                         <LinearGradient style={sharedStyles.button} colors={colors.blackGradient}>
-                            <Text style={sharedStyles.buttonText}>{lang.auth.requestResetPassword.form.button}</Text>
+                            <Text style={sharedStyles.buttonText}>{t('auth.requestResetPassword.form.button')}</Text>
                         </LinearGradient>
                     </AnimatedPressable>
                 </View>

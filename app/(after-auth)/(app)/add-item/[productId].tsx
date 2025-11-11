@@ -3,7 +3,6 @@ import {useState, useCallback} from 'react'
 import Header from "@/components/ui/Header";
 import FormLabel from "@/components/ui/FormLabel";
 import {styles} from "@/assets/style/add-item.styles";
-import lang from "@/lib/lang";
 import {colors} from "@/constants/colors";
 import SelectorInput from "@/components/ui/SelectorInput";
 import {LinearGradient} from "expo-linear-gradient";
@@ -19,6 +18,8 @@ import {CreateLocationProductDto, Product} from "@/generated-api";
 import {useLocation} from "@/hooks/useLocation";
 import FormInput from "@/components/ui/FormInput";
 import {Storage} from "@/types";
+import {useTranslation} from "react-i18next";
+import {getLocales} from "expo-localization";
 
 /**
  * SCREEN : Formulaire d'ajout d'un produit
@@ -43,14 +44,6 @@ import {Storage} from "@/types";
  * - Pré-remplissage du storage si passé en query param (?storage=fridge)
  */
 
-// Options pour le sélecteur de stockage
-const storageOptions = [
-    {label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"},
-    {label: lang.header.storageSelector.FREEZER, value: "FREEZER"},
-    {label: lang.header.storageSelector.PANTRY, value: "PANTRY"},
-    {label: lang.header.storageSelector.OTHER, value: "OTHER"},
-];
-
 /**
  * Schema Zod pour valider TOUT le formulaire avant soumission.
  * - name : string non vide (min 1 caractère)
@@ -72,6 +65,7 @@ const itemSchema = z.object({
 const storageParamSchema = z.enum(Storage);
 
 const AddItem = () => {
+    const { t, ready } = useTranslation(['common', 'error']);
     const { productId } = useLocalSearchParams<{ productId: string }>();
     const [product, setProduct] = useState<Product>({} as Product);
     const { location } = useLocation();
@@ -86,7 +80,7 @@ const AddItem = () => {
                     const scannedProduct = await getProductV1.mutateAsync(productId);
 
                     if (!location) {
-                        Alert.alert('Error', lang.errors.generic);
+                        Alert.alert('Error', t('generic', { ns: 'error' }));
                         return;
                     }
                     setProduct(scannedProduct.data);
@@ -95,7 +89,7 @@ const AddItem = () => {
                         Alert.alert('Error', error.response.data.message);
                         return;
                     }
-                    Alert.alert('Error', lang.errors.generic);
+                    Alert.alert('Error', t('generic', { ns: 'error' }));
                 }
             }
 
@@ -117,14 +111,26 @@ const AddItem = () => {
      */
     const [storage, setStorage] = useState<{label: string, value: string}>(
         storageParam && storageParamSchema.safeParse(storageParam).success
-            ? {label: lang.header.storageSelector[storageParam], value: storageParam as string}
-            : {label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"}
+            ? {label: t(`header.storageSelector.${storageParam}`), value: storageParam as string}
+            : {label: t('header.storageSelector.FRIDGE'), value: "FRIDGE"}
     );
 
     // Date d'expiration par défaut = demain (addDays évite d'ajouter des produits déjà expirés)
     const [expirationDate, setExpirationDate] = useState<Date>(addDays(new Date(), 1));
 
     const router = useRouter();
+
+    if (!ready) {
+        return;
+    }
+
+    // Options pour le sélecteur de stockage
+    const storageOptions = [
+        {label: t('header.storageSelector.FRIDGE'), value: "FRIDGE"},
+        {label: t('header.storageSelector.FREEZER'), value: "FREEZER"},
+        {label: t('header.storageSelector.PANTRY'), value: "PANTRY"},
+        {label: t('header.storageSelector.OTHER'), value: "OTHER"},
+    ];
 
     /**
      * Handler de soumission du formulaire.
@@ -142,7 +148,7 @@ const AddItem = () => {
     const handleAddItem = async () => {
         try {
             if (!location) {
-                Alert.alert('Error', lang.errors.generic);
+                Alert.alert('Error', t('generic', { ns: 'error' }));
                 return;
             }
 
@@ -159,7 +165,7 @@ const AddItem = () => {
                 if (firstError) {
                     Alert.alert('', firstError);
                 } else {
-                    Alert.alert('', lang.errors.generic);
+                    Alert.alert('', t('generic', { ns: 'error' }));
                 }
                 return;
             }
@@ -176,7 +182,7 @@ const AddItem = () => {
 
             // Reset complet du formulaire
             setQuantity("1");
-            setStorage({label: lang.header.storageSelector.FRIDGE, value: "FRIDGE"});
+            setStorage({label: t('header.storageSelector.FRIDGE'), value: "FRIDGE"});
             setExpirationDate(new Date());
 
             // Retour à l'accueil (replace pour éviter de garder /add-item dans l'historique)
@@ -194,7 +200,7 @@ const AddItem = () => {
                     return;
                 }
             }
-            Alert.alert('Error', lang.errors.generic);
+            Alert.alert('Error', t('generic', { ns: 'error' }));
         }
     }
 
@@ -205,14 +211,14 @@ const AddItem = () => {
 
             <View style={styles.addItem}>
                 {/* Titre et sous-titre de la page */}
-                <Text style={styles.title}>{lang.addItem.title}{" "}{product.name}</Text>
-                <Text style={styles.subtitle}>{lang.addItem.subtitle}</Text>
+                <Text style={styles.title}>{t('addItem.title')}{" "}{product.name}</Text>
+                <Text style={styles.subtitle}>{t('addItem.subtitle')}</Text>
 
                 <View style={{marginTop: 30}}>
                     {/* CHAMPS 2 & 3 : Quantité et Unité (côte à côte) */}
                     <View style={[styles.inputField, {flexDirection: "row", gap: 12}]}>
                         <View style={{flex: 1}}>
-                            <FormLabel>{lang.addItem.form.quantity.label}</FormLabel>
+                            <FormLabel>{t('addItem.form.quantity.label')}</FormLabel>
                             <FormInput
                                 value={quantity}
                                 onChangeText={setQuantity}
@@ -225,7 +231,7 @@ const AddItem = () => {
 
                     {/* CHAMP 4 : Date d'expiration (DateTimePicker natif iOS/Android) */}
                     <View style={styles.inputField}>
-                        <FormLabel>{lang.addItem.form.expirationDate.label}</FormLabel>
+                        <FormLabel>{t('addItem.form.expirationDate.label')}</FormLabel>
                         { Platform.OS === "ios" ? (
                             <RNDateTimePicker
                                 value={expirationDate}
@@ -244,7 +250,7 @@ const AddItem = () => {
                             >
                                 <View style={styles.androidDatePickerContent}>
                                     <Text style={styles.androidDatePickerText}>
-                                        {expirationDate.toLocaleDateString("fr-FR", {
+                                        {expirationDate.toLocaleDateString(getLocales()[0]?.languageCode ?? 'en', {
                                             day: "2-digit",
                                             month: "long",
                                             year: "numeric"
@@ -258,7 +264,7 @@ const AddItem = () => {
 
                     {/* CHAMP 5 : Stockage (frigo/congélateur/placards) */}
                     <View style={styles.inputField}>
-                        <FormLabel>{lang.addItem.form.storage.label}</FormLabel>
+                        <FormLabel>{t('addItem.form.storage.label')}</FormLabel>
                         <SelectorInput
                             items={storageOptions}
                             selectedItem={storage}
@@ -269,7 +275,7 @@ const AddItem = () => {
                     {/* BOUTON SUBMIT : Ajoute le produit */}
                     <AnimatedPressable onPress={handleAddItem}>
                         <LinearGradient style={styles.addBtn} colors={colors.blackGradient}>
-                            <Text style={styles.addBtnText}>{lang.addItem.form.addButton}</Text>
+                            <Text style={styles.addBtnText}>{t('addItem.form.addButton')}</Text>
                         </LinearGradient>
                     </AnimatedPressable>
                 </View>

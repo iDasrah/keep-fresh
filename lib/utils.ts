@@ -1,5 +1,5 @@
 import {colors} from "@/constants/colors";
-import lang from "@/lib/lang";
+import i18n from "@/i18n/i18n";
 
 /**
  * === UTILITAIRES ===
@@ -69,11 +69,11 @@ function getRandomItem<T>(array: T[]): T {
  */
 export function getRandomAntiWasteMessage(score: number): {title: string, content: string} {
     if (score < 40) {
-        return getRandomItem(lang.stats.antiWasteMessages.low);
+        return getRandomItem(i18n.t('stats.antiWasteMessages.low', { returnObjects: true }));
     } else if (score < 70) {
-        return getRandomItem(lang.stats.antiWasteMessages.medium);
+        return getRandomItem(i18n.t('stats.antiWasteMessages.medium', { returnObjects: true }));
     }
-    return getRandomItem(lang.stats.antiWasteMessages.high);
+    return getRandomItem(i18n.t('stats.antiWasteMessages.high', { returnObjects: true }));
 }
 
 /**
@@ -84,22 +84,11 @@ export function getRandomAntiWasteMessage(score: number): {title: string, conten
  */
 export function getRandomConsumptionTimeMessage(days: number): string {
     if (days <= 2) {
-        return getRandomItem(lang.stats.avgConsumptionTime.subtitle.short);
+        return getRandomItem(i18n.t('stats.avgConsumptionTime.subtitle.short', { returnObjects: true }));
     } else if (days <= 5) {
-        return getRandomItem(lang.stats.avgConsumptionTime.subtitle.medium);
+        return getRandomItem(i18n.t('stats.avgConsumptionTime.subtitle.medium', { returnObjects: true }));
     }
-    return getRandomItem(lang.stats.avgConsumptionTime.subtitle.long);
-}
-
-/**
- * Retourne un placeholder aléatoire selon le type de stockage.
- * Utilisé dans le formulaire d'ajout d'item.
- *
- * @param storage - Type de stockage (fridge, freezer, pantry)
- * @returns Exemple de produit adapté au stockage
- */
-export function getRandomPlaceholder(storage: "fridge" | "freezer" | "pantry"): string {
-    return getRandomItem(lang.addItem.form.name.placeholder[storage]);
+    return getRandomItem(i18n.t('stats.avgConsumptionTime.subtitle.long', { returnObjects: true }));
 }
 
 /**
@@ -110,13 +99,13 @@ export function getRandomPlaceholder(storage: "fridge" | "freezer" | "pantry"): 
  */
 export function getRandomExpiredThisWeekMessage(count: number): string {
     if (count === 0) {
-        return getRandomItem(lang.stats.expiredThisWeek.subtitle.none);
+        return getRandomItem(i18n.t('stats.expiredThisWeek.subtitle.none', { returnObjects: true }));
     } else if (count <= 3) {
-        return getRandomItem(lang.stats.expiredThisWeek.subtitle.few);
+        return getRandomItem(i18n.t('stats.expiredThisWeek.subtitle.few', { returnObjects: true }));
     } else if (count <= 7) {
-        return getRandomItem(lang.stats.expiredThisWeek.subtitle.some);
+        return getRandomItem(i18n.t('stats.expiredThisWeek.subtitle.some', { returnObjects: true }));
     }
-    return getRandomItem(lang.stats.expiredThisWeek.subtitle.many);
+    return getRandomItem(i18n.t('stats.expiredThisWeek.subtitle.many', { returnObjects: true }));
 }
 
 /**
@@ -126,7 +115,11 @@ export function getRandomExpiredThisWeekMessage(count: number): string {
  * @returns Message d'erreur traduit ou message générique
  */
 export function getBetterAuthErrorMessage(errorCode: string): string {
-    return lang.errors.betterAuth[errorCode as keyof typeof lang.errors.betterAuth] ?? lang.errors.generic;
+    const errors = i18n.t('betterAuth', { ns: 'error', returnObjects: true });
+    if (errors && typeof errors === 'object' && errorCode in errors) {
+        return errors[errorCode as keyof typeof errors] as string;
+    }
+    return i18n.t('generic', { ns: 'error' });
 }
 
 /**
@@ -153,7 +146,7 @@ export function validateFormData<T>(
         const firstError = parsedData.error?.issues[0]?.message;
         return {
             success: false,
-            error: firstError || lang.errors.generic
+            error: firstError || i18n.t('generic', { ns: 'error' })
         };
     }
 
@@ -178,7 +171,7 @@ export function validateFormData<T>(
  * }
  */
 export function handleAuthError(error: { code?: string } | null | undefined, fallbackMessage?: string): string {
-    if (!error) return fallbackMessage || lang.errors.generic;
-    if (!error.code) return fallbackMessage || lang.errors.generic;
+    if (!error) return fallbackMessage || i18n.t('generic', { ns: 'error' });
+    if (!error.code) return fallbackMessage || i18n.t('generic', { ns: 'error' });
     return getBetterAuthErrorMessage(error.code);
 }

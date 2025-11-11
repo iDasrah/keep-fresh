@@ -1,0 +1,40 @@
+{
+    "generic": "An error occurred. Please try again.",
+    "shoppingList": {
+        "emptyItemName": "The item name cannot be empty."
+    },
+    "addItem": {
+        "requiredName": "The product name is required."
+    },
+    "signIn": {
+        "invalidCredentials": "Invalid email or password.",
+        "invalidEmail": "The email is not valid.",
+        "requiredPassword": "The password is required."
+    },
+    "signUp": {
+        "requiredFirstname": "The first name is required.",
+        "requiredLastname": "The last name is required.",
+        "requiredName": "The username is required.",
+        "requiredPassword": "The password is required.",
+        "requiredPasswordConfirmation": "The password confirmation is required.",
+        "passwordMismatch": "The passwords do not match.",
+        "firstnameTooLong": "The first name is too long.",
+        "lastnameTooLong": "The last name is too long.",
+        "nameTooLong": "The username is too long.",
+        "invalidEmail": "The email is not valid.",
+        "invalidPassword": "The password must contain at least 8 characters, one uppercase letter, one lowercase letter, one special character, and one number.",
+        "passwordTooShort": "The password is too short.",
+        "passwordTooLong": "The password is too long.",
+        "passwordConfirmationTooShort": "The password confirmation is too short.",
+        "passwordConfirmationTooLong": "The password confirmation is too long.",
+        "invalidFirstname": "The first name can only contain letters and hyphens.",
+        "invalidLastname": "The last name can only contain letters and hyphens.",
+        "invalidName": "The username can only contain letters, numbers, and underscores."
+    },
+    "betterAuth": {
+        "INVALID_EMAIL_OR_PASSWORD": "Invalid email or password."
+    },
+    "addLocation": {
+        "invalidName": "The location name is required."
+    }
+}

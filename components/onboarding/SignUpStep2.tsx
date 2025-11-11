@@ -6,7 +6,7 @@ import FormInput from "@/components/ui/FormInput";
 import AnimatedPressable from "@/components/ui/AnimatedPressable";
 import {LinearGradient} from "expo-linear-gradient";
 import {colors} from "@/constants/colors";
-import lang from "@/lib/lang";
+import { useTranslation } from "react-i18next";
 
 interface SignUpStep2Props {
     firstname: string;
@@ -33,21 +33,27 @@ export default function SignUpStep2({
     onBack,
     onNext,
 }: SignUpStep2Props) {
+    const { t, ready } = useTranslation();
+
+    if (!ready) {
+        return;
+    }
+
     return (
         <View style={styles.stepContainer}>
             <View style={styles.header}>
-                <Text style={styles.title}>{lang.auth.signUp.step2.title}</Text>
+                <Text style={styles.title}>{t('auth.signUp.step2.title')}</Text>
                 <Text style={styles.subtitle}>
-                    {lang.auth.signUp.step2.subtitle}
+                    {t('auth.signUp.step2.subtitle')}
                 </Text>
             </View>
 
             <View style={styles.formContainer}>
                 <View style={[sharedStyles.inputField, styles.rowInputs]}>
                     <View style={{flex: 1}}>
-                        <FormLabel>{lang.auth.signUp.step2.firstName.label}</FormLabel>
+                        <FormLabel>{t('auth.signUp.step2.firstName.label')}</FormLabel>
                         <FormInput
-                            placeholder={lang.auth.signUp.step2.firstName.placeholder}
+                            placeholder={t('auth.signUp.step2.firstName.placeholder')}
                             value={firstname}
                             onChangeText={onFirstnameChange}
                             textContentType={"givenName"}
@@ -56,9 +62,9 @@ export default function SignUpStep2({
                     </View>
 
                     <View style={{flex: 1}}>
-                        <FormLabel>{lang.auth.signUp.step2.lastName.label}</FormLabel>
+                        <FormLabel>{t('auth.signUp.step2.lastName.label')}</FormLabel>
                         <FormInput
-                            placeholder={lang.auth.signUp.step2.lastName.placeholder}
+                            placeholder={t('auth.signUp.step2.lastName.placeholder')}
                             value={lastname}
                             onChangeText={onLastnameChange}
                             textContentType={"familyName"}
@@ -68,9 +74,9 @@ export default function SignUpStep2({
                 </View>
 
                 <View style={sharedStyles.inputField}>
-                    <FormLabel>{lang.auth.signUp.step2.username.label}</FormLabel>
+                    <FormLabel>{t('auth.signUp.step2.username.label')}</FormLabel>
                     <FormInput
-                        placeholder={lang.auth.signUp.step2.username.placeholder}
+                        placeholder={t('auth.signUp.step2.username.placeholder')}
                         value={name}
                         onChangeText={onNameChange}
                         textContentType={"username"}
@@ -82,11 +88,11 @@ export default function SignUpStep2({
 
             <View style={styles.buttonsContainer}>
                 <AnimatedPressable onPress={onBack} style={styles.secondaryButton}>
-                    <Text style={styles.secondaryButtonText}>{lang.back}</Text>
+                    <Text style={styles.secondaryButtonText}>{t('back')}</Text>
                 </AnimatedPressable>
                 <AnimatedPressable onPress={onNext}>
                     <LinearGradient style={sharedStyles.button} colors={colors.blackGradient}>
-                        <Text style={sharedStyles.buttonText}>{lang.continue}</Text>
+                        <Text style={sharedStyles.buttonText}>{t('continue')}</Text>
                     </LinearGradient>
                 </AnimatedPressable>
             </View>
