@@ -12,5 +12,27 @@ export const authClient = createAuthClient({
             storagePrefix: "keepfresh",
             storage: SecureStore,
         })
-    ]
+    ],
+    $InferAuth: {
+        user: {
+            additionalFields: {
+                firstname: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                },
+                lastname: {
+                    type: "string",
+                    required: true,
+                    input: true,
+                },
+                expoPushToken: {
+                    type: "string",
+                    required: false,
+                    input: false,
+                    returned: true,
+                },
+            },
+        },
+    },
 })

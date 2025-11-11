@@ -53,7 +53,8 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -62,9 +63,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "d87e1a27-86f6-4ee8-a850-369ccd873900"
+        "projectId": "eb8abf1f-f91e-4095-83b9-e242e693f461"
       }
     },
-    "owner": "dasrahh"
+    "owner": "lumeo"
   }
 }

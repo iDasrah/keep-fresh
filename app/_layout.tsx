@@ -6,6 +6,39 @@ import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
 import {StatusBar} from "expo-status-bar";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {LocationProvider} from "@/hooks/useLocation";
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+
+async function registerForPushNotificationsAsync() {
+    if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            if (status !== 'granted') {
+                return;
+            }
+        }
+
+        const projectId: string|undefined = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+        if (!projectId) {
+            return;
+        }
+
+        try {
+            return (
+                await Notifications.getExpoPushTokenAsync({
+                    projectId,
+                })
+            ).data;
+        } catch (_) {
+            return;
+        }
+    } else {
+        return;
+    }
+}
 
 export default function AuthLayout() {
     SplashScreen.preventAutoHideAsync();
@@ -13,6 +46,24 @@ export default function AuthLayout() {
     const queryClient = new QueryClient();
 
     if (!session.isPending) {
+        const pushToken = (session.data?.user as any)?.expoPushToken as string|undefined;
+        if (session.data?.session && !pushToken) {
+            registerForPushNotificationsAsync().then(async (token) => {
+                if (token) {
+                    await authClient.updateUser({
+                        expoPushToken: token,
+                    } as any);
+                }
+            });
+        } else if (session.data?.session && pushToken) {
+            Notifications.getPermissionsAsync().then(async ({ status }) => {
+                if (status !== 'granted') {
+                    await authClient.updateUser({
+                        expoPushToken: null,
+                    } as any);
+                }
+            });
+        }
         SplashScreen.hide();
     }
 
