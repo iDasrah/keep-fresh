@@ -1,4 +1,4 @@
-import {ScrollView, View} from "react-native";
+import {View} from "react-native";
 import Header from "@/components/ui/Header";
 import ItemsList from "@/components/ui/ItemsList";
 import {useItems} from "@/stores/items";
@@ -26,13 +26,8 @@ export default function Index() {
             {/* Header avec search et storage selector */}
             <Header variant="index" />
 
-            {/*
-                ScrollView avec padding bottom important pour éviter
-                que le contenu soit caché par la bottom tab bar
-            */}
-            <ScrollView
-                style={{padding: 16}}
-                contentContainerStyle={{paddingBottom: 300}}
+            <View
+                style={{padding: 16, flex: 1}}
             >
                 {/*
                     ItemsList gère le fetch, le tri et l'affichage des items
@@ -43,7 +38,7 @@ export default function Index() {
                     storage={selectedStorage}
                     searchText={searchText}
                 />
-            </ScrollView>
+            </View>
         </View>
   );
 }
