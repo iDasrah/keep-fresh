@@ -48,9 +48,23 @@ const Item = ({item}: ItemProps) => {
         transform: [{ scale: scale.value }]
     }));
     const locale = getLocales()[0]?.languageCode === 'en' ? enGB : fr;
+    const expirationDate = new Date(item.expirationDate);
+    expirationDate.setHours(0, 0, 0, 0);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const distanceToNow = expirationDate.getTime() - now.getTime();
+    let expiringStatus: 'not'|'today'|'tomorrow'|'expired' = 'not';
+
+    if (distanceToNow === 0) {
+        expiringStatus = 'today';
+    } else if (distanceToNow < 0) {
+        expiringStatus = 'expired';
+    } else if (distanceToNow < 2 * 24 * 60 * 60 * 1000) {
+        expiringStatus = 'tomorrow';
+    }
 
     if (!ready) {
-        return;
+        return <View/>;
     }
 
     /**
@@ -119,7 +133,13 @@ const Item = ({item}: ItemProps) => {
                         )
                     }
                     <Text style={[styles.itemExpiration, {color: statusColors[itemStatus]}]}>
-                        {t('product.expiringIn')} {formatDistanceToNow(new Date(item.expirationDate), {
+                        {expiringStatus === 'not' && t('product.expiringIn')} {expiringStatus === 'not' && formatDistanceToNow(item.expirationDate, {
+                            includeSeconds: false,
+                            locale,
+                        })}
+                        {expiringStatus === 'today' && t('product.expiresToday')}
+                        {expiringStatus === 'tomorrow' && t('product.expiresTomorrow')}
+                        {expiringStatus === 'expired' && t('product.expiredSince')} {expiringStatus === 'expired' && formatDistanceToNow(item.expirationDate, {
                             includeSeconds: false,
                             locale,
                         })}

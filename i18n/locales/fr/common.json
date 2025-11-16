@@ -18,7 +18,10 @@
         }
     },
     "product": {
-        "expiringIn": "Expire dans"
+        "expiringIn": "Expire dans",
+        "expiredSince": "Expiré depuis",
+        "expiresToday": "Expire aujourd'hui",
+        "expiresTomorrow": "Expire demain"
     },
     "addItem": {
         "title": "Ajouter",
@@ -339,5 +342,8 @@
             },
             "button": "Ajouter l'emplacement"
         }
+    },
+    "list": {
+        "endOfList": "Vous avez atteint la fin de la liste."
     }
 }
