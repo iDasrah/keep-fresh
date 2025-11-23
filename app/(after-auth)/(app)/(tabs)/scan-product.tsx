@@ -21,12 +21,12 @@ const ScanProduct = () => {
   useFocusEffect(
     useCallback(() => {
       isProcessing.current = false;
-      camera.current?.resumePreview();
+      void camera.current?.resumePreview();
       setIsActive(true);
 
       return () => {
         setIsActive(false);
-        camera.current?.pausePreview();
+        void camera.current?.pausePreview();
         isProcessing.current = true;
       };
     }, [])
@@ -40,7 +40,6 @@ const ScanProduct = () => {
       if (isProcessing.current) return;
       isProcessing.current = true;
 
-      camera.current?.pausePreview();
       const product = await getProductByBarcodeV1.mutateAsync(barcode);
       router.push(`/(after-auth)/(app)/add-item/${product.data.id}`);
     } catch (_) {
@@ -51,10 +50,20 @@ const ScanProduct = () => {
         router.push(`/(after-auth)/(app)/add-item/${product.data.id}`);
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response?.data?.message) {
-            Alert.alert('Error', error.response.data.message);
+            Alert.alert('Error', error.response.data.message, [{
+              style: 'default',
+              onPress: () => {
+                isProcessing.current = false;
+              }
+            }]);
             return;
         }
-        Alert.alert('Error', t('generic', { ns: 'error' }));
+        Alert.alert('Error', t('generic', { ns: 'error' }), [{
+          style: 'default',
+          onPress: () => {
+            isProcessing.current = false;
+          }
+        }]);
       }
     }
   }, []);
