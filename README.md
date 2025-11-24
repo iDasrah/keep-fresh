@@ -23,11 +23,51 @@ Fini les yaourts oubliés et les légumes périmés !
 
 ## Développement local avec l'API
 
-### Prérequis
+### Méthode 1
+
+#### Prérequis
+- Cloner le dépôt de l'API : [keep-fresh-api](https://github.com/luci1s/keep-fresh-api)
+
+#### Configuration
+
+1. **Lancer l'API en local** :
+```sh
+cd keep-fresh-api
+npm run start:dev
+```
+
+2. **Récupérer l'IP locale** :
+```sh
+ipconfig # Windows
+ipconfig getifaddr en0 # Mac Wi-Fi
+ipconfig getifaddr en1 # Mac Ethernet
+ifconfig # Linux
+```
+
+3. **Configurer l'URL de l'API** :
+   - Créer un fichier `.env` dans keep-fresh-app
+   - Ajouter la variable :
+```env
+EXPO_PUBLIC_API_URL="https://votre-ip-locale:8000"
+```
+
+4. **Générer le client de l'API** :
+```sh
+npm run openapi
+```
+
+5. **Lancer l'app mobile** :
+```sh
+npx expo start
+```
+
+### Méthode 2
+
+#### Prérequis
 - Avoir Ngrok installé ([ngrok.com](https://ngrok.com/))
 - Cloner le dépôt de l'API : [keep-fresh-api](https://github.com/luci1s/keep-fresh-api)
 
-### Configuration
+#### Configuration
 
 1. **Lancer l'API en local** :
 ```sh
@@ -55,7 +95,7 @@ npm run openapi
 
 5. **Lancer l'app mobile** :
 ```sh
-npx expo start
+npx expo start --tunnel
 ```
 
 ## Roadmap
